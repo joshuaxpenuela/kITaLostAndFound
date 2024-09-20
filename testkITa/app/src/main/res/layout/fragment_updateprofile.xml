@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.example.kITa.UpdateProfileActivity">
+
+    <!-- Top toolbar with icons -->
+    <LinearLayout
+        android:id="@+id/toolbar2"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        app:labelVisibilityMode="unlabeled"
+        app:layout_constraintStart_toStartOf="@id/toolbar"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Guide Icon -->
+        <ImageButton
+            android:id="@+id/guide_icon"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:background="@color/white"
+            android:src="@drawable/ic_guide"
+            android:contentDescription="guideIcon"
+            />
+
+        <!-- Logo Image -->
+        <ImageView
+            android:id="@+id/logo_image"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:adjustViewBounds="true"
+            android:layout_weight="3"
+            android:padding="78dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/kitalogo"
+            android:contentDescription="kitaLogo"
+            />
+
+        <!-- Search Icon -->
+        <ImageButton
+            android:id="@+id/search_icon"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:padding="8dp"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
+            android:background="@color/white"
+            android:src="@drawable/ic_search"
+            android:contentDescription="searchIcon"
+            />
+    </LinearLayout>
+
+    <!-- Main Bottom Navigation Bar -->
+    <LinearLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/toolbar_dropshadow"
+        android:orientation="horizontal"
+        app:labelVisibilityMode="unlabeled"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar2">
+
+        <ImageButton
+            android:id="@+id/nav_lost"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_lost"
+            android:background="@color/white"
+            android:contentDescription="lostIcon"
+            />
+
+        <ImageButton
+            android:id="@+id/nav_found"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_found"
+            android:background="@color/white"
+            android:contentDescription="foundIcon"
+            />
+
+        <ImageButton
+            android:id="@+id/nav_chat"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_chat"
+            android:background="@color/white"
+            android:contentDescription="chatIcon"
+            />
+
+        <ImageButton
+            android:id="@+id/nav_notifications"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_notification"
+            android:background="@color/white"
+            android:contentDescription="notifIcon"/>
+
+        <ImageButton
+            android:id="@+id/nav_profile"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_profile"
+            android:background="@color/white"
+            android:contentDescription="profileIcon"
+            app:tint="@color/green"
+            />
+    </LinearLayout>
+
+    <!-- Main Content Container -->
+    <RelativeLayout
+        android:id="@+id/profileLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/gradient"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <ImageView
+            android:id="@+id/profilePic"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:contentDescription="uploadProfileIcon"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_profile"
+            app:tint="@color/green" />
+
+        <EditText
+            android:id="@+id/firstName"
+            android:layout_width="150dp"
+            android:layout_height="48dp"
+            android:layout_below="@+id/profilePic"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_toStartOf="@+id/lastName"
+            android:background="@drawable/text_input_bg"
+            android:hint="First Name"
+            android:inputType="text"
+            android:padding="10dp" />
+
+        <EditText
+            android:id="@+id/lastName"
+            android:layout_width="150dp"
+            android:layout_height="48dp"
+            android:layout_below="@+id/profilePic"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/text_input_bg"
+            android:hint="Last Name"
+            android:inputType="text"
+            android:padding="10dp" />
+
+        <TextView
+            android:id="@+id/submitUpdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lastName"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="22dp"
+            android:layout_marginEnd="20dp"
+            android:text="Done"
+            android:textColor="@color/green"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/emailText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/firstName"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="42dp"
+            android:text="Email"
+            android:textColor="@color/green"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/emailText"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="15dp"
+            android:text="user@email.com"
+            android:textColor="@color/green"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/contactText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/email"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="31dp"
+            android:text="Contact No."
+            android:textColor="@color/green"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/contactNo"
+            android:layout_width="300dp"
+            android:layout_height="48dp"
+            android:layout_below="@+id/contactText"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="20dp"
+            android:padding="10dp"
+            android:hint="Contact Number"
+            android:inputType="number"
+            android:background="@drawable/text_input_bg"/>
+
+        <TextView
+            android:id="@+id/departmentText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/contactNo"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="19dp"
+            android:text="College or Deparment"
+            android:textColor="@color/green"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/department"
+            style="@style/CustomSpinnerStyle"
+            android:layout_width="300dp"
+            android:layout_height="48dp"
+            android:layout_below="@+id/departmentText"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="20dp"
+            android:entries="@array/department_array"
+            android:hint="Department or College"
+            android:textSize="15sp" />
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

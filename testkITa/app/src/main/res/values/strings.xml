@@ -1,0 +1,70 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">kITa</string>
+    <string name="prompt_email">email</string>
+    <string name="prompt_password">password</string>
+    <string name="action_sign_in_short">sign_in</string>
+    <string name="add_post">AddNew</string>
+    <string name="action_settings">Settings</string>
+
+    <string-array name="department_array">
+        <item>Select Department</item>
+        <item>CAFENR</item>
+        <item>CAS</item>
+        <item>CCJ</item>
+        <item>CED</item>
+        <item>CEMDS</item>
+        <item>CEIT</item>
+        <item>CON</item>
+        <item>CSPEAR</item>
+        <item>CVMBS</item>
+        <item>COM</item>
+        <item>Graduate School</item>
+        <item>Admin</item>
+        <item>OSAS</item>
+    </string-array>
+
+    <string-array name="category_array">
+        <item>ID</item>
+        <item>Gadgets/Electronics</item>
+        <item>Accessories</item>
+        <item>Tumbler</item>
+        <item>Wallet</item>
+        <item>Documents</item>
+        <item>Umbrella</item>
+        <item>Money</item>
+        <item>Bag</item>
+        <item>Jewelries</item>
+        <item>Clothes</item>
+        <item>ATM Card</item>
+        <item>School Supplies</item>
+    </string-array>
+
+    <string name="otpInstruct">Please enter the OTP sent to your email</string>
+    <string name="resendText">Didn\'t receive the code?</string>
+
+    <string name="FinderGuide">
+        1. The finder must accurately fill out the necessary details in the Lost and Found form within the kITa app. This includes their full name, email address, contact number, college or department affiliation, the name of the found item, as well as the date and location where it was found.\n\n
+        2. The finder is encouraged to indicate a short description of the found item, including any distinguishing features or identifying marks.\n\n
+        3. The finder should submit the found item to the designated lost and found office or civil security services within 24 hours of discovering it.
+    </string>
+
+    <string name="DescNote">
+        *If CvSU Student or Employee, please submit your school or employee ID. If visitors, please submit a Valid ID
+    </string>
+
+    <string name="ClaimantGuide">
+        1. Upon locating their lost item in the kITa application, claimants must provide a specific description of the item and present proof of ownership, which may include a receipt, photograph, unique description, or valid identification.\n\n
+        2. Claimants are required to complete the lost and found form, including their full name, contact number, and a detailed description of the lost item, before claiming the item.\n\n
+        3. Claimants should retrieve their lost items during the specified office hours of the Lost and Found Office or Civil Security Services.
+    </string>
+
+    <string name="CivilSecurityGuide">
+        1. Upon receiving a lost item report, Civil Security personnel will verify the item details, and information of the finder, after which the assigned administrator will change the status of the item to "approved" and display it in the main menu of the kITA application.\n\n
+        2. Found items will be held for 90 days, after which damaged or low-value items will be properly disposed of, while high-value items will be reported to the Director for disposition decisions.\n\n
+        3. When a claimant reports finding their lost item in the kITA application, the assigned administrator will re-verify the identity of the claimant based on information submitted in the kITA application before returning the item.\n\n
+        4. The Lost and Found administrator will update the status of the item to "claimed" once it has been returned successfully to its owner.\n\n
+        5. Civil Security Services will maintain a comprehensive database of all disposed lost and found items.\n\n
+        6. Users are encouraged to provide feedback on the process by completing and returning the Stakeholders Feedback form or filling out the provided Google Form.
+    </string>
+
+</resources>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/nav_lost"
+        android:icon="@drawable/ic_lost"
+        android:title="Lost"
+        app:iconTint="@color/colorBottomNavigationSelected" />
+
+    <item
+        android:id="@+id/nav_found"
+        android:icon="@drawable/ic_found"
+        android:title="Found"
+        app:iconTint="@color/colorBottomNavigationSelected" />
+
+    <item
+        android:id="@+id/nav_chat"
+        android:icon="@drawable/ic_chat"
+        android:title="Chat"
+        app:iconTint="@color/colorBottomNavigationSelected" />
+
+    <item
+        android:id="@+id/nav_notifications"
+        android:icon="@drawable/ic_notification"
+        android:title="Notifications"
+        app:iconTint="@color/colorBottomNavigationSelected" />
+
+    <item
+        android:id="@+id/nav_profile"
+        android:icon="@drawable/ic_profile"
+        android:title="Profile"
+        app:iconTint="@color/colorBottomNavigationSelected" />
+</menu>

@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.example.kITa.ClaimingItemActivity">
+
+    <!-- Top toolbar with icons -->
+    <LinearLayout
+        android:id="@+id/toolbar2"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        app:labelVisibilityMode="unlabeled"
+        app:layout_constraintStart_toStartOf="@id/toolbar"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Guide Icon -->
+        <ImageButton
+            android:id="@+id/guide_icon"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:background="@color/white"
+            android:src="@drawable/ic_guide"
+            android:contentDescription="guideIcon"
+            />
+
+        <!-- Logo Image -->
+        <ImageView
+            android:id="@+id/logo_image"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:adjustViewBounds="true"
+            android:layout_weight="3"
+            android:padding="78dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/kitalogo"
+            android:contentDescription="kitaLogo"
+            />
+
+        <!-- Search Icon -->
+        <ImageButton
+            android:id="@+id/search_icon"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:padding="8dp"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
+            android:background="@color/white"
+            android:src="@drawable/ic_search"
+            android:contentDescription="searchIcon"
+            />
+    </LinearLayout>
+
+    <!-- Main Bottom Navigation Bar -->
+    <LinearLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/toolbar_dropshadow"
+        android:orientation="horizontal"
+        app:labelVisibilityMode="unlabeled"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar2">
+
+        <ImageButton
+            android:id="@+id/nav_lost"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_lost"
+            android:background="@color/white"
+            android:contentDescription="lostIcon"
+            app:tint="@color/green"
+            />
+
+        <ImageButton
+            android:id="@+id/nav_found"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_found"
+            android:background="@color/white"
+            android:contentDescription="foundIcon"
+            />
+
+        <ImageButton
+            android:id="@+id/nav_chat"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_chat"
+            android:background="@color/white"
+            android:contentDescription="chatIcon"
+            />
+
+        <ImageButton
+            android:id="@+id/nav_notifications"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_notification"
+            android:background="@color/white"
+            android:contentDescription="notifIcon"/>
+
+        <ImageButton
+            android:id="@+id/nav_profile"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_profile"
+            android:background="@color/white"
+            android:contentDescription="profileIcon"
+            />
+    </LinearLayout>
+
+    <!-- Main Content Container -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/gradient"
+        android:paddingBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintVertical_bias="0.0">
+
+        <TextView
+            android:id="@+id/ClaimLostTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Claim Lost Item"
+            android:textAlignment="center"
+            android:textColor="@color/green"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/proofOfIDText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ClaimLostTitle"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:text="Proof of Identification"
+            android:textColor="@color/green"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/proofNote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/proofOfIDText"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="20dp"
+            android:text="@string/DescNote"
+            android:textColor="@color/green"
+            android:textSize="12sp" />
+
+        <ImageButton
+            android:id="@+id/proofOfID"
+            android:layout_width="400dp"
+            android:layout_height="150dp"
+            android:layout_below="@id/proofNote"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/text_input_bg"
+            android:src="@drawable/ic_addphoto" />
+
+        <TextView
+            android:id="@+id/DescriptionText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/proofOfID"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="15dp"
+            android:text="Description of Item / Proof of Ownership"
+            android:textColor="@color/green"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:layout_width="400dp"
+            android:layout_height="100dp"
+            android:layout_below="@id/DescriptionText"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/text_input_bg"
+            android:hint="E.g. Marks, Unique description of the item, etc"
+            android:inputType="textMultiLine"
+            android:padding="10dp"
+            android:textAlignment="textStart"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/cancelClaim"
+            android:layout_width="180dp"
+            android:layout_height="50dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="20dp"
+            android:backgroundTint="@color/white"
+            android:text="Cancel"
+            android:textColor="@color/green"
+            android:textStyle="bold"
+            app:strokeColor="@color/green"
+            app:strokeWidth="2dp" />
+
+        <Button
+            android:id="@+id/submitClaim"
+            android:layout_width="180dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="11dp"
+
+            android:layout_marginEnd="20dp"
+            android:layout_toEndOf="@+id/cancelClaim"
+            android:backgroundTint="@color/green"
+            android:text="Submit"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

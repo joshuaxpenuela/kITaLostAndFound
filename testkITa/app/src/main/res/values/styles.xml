@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+
+    <resources>
+        <style name="CustomSpinnerStyle" parent="Widget.AppCompat.Spinner">
+            <item name="android:background">@drawable/spinner_bg</item>
+            <item name="android:paddingStart">10dp</item>
+            <item name="android:paddingEnd">30dp</item>
+            <item name="android:dropDownSelector">@drawable/spinner_bg</item>
+        </style>
+    </resources>
+
+

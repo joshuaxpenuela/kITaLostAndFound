@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.example.kITa.UnclaimedActivity">
+
+    <!-- Top toolbar with icons -->
+    <LinearLayout
+        android:id="@+id/toolbar2"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        app:labelVisibilityMode="unlabeled"
+        app:layout_constraintStart_toStartOf="@id/toolbar"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Guide Icon -->
+        <ImageButton
+            android:id="@+id/guide_icon"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:background="@color/white"
+            android:src="@drawable/ic_guide"
+            android:contentDescription="guideIcon"
+            />
+
+        <!-- Logo Image -->
+        <ImageView
+            android:id="@+id/logo_image"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:adjustViewBounds="true"
+            android:layout_weight="3"
+            android:padding="78dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/kitalogo"
+            android:contentDescription="kitaLogo"
+            />
+
+        <!-- Search Icon -->
+        <ImageButton
+            android:id="@+id/search_icon"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:padding="8dp"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
+            android:background="@color/white"
+            android:src="@drawable/ic_search"
+            android:contentDescription="searchIcon"
+            />
+    </LinearLayout>
+
+    <!-- Main Bottom Navigation Bar -->
+    <LinearLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/toolbar_dropshadow"
+        android:orientation="horizontal"
+        app:labelVisibilityMode="unlabeled"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar2">
+
+        <ImageButton
+            android:id="@+id/nav_lost"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_lost"
+            android:background="@color/white"
+            android:contentDescription="lostIcon"
+            app:tint="@color/green"
+            />
+
+        <ImageButton
+            android:id="@+id/nav_found"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_found"
+            android:background="@color/white"
+            android:contentDescription="foundIcon"
+            />
+
+        <ImageButton
+            android:id="@+id/nav_chat"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_chat"
+            android:background="@color/white"
+            android:contentDescription="chatIcon"
+            />
+
+        <ImageButton
+            android:id="@+id/nav_notifications"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_notification"
+            android:background="@color/white"
+            android:contentDescription="notifIcon"/>
+
+        <ImageButton
+            android:id="@+id/nav_profile"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_profile"
+            android:background="@color/white"
+            android:contentDescription="profileIcon"
+            />
+    </LinearLayout>
+
+
+    <!-- Main Content Container -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/gradient"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="0dp">
+
+        <RelativeLayout
+            android:id="@+id/guide_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="20dp"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <ImageView
+                android:id="@+id/unclaimedItemImgSlide"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:src="@drawable/ic_uploadphoto" />
+
+            <TextView
+                android:id="@+id/itemName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/unclaimedItemImgSlide"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:text="Item Name"
+                android:textColor="@color/green"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:id="@+id/status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/itemName"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="20dp"
+                android:text="Status"
+                android:textSize="25sp"
+                android:textColor="@color/green"
+                />
+
+            <ImageView
+                android:id="@+id/locationIcon"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_below="@+id/status"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="15dp"
+                android:src="@drawable/ic_location"
+                />
+
+            <TextView
+                android:id="@+id/location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/status"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="15dp"
+                android:layout_toEndOf="@+id/locationIcon"
+                android:text="Location"
+                android:textColor="@color/green"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/timeFoundedText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/locationIcon"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="20dp"
+                android:text="Found on"
+                android:textColor="@color/green"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/timeFoundedText"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:text="01/01/2024"
+                android:textColor="@color/green"
+                android:textSize="18sp"
+                />
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/timeFoundedText"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_toEndOf="@+id/date"
+                android:text="8:30AM"
+                android:textColor="@color/green"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/itemCategoryText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/date"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="20dp"
+                android:text="Item Category"
+                android:textColor="@color/green"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:id="@+id/itemCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/itemCategoryText"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:text="Category"
+                android:textColor="@color/green"
+                android:textSize="18sp"
+                />
+
+            <TextView
+                android:id="@+id/otherDetailsText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/itemCategory"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="20dp"
+                android:text="Other Details"
+                android:textColor="@color/green"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:id="@+id/otherDetails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/otherDetailsText"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="20dp"
+                android:text="Item Details"
+                android:textColor="@color/green"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/reportedByText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/otherDetails"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="20dp"
+                android:text="Reported By"
+                android:textColor="@color/green"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:id="@+id/Fname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/reportedByText"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:text="First Name"
+                android:textColor="@color/green"
+                android:textSize="18sp"
+                />
+
+            <Button
+                android:id="@+id/claimItemBtn"
+                android:layout_width="180dp"
+                android:layout_height="60dp"
+                android:layout_below="@+id/Fname"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="34dp"
+                android:layout_marginEnd="50dp"
+                android:backgroundTint="@color/green"
+                android:text="Claim Item"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
