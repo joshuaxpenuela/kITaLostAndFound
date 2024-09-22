@@ -43,6 +43,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
 
     private RequestQueue requestQueue;
     private String email;
+    private int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,7 +178,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
                         if (status.equals("success")) {
                             Toast.makeText(UpdateProfileActivity.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
                             // Update the UserSession with the new details
-                            UserSession.getInstance().saveUserData(firstName, lastName, email, contactNo, department);
+                            UserSession.getInstance().saveUserData(id, firstName, lastName, email, contactNo, department);
                             finish();
                         } else {
                             String error = jsonResponse.optString("message", "Unknown error");
@@ -195,6 +196,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
+                params.put("id", String.valueOf(id));
                 params.put("email", email);
                 params.put("firstName", firstNameEditText.getText().toString().trim());
                 params.put("lastName", lastNameEditText.getText().toString().trim());

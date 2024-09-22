@@ -4,24 +4,34 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import com.example.kITa.ApiClient.ApiCallback;
 
 public class ChatActivity extends AppCompatActivity {
 
-    private ImageButton guideIcon;
-    private ImageButton searchIcon;
-    private ImageButton navLost;
-    private ImageButton navFound;
-    private ImageButton navChat;
-    private ImageButton navNotifications;
-    private ImageButton navProfile;
+    private ImageButton guideIcon, searchIcon, navLost, navFound, navChat, navNotifications, navProfile;
+    private CardView cssCardView;
+    private TextView messageTextView, timeMessageTextView;
+    private DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_chat); // Linking to fragment_chat.xml
+        setContentView(R.layout.fragment_chat);
 
-        // Initialize ImageButtons
+        dbHelper = new DatabaseHelper(this);
+
+        initializeViews();
+        setClickListeners();
+
+        loadLatestAdminMessage();
+    }
+
+    private void initializeViews() {
         guideIcon = findViewById(R.id.guide_icon);
         searchIcon = findViewById(R.id.search_icon);
         navLost = findViewById(R.id.nav_lost);
@@ -29,42 +39,40 @@ public class ChatActivity extends AppCompatActivity {
         navChat = findViewById(R.id.nav_chat);
         navNotifications = findViewById(R.id.nav_notifications);
         navProfile = findViewById(R.id.nav_profile);
+        cssCardView = findViewById(R.id.CSSCardView);
+        messageTextView = findViewById(R.id.message);
+        timeMessageTextView = findViewById(R.id.timeMessage);
+    }
 
-        // Set onClickListeners
-        guideIcon.setOnClickListener(v -> {
-            Intent intent = new Intent(ChatActivity.this, GuidelinesActivity.class);
-            startActivity(intent);
-        });
+    private void setClickListeners() {
+        guideIcon.setOnClickListener(v -> startActivity(new Intent(ChatActivity.this, GuidelinesActivity.class)));
+        searchIcon.setOnClickListener(v -> startActivity(new Intent(ChatActivity.this, SearchActivity.class)));
+        navLost.setOnClickListener(v -> startActivity(new Intent(ChatActivity.this, MainActivity.class)));
+        navFound.setOnClickListener(v -> startActivity(new Intent(ChatActivity.this, ClaimedActivity.class)));
+        navChat.setOnClickListener(v -> { finish(); startActivity(getIntent()); });
+        navNotifications.setOnClickListener(v -> startActivity(new Intent(ChatActivity.this, NotificationActivity.class)));
+        navProfile.setOnClickListener(v -> startActivity(new Intent(ChatActivity.this, ProfileActivity.class)));
 
-        searchIcon.setOnClickListener(v -> {
-            Intent intent = new Intent(ChatActivity.this, SearchActivity.class);
-            startActivity(intent);
-        });
+        cssCardView.setOnClickListener(v -> startActivity(new Intent(ChatActivity.this, AdminChatActivity.class)));
+    }
 
-        navLost.setOnClickListener(v -> {
-            Intent intent = new Intent(ChatActivity.this, MainActivity.class);
-            startActivity(intent);
-        });
+    private void loadLatestAdminMessage() {
+        ApiClient.getLatestAdminMessage(new ApiCallback<Message>() {
+            @Override
+            public void onSuccess(Message message) {
+                if (message != null) {
+                    messageTextView.setText(message.getText());
+                    timeMessageTextView.setText(message.getFormattedTime());
+                } else {
+                    messageTextView.setText("");
+                    timeMessageTextView.setText("");
+                }
+            }
 
-        navFound.setOnClickListener(v -> {
-            Intent intent = new Intent(ChatActivity.this, ClaimedActivity.class);
-            startActivity(intent);
-        });
-
-        navChat.setOnClickListener(v -> {
-            // Since navChat is the ChatActivity, you can refresh it if needed
-            finish();
-            startActivity(getIntent());
-        });
-
-        navNotifications.setOnClickListener(v -> {
-            Intent intent = new Intent(ChatActivity.this, NotificationActivity.class);
-            startActivity(intent);
-        });
-
-        navProfile.setOnClickListener(v -> {
-            Intent intent = new Intent(ChatActivity.this, ProfileActivity.class);
-            startActivity(intent);
+            @Override
+            public void onError(String error) {
+                Toast.makeText(ChatActivity.this, "Error: " + error, Toast.LENGTH_SHORT).show();
+            }
         });
     }
 }

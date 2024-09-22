@@ -1,3 +1,8 @@
+val Any.compiler: Any
+    get() {
+        TODO("Not yet implemented")
+    }
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -46,4 +51,6 @@ dependencies {
     implementation (libs.volley)
     implementation (libs.material)
     implementation (libs.androidx.constraintlayout)
+    implementation (libs.com.github.bumptech.glide.glide)
+    annotationProcessor (libs.compiler)
 }

@@ -3,6 +3,7 @@ package com.example.kITa;
 public class UserSession {
     private static UserSession instance;
 
+    private int id;
     private String firstName;
     private String lastName;
     private String email;
@@ -18,12 +19,17 @@ public class UserSession {
         return instance;
     }
 
-    public void saveUserData(String firstName, String lastName, String email, String contactNo, String dept) {
+    public void saveUserData(int id, String firstName, String lastName, String email, String contactNo, String dept) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.contactNo = contactNo;
         this.dept = dept;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getFirstName() {

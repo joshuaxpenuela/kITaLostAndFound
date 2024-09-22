@@ -79,12 +79,13 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
 
                             // Save user data to UserSession
+                            int id = jsonResponse.optInt("id");
                             String firstName = jsonResponse.optString("Fname", "N/A");
                             String lastName = jsonResponse.optString("Lname", "N/A");
                             String contactNo = jsonResponse.optString("contactNo", "N/A");
                             String dept = jsonResponse.optString("dept", "N/A");
 
-                            UserSession.getInstance().saveUserData(firstName, lastName, email, contactNo, dept);
+                            UserSession.getInstance().saveUserData(id, firstName, lastName, email, contactNo, dept);
 
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);

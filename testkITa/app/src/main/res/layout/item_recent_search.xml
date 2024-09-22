@@ -3,19 +3,26 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="8dp">
+    android:padding="5dp">
 
     <TextView
         android:id="@+id/recentSearchText"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="5dp"
         android:layout_weight="1"
-        android:textSize="16sp"/>
+        android:text="Recent Search"
+        android:textColor="@color/green"
+        android:textStyle="bold"
+        android:textSize="25sp"/>
 
     <ImageButton
         android:id="@+id/deleteRecentSearchBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginRight="20dp"
+        android:padding="10dp"
         android:src="@drawable/ic_exit"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="Delete recent search"/>

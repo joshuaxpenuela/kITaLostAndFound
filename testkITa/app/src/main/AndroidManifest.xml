@@ -121,6 +121,15 @@
             android:exported="true">
         </activity>
 
+        <activity
+            android:name=".AdminChatActivity"
+            android:exported="true">
+        </activity>
+
+        <activity
+            android:name=".UserChatActivity"
+            android:exported="true">
+        </activity>
 
     </application>
 </manifest>

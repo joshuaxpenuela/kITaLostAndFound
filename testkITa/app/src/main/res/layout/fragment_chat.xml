@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.example.kITa.MainActivity">
+    tools:context="com.example.kITa.ChatActivity">
 
     <!-- Top toolbar with icons -->
     <LinearLayout
@@ -147,7 +147,7 @@
             <RelativeLayout
                 android:id="@+id/cssMsgLayout"
                 android:layout_width="match_parent"
-                android:layout_height="145dp"
+                android:layout_height="wrap_content"
                 >
                 <TextView
                     android:id="@+id/MessageTabTitle"
@@ -161,59 +161,74 @@
                     android:textStyle="bold"/>
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/CSSCardView"
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
                     android:layout_marginTop="10dp"
                     android:layout_below="@+id/MessageTabTitle"
                     android:backgroundTint="@color/white"
                     android:elevation="10dp"
-                    app:cardCornerRadius="0dp"
+                    android:clickable="true"
+                    app:contentPadding="5dp"
                     >
 
-                    <ImageButton
-                        android:id="@+id/cssProfilePic"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="10dp"
-                        android:backgroundTint="@color/white"
-                        android:contentDescription="CSSLogo"
-                        android:padding="0dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/ic_security" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        >
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            >
+                            <ImageView
+                                android:id="@+id/UserIcon"
+                                android:layout_width="80dp"
+                                android:layout_height="60dp"
+                                android:src="@drawable/ic_security"
+                                app:tint="@color/green"
+                                />
+                            <TextView
+                                android:id="@+id/timeMessage"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:text="08:00 AM"
+                                android:textAlignment="center"
+                                android:textColor="@color/green"
+                                android:textSize="15sp"
+                                android:textStyle="bold"
+                                />
+                        </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/CSSName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginLeft="85dp"
-                        android:text="Civil Security Services"
-                        android:textColor="@color/green"
-                        android:textSize="23sp"
-                        android:textStyle="bold" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:layout_marginStart="10dp"
+                            >
+                            <TextView
+                                android:id="@+id/CSSName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:text="Civil Security Services"
+                                android:textColor="@color/green"
+                                android:textSize="23sp"
+                                android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/message"
-                        android:layout_width="300dp"
-                        android:layout_height="38dp"
-                        android:layout_marginTop="35dp"
-                        android:layout_marginLeft="85dp"
-                        android:text="message"
-                        android:textColor="@color/green"
-                        android:textSize="15sp" />
+                            <TextView
+                                android:id="@+id/message"
+                                android:layout_width="300dp"
+                                android:layout_height="38dp"
+                                android:layout_marginTop="0dp"
+                                android:text="message"
+                                android:textColor="@color/green"
+                                android:textSize="15sp" />
 
-                    <TextView
-                        android:id="@+id/timeMessage"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="28dp"
-                        android:layout_marginTop="72dp"
-                        android:text="08:00 AM"
-                        android:textColor="@color/green"
-                        android:textSize="10sp"
-                        android:textStyle="bold"
-                        />
+                        </LinearLayout>
+                    </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
             </RelativeLayout>
@@ -221,23 +236,49 @@
             <RelativeLayout
                 android:id="@+id/userMsgLayout"
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
                 android:layout_below="@id/cssMsgLayout"
                 >
 
                 <TextView
+                    android:id="@+id/UserChatText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
-                    android:layout_marginTop="10dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="330dp"
                     android:text="Users"
-                    android:textSize="20sp"
                     android:textColor="@color/green"
-                    android:textStyle="bold"/>
-            </RelativeLayout>
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/UserChatRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/UserChatText"
+                    android:layout_marginTop="10dp"
+                    android:paddingBottom="10dp"
+                    />
+            </RelativeLayout>
         </RelativeLayout>
     </androidx.core.widget.NestedScrollView>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addMsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="30dp"
+        android:contentDescription="addUserMsg"
+        app:backgroundTintMode="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:tint="@color/green"
+        app:srcCompat="@android:drawable/ic_input_add"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
