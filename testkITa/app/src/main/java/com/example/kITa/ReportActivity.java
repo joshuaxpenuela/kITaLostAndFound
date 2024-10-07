@@ -1,10 +1,14 @@
 package com.example.kITa;
 
+import static android.opengl.ETC1.encodeImage;
+
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -20,13 +24,18 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -44,6 +53,11 @@ public class ReportActivity extends AppCompatActivity {
     private Calendar calendar;
     private DatePickerDialog datePickerDialog;
     private TimePickerDialog timePickerDialog;
+
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private ImageButton[] imageButtons;
+    private String[] encodedImages;
+    private int currentImageIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +83,16 @@ public class ReportActivity extends AppCompatActivity {
         img5 = findViewById(R.id.img5);
         submitButton = findViewById(R.id.SubmitReport);
         cancelButton = findViewById(R.id.cancelReport);
+        imageButtons = new ImageButton[]{img1, img2, img3, img4, img5};
+        encodedImages = new String[5];
+
+        for (int i = 0; i < imageButtons.length; i++) {
+            final int index = i;
+            imageButtons[i].setOnClickListener(v -> {
+                currentImageIndex = index;
+                openGallery();
+            });
+        }
 
         // Initialize navigation elements
         guideIcon = findViewById(R.id.guide_icon);
@@ -172,6 +196,36 @@ public class ReportActivity extends AppCompatActivity {
         });
     }
 
+    private void openGallery() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri imageUri = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+                imageButtons[currentImageIndex].setImageBitmap(bitmap);
+                encodedImages[currentImageIndex] = encodeImage(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private String encodeImage(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] imageBytes = baos.toByteArray();
+        return Base64.encodeToString(imageBytes, Base64.DEFAULT);
+    }
+
     private boolean validateInputFields() {
         boolean isValid = true;
 
@@ -231,7 +285,19 @@ public class ReportActivity extends AppCompatActivity {
             isValid = false;
         }
 
-        return isValid;
+        int uploadedImages = 0;
+        for (String encodedImage : encodedImages) {
+            if (encodedImage != null && !encodedImage.isEmpty()) {
+                uploadedImages++;
+            }
+        }
+
+        if (uploadedImages < 3) {
+            Toast.makeText(this, "Please upload at least 3 images", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
     }
 
     private boolean isValidEmail(String email) {
@@ -250,46 +316,44 @@ public class ReportActivity extends AppCompatActivity {
         if (validateInputFields()) {
             String url = "http://10.0.2.2/lost_found_db/submit_report.php";
 
-            RequestQueue queue = Volley.newRequestQueue(this);
+            JSONObject jsonBody = new JSONObject();
+            try {
+                jsonBody.put("Fname", firstName.getText().toString().trim());
+                jsonBody.put("Lname", lastName.getText().toString().trim());
+                jsonBody.put("email", email.getText().toString().trim());
+                jsonBody.put("contact_no", contactNo.getText().toString().trim());
+                jsonBody.put("dept_college", department.getSelectedItem().toString());
+                jsonBody.put("item_name", itemName.getText().toString().trim());
+                jsonBody.put("item_category", itemCategory.getSelectedItem().toString().trim());
+                jsonBody.put("location_found", location.getText().toString().trim());
+                jsonBody.put("date", date.getText().toString().trim());
+                jsonBody.put("time", convertTo24HourFormat(time.getText().toString().trim()));
+                jsonBody.put("other_details", otherDetails.getText().toString().trim());
 
-            StringRequest request = new StringRequest(Request.Method.POST, url,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            Log.d("ReportActivity", "Response: " + response);
-                            Toast.makeText(ReportActivity.this, "Reporting Successful", Toast.LENGTH_SHORT).show();
-                            Log.d("ReportActivity", "Item reported successfully with status: Unclaimed");
-                            Intent intent = new Intent(ReportActivity.this, MainActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Log.e("ReportActivity", "Error: " + error.getMessage());
-                            Toast.makeText(ReportActivity.this, "Error Reporting Item", Toast.LENGTH_SHORT).show();
-                        }
-                    }) {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<>();
-                    params.put("Fname", firstName.getText().toString().trim());
-                    params.put("Lname", lastName.getText().toString().trim());
-                    params.put("email", email.getText().toString().trim());
-                    params.put("contact_no", contactNo.getText().toString().trim());
-                    params.put("dept_college", department.getSelectedItem().toString());
-                    params.put("item_name", itemName.getText().toString().trim());
-                    params.put("item_category", itemCategory.getSelectedItem().toString().trim());
-                    params.put("location_found", location.getText().toString().trim());
-                    params.put("date", date.getText().toString().trim());
-                    params.put("time", convertTo24HourFormat(time.getText().toString().trim()));
-                    params.put("other_details", otherDetails.getText().toString().trim());
-                    return params;
+                for (int i = 0; i < encodedImages.length; i++) {
+                    if (encodedImages[i] != null && !encodedImages[i].isEmpty()) {
+                        jsonBody.put("img" + (i + 1), encodedImages[i]);
+                    }
                 }
-            };
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
-            queue.add(request);
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonBody,
+                    response -> {
+                        Log.d("ReportActivity", "Response: " + response.toString());
+                        Toast.makeText(ReportActivity.this, "Reporting Successful", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(ReportActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    },
+                    error -> {
+                        Log.e("ReportActivity", "Error: " + error.toString());
+                        Toast.makeText(ReportActivity.this, "Error Reporting Item: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
+
+            RequestQueue queue = Volley.newRequestQueue(this);
+            queue.add(jsonObjectRequest);
         }
     }
 

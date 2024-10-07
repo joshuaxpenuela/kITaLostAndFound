@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -13,11 +14,17 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.kITa.ApiClient.ApiCallback;
-import java.io.*;
-import java.net.*;
+
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
@@ -29,7 +36,6 @@ public class AdminChatActivity extends AppCompatActivity {
     private ImageButton sendMessage, uploadImg;
     private EditText messageEditText;
     private RecyclerView chatRecyclerView;
-    private DatabaseHelper dbHelper;
     private MessageAdapter messageAdapter;
     private List<Message> messages;
 
@@ -37,8 +43,6 @@ public class AdminChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_chatadmin);
-
-        dbHelper = new DatabaseHelper(this);
 
         initializeViews();
         setClickListeners();
@@ -49,7 +53,7 @@ public class AdminChatActivity extends AppCompatActivity {
         sendMessage = findViewById(R.id.sendMessage);
         uploadImg = findViewById(R.id.uploadImg);
         messageEditText = findViewById(R.id.message);
-        chatRecyclerView = findViewById(R.id.chatRecyclerView);
+        chatRecyclerView = findViewById(R.id.chatAdminRecyclerView);
         chatRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
@@ -57,7 +61,6 @@ public class AdminChatActivity extends AppCompatActivity {
         sendMessage.setOnClickListener(v -> sendMessageToAdmin());
         uploadImg.setOnClickListener(v -> openImageChooser());
     }
-
 
     private void loadMessages() {
         int userId = UserSession.getInstance().getId();
@@ -72,11 +75,11 @@ public class AdminChatActivity extends AppCompatActivity {
 
             @Override
             public void onError(String error) {
-                Toast.makeText(AdminChatActivity.this, "Error: " + error, Toast.LENGTH_SHORT).show();
+                Log.e("AdminChatActivity", "Error sending message: " + error);
+                Toast.makeText(AdminChatActivity.this, "Error sending message: " + error, Toast.LENGTH_SHORT).show();
             }
         });
     }
-
 
     private void sendMessageToAdmin() {
         String messageText = messageEditText.getText().toString().trim();
@@ -108,12 +111,15 @@ public class AdminChatActivity extends AppCompatActivity {
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
 
+    private void logServerResponse(String response) {
+        Log.d("AdminChatActivity", "Server response: " + response);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri imageUri = data.getData();
-            // Upload image to server and get URL
             String imageUrl = uploadImageToServer(imageUri);
             if (imageUrl != null) {
                 int userId = UserSession.getInstance().getId();
@@ -182,38 +188,41 @@ public class AdminChatActivity extends AppCompatActivity {
                             response.append(line);
                         }
                         br.close();
+                        logServerResponse(response.toString());
                         return response.toString();
                     } else {
+                        logServerResponse("Error response code: " + responseCode);
                         return null;
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    logServerResponse("Exception: " + e.getMessage());
                     return null;
                 }
             }
 
             @Override
             protected void onPostExecute(String result) {
+                ApiCallback<Integer> callback = null;
                 if (result != null) {
                     try {
                         JSONObject jsonResult = new JSONObject(result);
                         if (jsonResult.getBoolean("success")) {
-                            imageUrl[0] = jsonResult.getString("image_url");
+                            callback.onSuccess(jsonResult.getInt("message_id"));
                         } else {
-                            Toast.makeText(AdminChatActivity.this, "Error uploading image: " + jsonResult.getString("error"), Toast.LENGTH_SHORT).show();
+                            callback.onError(jsonResult.getString("error"));
                         }
                     } catch (Exception e) {
-                        Toast.makeText(AdminChatActivity.this, "Error parsing server response", Toast.LENGTH_SHORT).show();
+                        callback.onError("Failed to parse server response: " + e.getMessage() + "\nResponse: " + result);
                     }
                 } else {
-                    Toast.makeText(AdminChatActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+                    callback.onError("Network error");
                 }
             }
         }.execute();
 
-        // Wait for the AsyncTask to complete
         try {
-            Thread.sleep(5000); // Wait for up to 5 seconds
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

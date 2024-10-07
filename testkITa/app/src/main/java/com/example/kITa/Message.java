@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.Locale;
 
 public class Message {
-    public int getText;
     private int id;
     private int senderId;
     private int receiverId;
@@ -23,8 +22,6 @@ public class Message {
         this.createdAt = createdAt;
         this.mediaUrl = mediaUrl;
     }
-
-    // Getters and setters
 
     public String getFormattedTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
@@ -44,8 +41,11 @@ public class Message {
     }
 
     public void setId(Integer messageId) {
+        this.id = messageId;
     }
-    public int getReceiverId() { return receiverId;
+
+    public int getReceiverId() {
+        return receiverId;
     }
 
     public boolean isAdminSender() {

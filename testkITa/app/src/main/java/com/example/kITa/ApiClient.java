@@ -15,11 +15,6 @@ import java.util.List;
 public class ApiClient {
     private static final String BASE_URL = "http://10.0.2.2/lost_found_db/";
 
-    public interface ApiCallback<T> {
-        void onSuccess(T result);
-        void onError(String error);
-    }
-
     public static void createMessage(Message message, ApiCallback<Integer> callback) {
         new AsyncTask<Void, Void, String>() {
             @Override
@@ -35,7 +30,6 @@ public class ApiClient {
                     jsonParam.put("sender_id", message.getSenderId());
                     jsonParam.put("receiver_id", message.getReceiverId());
                     jsonParam.put("message", message.getText());
-                    jsonParam.put("is_admin_sender", message.isAdminSender() ? 1 : 0);
                     jsonParam.put("media_url", message.getMediaUrl());
 
                     OutputStream os = conn.getOutputStream();
@@ -114,7 +108,7 @@ public class ApiClient {
                                     jsonMessage.getInt("sender_id"),
                                     jsonMessage.getInt("receiver_id"),
                                     jsonMessage.getString("message"),
-                                    jsonMessage.getInt("is_admin_sender") == 1,
+                                    false,
                                     new Date(jsonMessage.getLong("created_at")),
                                     jsonMessage.getString("media_url")
                             ));
@@ -164,7 +158,7 @@ public class ApiClient {
                                 jsonMessage.getInt("sender_id"),
                                 jsonMessage.getInt("receiver_id"),
                                 jsonMessage.getString("message"),
-                                jsonMessage.getInt("is_admin_sender") == 1,
+                                false,
                                 new Date(jsonMessage.getLong("created_at")),
                                 jsonMessage.getString("media_url")
                         );
