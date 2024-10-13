@@ -12,9 +12,12 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +51,7 @@ public class ClaimedActivity extends AppCompatActivity {
         navChat = findViewById(R.id.nav_chat);
         navNotifications = findViewById(R.id.nav_notifications);
         navProfile = findViewById(R.id.nav_profile);
+
         claimedItemsRecyclerView = findViewById(R.id.claimedItemsRecyclerView);
     }
 
@@ -87,8 +91,13 @@ public class ClaimedActivity extends AppCompatActivity {
                             int id = item.optInt("id_item", -1);
                             String itemName = item.optString("item_name", "Unknown Item");
                             String location = item.optString("location_found", "Unknown Location");
+                            String img1Path = item.optString("img1", ""); // Fetching img1 path
 
-                            claimedItemsList.add(new ClaimedItem(id, itemName, location));
+                            // Build image URL
+                            String imageUrl = "http://10.0.2.2/lost_found_db/uploads/img_reported_items/" + img1Path;
+
+                            // Add item to the list with image URL
+                            claimedItemsList.add(new ClaimedItem(id, itemName, location, imageUrl));
                         }
                         claimedItemsAdapter.notifyDataSetChanged();
                     } catch (JSONException e) {

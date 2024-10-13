@@ -3,21 +3,26 @@ package com.example.kITa;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 public class ClaimedItemsAdapter extends RecyclerView.Adapter<ClaimedItemsAdapter.ViewHolder> {
-    private List<ClaimedItem> claimedItemsList;
+
+    private List<ClaimedItem> itemsList;
     private OnItemClickListener listener;
 
     public interface OnItemClickListener {
         void onItemClick(int itemId);
     }
 
-    public ClaimedItemsAdapter(List<ClaimedItem> claimedItemsList, OnItemClickListener listener) {
-        this.claimedItemsList = claimedItemsList;
+    public ClaimedItemsAdapter(List<ClaimedItem> itemsList, OnItemClickListener listener) {
+        this.itemsList = itemsList;
         this.listener = listener;
     }
 
@@ -30,31 +35,37 @@ public class ClaimedItemsAdapter extends RecyclerView.Adapter<ClaimedItemsAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ClaimedItem item = claimedItemsList.get(position);
-        holder.itemNameTextView.setText(item.getItemName());
-        holder.locationTextView.setText(item.getLocation());
+        ClaimedItem item = itemsList.get(position);
+        holder.itemName.setText(item.getItemName());
+        holder.itemLocation.setText(item.getLocation());
+
+        // Load img1 into ImageView using Glide
+        Glide.with(holder.itemImage.getContext())
+                .load(item.getImg1())  // Load imageUrl from ClaimedItem
+                .placeholder(R.drawable.ic_uploadphoto) // Placeholder image
+                .into(holder.itemImage);
+
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClick(item.getId());
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return claimedItemsList.size();
+        return itemsList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView itemNameTextView;
-        TextView locationTextView;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView itemImage;
+        TextView itemName, itemLocation;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            itemNameTextView = itemView.findViewById(R.id.itemName);
-            locationTextView = itemView.findViewById(R.id.location);
-
-            itemView.setOnClickListener(v -> {
-                int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION) {
-                    listener.onItemClick(claimedItemsList.get(position).getId());
-                }
-            });
+            itemImage = itemView.findViewById(R.id.itemImg);  // ImageView for img1
+            itemName = itemView.findViewById(R.id.itemName);
+            itemLocation = itemView.findViewById(R.id.location);
         }
     }
 }

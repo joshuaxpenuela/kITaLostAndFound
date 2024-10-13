@@ -16,6 +16,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -83,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
         todaySeeMore.setOnClickListener(v -> openMainActivity2(0));
         weekSeeMore.setOnClickListener(v -> openMainActivity2(1));
         olderSeeMore.setOnClickListener(v -> openMainActivity2(2));
-
     }
 
     private void openMainActivity2(int tabIndex) {
@@ -102,35 +102,22 @@ public class MainActivity extends AppCompatActivity {
         olderItemsList = new ArrayList<>();
 
         todayItemsAdapter = new TodayItemsAdapter(todayItemsList, this);
-        weekItemsAdapter = new OlderItemsAdapter(weekItemsList, this);
-        olderItemsAdapter = new OlderItemsAdapter(olderItemsList, this);
+        weekItemsAdapter = new OlderItemsAdapter(weekItemsList, this); // Pass context here
+        olderItemsAdapter = new OlderItemsAdapter(olderItemsList, this); // Pass context here
 
         todayItemsRecyclerView.setAdapter(todayItemsAdapter);
         weekItemsRecyclerView.setAdapter(weekItemsAdapter);
         olderItemsRecyclerView.setAdapter(olderItemsAdapter);
 
-        todayItemsAdapter.setOnItemClickListener(item -> {
-            Log.d("MainActivity", "Today item clicked: " + item.getId());
-            startUnclaimedActivity(item.getId());
-        });
-
-        weekItemsAdapter.setOnItemClickListener(item -> {
-            Log.d("MainActivity", "Week item clicked: " + item.getId());
-            startUnclaimedActivity(item.getId());
-        });
-
-        olderItemsAdapter.setOnItemClickListener(item -> {
-            Log.d("MainActivity", "Older item clicked: " + item.getId());
-            startUnclaimedActivity(item.getId());
-        });
+        todayItemsAdapter.setOnItemClickListener(item -> startUnclaimedActivity(item.getId()));
+        weekItemsAdapter.setOnItemClickListener(item -> startUnclaimedActivity(item.getId()));
+        olderItemsAdapter.setOnItemClickListener(item -> startUnclaimedActivity(item.getId()));
     }
-
 
     private void startUnclaimedActivity(int itemId) {
         Intent intent = new Intent(MainActivity.this, UnclaimedActivity.class);
         intent.putExtra("item_id", itemId);
         startActivity(intent);
-        Log.d("MainActivity", "Starting UnclaimedActivity with item_id: " + itemId);
     }
 
     private void fetchItems() {
@@ -147,19 +134,22 @@ public class MainActivity extends AppCompatActivity {
                                 int id = item.getInt("id_item");
                                 String itemName = item.getString("item_name");
                                 String location = item.getString("location_found");
-                                String img1 = item.getString("img1");
+                                String img1Path = item.getString("img1");
                                 String date = item.getString("date");
                                 String time = item.getString("time");
                                 String category = item.getString("category");
                                 String status = item.getString("status");
 
+                                // Properly fetch the image from the uploads directory
+                                String imageUrl = "http://10.0.2.2/lost_found_db/uploads/img_reported_items/" + img1Path;
+
                                 if (status.equals("Unclaimed")) {
                                     if (category.equals("today")) {
-                                        todayItemsList.add(new TodayItem(id, img1, itemName, location, date, time, status));
+                                        todayItemsList.add(new TodayItem(id, imageUrl, itemName, location, date, time, status));
                                     } else if (category.equals("week")) {
-                                        weekItemsList.add(new OlderItem(id, img1, itemName, location, date, time, status));
+                                        weekItemsList.add(new OlderItem(id, imageUrl, itemName, location, date, time, status));
                                     } else if (category.equals("older")) {
-                                        olderItemsList.add(new OlderItem(id, img1, itemName, location, date, time, status));
+                                        olderItemsList.add(new OlderItem(id, imageUrl, itemName, location, date, time, status));
                                     }
                                 }
                             }

@@ -29,7 +29,6 @@ public class ItemsPagerAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-
         return 3; // We have 3 tabs
     }
 }

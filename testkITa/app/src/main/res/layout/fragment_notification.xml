@@ -110,7 +110,7 @@
                 android:layout_weight="1"
                 android:padding="8dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_notification"
+                android:src="@drawable/notifications"
                 android:background="@color/white"
                 android:contentDescription="notifIcon"
                 app:tint="@color/green"/>

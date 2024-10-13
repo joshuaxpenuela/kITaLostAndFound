@@ -3,6 +3,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="green">#1F7A23</color>
     <color name="lightgreen">#D1FFBD</color>
+    <color name="red">#FF0000</color>
     <color name="colorBottomNavigationSelected">#1F7A23</color>
     <!--  Green color  -->
 </resources>

@@ -191,7 +191,7 @@
             android:src="@drawable/ic_addphoto" />
 
         <TextView
-            android:id="@+id/DescriptionText"
+            android:id="@+id/DescriptionTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/proofOfID"
@@ -203,16 +203,17 @@
             android:textStyle="bold" />
 
         <EditText
+            android:id="@+id/DescriptionText"
             android:layout_width="400dp"
             android:layout_height="100dp"
-            android:layout_below="@id/DescriptionText"
+            android:layout_below="@id/DescriptionTitle"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
             android:background="@drawable/text_input_bg"
-            android:hint="E.g. Marks, Unique description of the item, etc"
+            android:hint="Marks, Unique description of the item, Other evidence of ownership"
             android:inputType="textMultiLine"
             android:padding="10dp"
             android:textAlignment="textStart"

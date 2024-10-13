@@ -1,8 +1,6 @@
 package com.example.kITa;
 
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 public class TodayItemsAdapter extends RecyclerView.Adapter<TodayItemsAdapter.ViewHolder> {
@@ -43,15 +42,18 @@ public class TodayItemsAdapter extends RecyclerView.Adapter<TodayItemsAdapter.Vi
         TodayItem item = itemsList.get(position);
         holder.itemName.setText(item.getItemName());
         holder.itemLocation.setText(item.getItemLocation());
-        holder.itemImage.setImageResource(R.drawable.ic_uploadphoto);
+
+        // Use Glide to load the image into the ImageView
+        Glide.with(context)
+                .load(item.getImageUrl())
+                .placeholder(R.drawable.ic_uploadphoto)  // Add a placeholder image
+                .into(holder.itemImage);  // Use itemImg for ImageView
 
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onItemClick(item);
             }
         });
-
-        Log.d("TodayItemsAdapter", "Binding item: " + item.getItemName() + " - " + item.getDate() + " " + item.getTime() + " - Status: " + item.getStatus());
     }
 
     @Override
@@ -61,15 +63,13 @@ public class TodayItemsAdapter extends RecyclerView.Adapter<TodayItemsAdapter.Vi
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView itemImage;
-        TextView itemName, itemLocation, time;
+        TextView itemName, itemLocation;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            itemImage = itemView.findViewById(R.id.itemImg);
+            itemImage = itemView.findViewById(R.id.itemImg);  // Bind the correct ImageView
             itemName = itemView.findViewById(R.id.itemName);
             itemLocation = itemView.findViewById(R.id.location);
-            time = itemView.findViewById(R.id.time);
         }
     }
 }
-

@@ -5,35 +5,37 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.denzcoskun.imageslider.ImageSlider;
+import com.denzcoskun.imageslider.constants.ScaleTypes;
+import com.denzcoskun.imageslider.models.SlideModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
 public class UnclaimedActivity extends AppCompatActivity {
 
     private ImageButton guideIcon, searchIcon, navLost, navFound, navChat, navNotifications, navProfile;
+    private ImageSlider imageSlider;
+    private TextView itemNameText, statusText, locationText, dateText, timeText, itemCategoryText, otherDetailsText, reportedByText;
+    private Button claimItemBtn;
 
     private static final String TAG = "UnclaimedActivity";
     private static final String URL = "http://10.0.2.2/lost_found_db/get_items_details.php";
-
-    private ImageView itemImage;
-    private TextView itemNameText, statusText, locationText, dateText, timeText, itemCategoryText, otherDetailsText, reportedByText;
-    private Button claimItemBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +47,7 @@ public class UnclaimedActivity extends AppCompatActivity {
         setupClickListeners();
 
         int itemId = getIntent().getIntExtra("item_id", -1);
-        Log.d("UnclaimedActivity", "Received item_id: " + itemId);
+        Log.d(TAG, "Received item_id: " + itemId);
 
         if (itemId != -1) {
             fetchItemDetails(itemId);
@@ -56,7 +58,6 @@ public class UnclaimedActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-
         guideIcon = findViewById(R.id.guide_icon);
         searchIcon = findViewById(R.id.search_icon);
         navLost = findViewById(R.id.nav_lost);
@@ -65,6 +66,7 @@ public class UnclaimedActivity extends AppCompatActivity {
         navNotifications = findViewById(R.id.nav_notifications);
         navProfile = findViewById(R.id.nav_profile);
 
+        imageSlider = findViewById(R.id.unclaimedItemImgSlide);
         itemNameText = findViewById(R.id.itemName);
         statusText = findViewById(R.id.status);
         locationText = findViewById(R.id.location);
@@ -72,12 +74,17 @@ public class UnclaimedActivity extends AppCompatActivity {
         timeText = findViewById(R.id.time);
         itemCategoryText = findViewById(R.id.itemCategory);
         otherDetailsText = findViewById(R.id.otherDetails);
-        reportedByText = findViewById(R.id.Fname); // Assuming we'll concatenate first and last name
+        reportedByText = findViewById(R.id.Fname);
         claimItemBtn = findViewById(R.id.claimItemBtn);
-
         claimItemBtn.setOnClickListener(v -> {
-            // TODO: Implement claim item functionality
-            Toast.makeText(this, "Claim functionality not implemented yet", Toast.LENGTH_SHORT).show();
+            int itemId = getIntent().getIntExtra("item_id", -1);
+            if (itemId != -1) {
+                Intent intent = new Intent(UnclaimedActivity.this, ClaimingItemActivity.class);
+                intent.putExtra("item_id", itemId);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "Error: Item not found", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
@@ -92,18 +99,16 @@ public class UnclaimedActivity extends AppCompatActivity {
     }
 
     private void fetchItemDetails(int itemId) {
-        Log.d("UnclaimedActivity", "Fetching details for item_id: " + itemId);
+        Log.d(TAG, "Fetching details for item_id: " + itemId);
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String url = URL + "?id_item=" + itemId; // Corrected URL
-        Log.d("UnclaimedActivity", "Request URL: " + url);
+        String url = URL + "?id_item=" + itemId;
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
-                    Log.d("UnclaimedActivity", "Received response: " + response.toString());
                     try {
                         if (response.has("error")) {
-                            Log.e("UnclaimedActivity", "Error in response: " + response.getString("error"));
-                            Toast.makeText(UnclaimedActivity.this, "Error fetching data: " + response.getString("error"), Toast.LENGTH_SHORT).show();
+                            Log.e(TAG, "Error in response: " + response.getString("error"));
+                            Toast.makeText(UnclaimedActivity.this, "Error fetching data", Toast.LENGTH_SHORT).show();
                         } else {
                             displayItemDetails(response);
                         }
@@ -113,18 +118,11 @@ public class UnclaimedActivity extends AppCompatActivity {
                     }
                 },
                 error -> {
-                    Log.e("UnclaimedActivity", "Error fetching data: " + error.toString());
+                    Log.e(TAG, "Error fetching data: " + error.toString());
                     Toast.makeText(UnclaimedActivity.this, "Error fetching data", Toast.LENGTH_SHORT).show();
                 });
 
         requestQueue.add(request);
-    }
-
-    // In SearchActivity.java
-    private void onSearchItemClick(SearchItem item) {
-        Intent intent = new Intent(this, UnclaimedActivity.class);
-        intent.putExtra("item_id", item.getId());
-        startActivity(intent);
     }
 
     private void displayItemDetails(JSONObject item) throws JSONException {
@@ -133,29 +131,45 @@ public class UnclaimedActivity extends AppCompatActivity {
         locationText.setText(item.getString("location_found"));
         dateText.setText(item.getString("date"));
 
-        // Get the time from the response and convert it to 12-hour format
-        String time24Format = item.getString("time");
-        String time12Format = convertTimeTo12HourFormat(time24Format); // Call helper method
-        timeText.setText(time12Format); // Display the converted time
+        // Convert time to 12-hour format before displaying it
+        String time = item.getString("time");
+        String formattedTime = convertTimeTo12HourFormat(time);
+        timeText.setText(formattedTime);
 
         itemCategoryText.setText(item.getString("item_category"));
         otherDetailsText.setText(item.getString("other_details"));
         reportedByText.setText(item.getString("Fname") + " " + item.getString("Lname"));
-    }
 
-    private String convertTimeTo12HourFormat(String time24) {
-        try {
-            // Define 24-hour and 12-hour format patterns
-            SimpleDateFormat inputFormat = new SimpleDateFormat("HH:mm");
-            SimpleDateFormat outputFormat = new SimpleDateFormat("hh:mm a");
-
-            // Parse the 24-hour time and convert to 12-hour format
-            Date date = inputFormat.parse(time24);
-            return outputFormat.format(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return time24; // Return original time if parsing fails
+        // Dynamically populate ImageSlider and use CENTER_INSIDE or CENTER_CROP to avoid stretching
+        List<SlideModel> slideModels = new ArrayList<>();
+        if (!item.isNull("img1") && !item.getString("img1").isEmpty()) {
+            slideModels.add(new SlideModel("http://10.0.2.2/lost_found_db/uploads/img_reported_items/" + item.getString("img1"), ScaleTypes.CENTER_INSIDE));
+        }
+        if (!item.isNull("img2") && !item.getString("img2").isEmpty()) {
+            slideModels.add(new SlideModel("http://10.0.2.2/lost_found_db/uploads/img_reported_items/" + item.getString("img2"), ScaleTypes.CENTER_INSIDE));
+        }
+        if (!item.isNull("img3") && !item.getString("img3").isEmpty()) {
+            slideModels.add(new SlideModel("http://10.0.2.2/lost_found_db/uploads/img_reported_items/" + item.getString("img3"), ScaleTypes.CENTER_INSIDE));
+        }
+        if (!item.isNull("img4") && !item.getString("img4").isEmpty()) {
+            slideModels.add(new SlideModel("http://10.0.2.2/lost_found_db/uploads/img_reported_items/" + item.getString("img4"), ScaleTypes.CENTER_INSIDE));
+        }
+        if (!item.isNull("img5") && !item.getString("img5").isEmpty()) {
+            slideModels.add(new SlideModel("http://10.0.2.2/lost_found_db/uploads/img_reported_items/" + item.getString("img5"), ScaleTypes.CENTER_INSIDE));
         }
 
+        imageSlider.setImageList(slideModels, ScaleTypes.CENTER_INSIDE);
+    }
+
+    // Method to convert time from 24-hour to 12-hour format
+    private String convertTimeTo12HourFormat(String time) {
+        try {
+            SimpleDateFormat inputFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+            SimpleDateFormat outputFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+            return outputFormat.format(inputFormat.parse(time));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return time; // Return original time in case of error
+        }
     }
 }

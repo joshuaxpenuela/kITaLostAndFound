@@ -8,12 +8,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide; // Ensure Glide is imported
 import java.util.ArrayList;
 
 public class WeekItemsAdapter extends RecyclerView.Adapter<WeekItemsAdapter.ViewHolder> {
 
     private ArrayList<OlderItem> itemsList;
-    private Context context;
+    private Context context; // Context to use with Glide
     private OnItemClickListener listener;
 
     public interface OnItemClickListener {
@@ -24,14 +25,16 @@ public class WeekItemsAdapter extends RecyclerView.Adapter<WeekItemsAdapter.View
         this.listener = listener;
     }
 
+    // Updated constructor to accept Context
     public WeekItemsAdapter(ArrayList<OlderItem> itemsList, Context context) {
         this.itemsList = itemsList;
-        this.context = context;
+        this.context = context; // Store context for later use
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // Inflate the layout for the item
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_weekitems, parent, false);
         return new ViewHolder(view);
     }
@@ -40,27 +43,30 @@ public class WeekItemsAdapter extends RecyclerView.Adapter<WeekItemsAdapter.View
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         OlderItem item = itemsList.get(position);
 
-        if (holder.itemName != null) {
+        // Check if item is not null before setting details
+        if (item != null) {
             holder.itemName.setText(item.getItemName());
-        }
-        if (holder.itemLocation != null) {
             holder.itemLocation.setText(item.getItemLocation());
-        }
-        if (holder.itemDate != null) {
-            holder.itemDate.setText(item.getDate());
-        }
-        if (holder.itemTime != null) {
-            holder.itemTime.setText(item.getTime());
-        }
-        if (holder.itemImage != null) {
-            holder.itemImage.setImageResource(R.drawable.ic_uploadphoto);
-        }
 
-        holder.itemView.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onItemClick(item);
-            }
-        });
+            // Load the image using Glide
+            Glide.with(context)
+                    .load(item.getImageUrl()) // Get image URL from the item
+                    .placeholder(R.drawable.ic_uploadphoto) // Placeholder image
+                    .into(holder.itemImage); // Load into ImageView
+
+            holder.itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onItemClick(item);
+                }
+            });
+        } else {
+            // Handle case when item is null
+            holder.itemName.setText("Unknown Item");
+            holder.itemLocation.setText("Unknown Location");
+            holder.itemDate.setText("N/A");
+            holder.itemTime.setText("N/A");
+            holder.itemImage.setImageResource(R.drawable.ic_uploadphoto); // Set placeholder image
+        }
     }
 
     @Override
@@ -74,11 +80,11 @@ public class WeekItemsAdapter extends RecyclerView.Adapter<WeekItemsAdapter.View
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            itemImage = itemView.findViewById(R.id.itemImg);
-            itemName = itemView.findViewById(R.id.itemName);
-            itemLocation = itemView.findViewById(R.id.location);
-            itemDate = itemView.findViewById(R.id.date);
-            itemTime = itemView.findViewById(R.id.time);
+            itemImage = itemView.findViewById(R.id.itemImg); // Ensure this matches your layout
+            itemName = itemView.findViewById(R.id.itemName); // Ensure this matches your layout
+            itemLocation = itemView.findViewById(R.id.location); // Ensure this matches your layout
+            itemDate = itemView.findViewById(R.id.date); // Ensure this matches your layout
+            itemTime = itemView.findViewById(R.id.time); // Ensure this matches your layout
         }
     }
 }

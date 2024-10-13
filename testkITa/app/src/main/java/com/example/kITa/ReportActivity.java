@@ -1,14 +1,11 @@
 package com.example.kITa;
 
-import static android.opengl.ETC1.encodeImage;
-
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -20,14 +17,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -35,7 +34,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -46,18 +46,15 @@ public class ReportActivity extends AppCompatActivity {
 
     private EditText firstName, lastName, email, contactNo, itemName, location, date, time, otherDetails;
     private Spinner department, itemCategory;
+    private ImageButton guideIcon, searchIcon, navLost, navFound, navChat, navNotifications, navProfile;
+    private Calendar calendar;
     private ImageButton img1, img2, img3, img4, img5;
     private Button submitButton, cancelButton;
-    private ImageButton guideIcon, searchIcon, navLost, navFound, navChat, navNotifications, navProfile;
+    private ImageButton selectedImageButton;
 
-    private Calendar calendar;
     private DatePickerDialog datePickerDialog;
     private TimePickerDialog timePickerDialog;
-
-    private static final int PICK_IMAGE_REQUEST = 1;
-    private ImageButton[] imageButtons;
-    private String[] encodedImages;
-    private int currentImageIndex;
+    private Map<String, String> encodedImages = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +62,34 @@ public class ReportActivity extends AppCompatActivity {
         setContentView(R.layout.fragment_reporting);
 
         // Initialize form elements
+        initializeUIComponents();
+        setupDateTimePickers();
+        setupNavigation();
+
+        // Set onClickListeners for ImageButtons to open image picker
+        setImagePicker(img1, "img1");
+        setImagePicker(img2, "img2");
+        setImagePicker(img3, "img3");
+        setImagePicker(img4, "img4");
+        setImagePicker(img5, "img5");
+
+        // Set onClickListeners for form buttons
+        submitButton.setOnClickListener(v -> submitReport());
+        cancelButton.setOnClickListener(v -> finish());
+    }
+
+    private void setupNavigation() {
+        // Set onClickListeners for navigation buttons
+        guideIcon.setOnClickListener(v -> startActivity(new Intent(ReportActivity.this, GuidelinesActivity.class)));
+        searchIcon.setOnClickListener(v -> startActivity(new Intent(ReportActivity.this, SearchActivity.class)));
+        navLost.setOnClickListener(v -> startActivity(new Intent(ReportActivity.this, MainActivity.class)));
+        navFound.setOnClickListener(v -> startActivity(new Intent(ReportActivity.this, ClaimedActivity.class)));
+        navChat.setOnClickListener(v -> startActivity(new Intent(ReportActivity.this, ChatActivity.class)));
+        navNotifications.setOnClickListener(v -> startActivity(new Intent(ReportActivity.this, NotificationActivity.class)));
+        navProfile.setOnClickListener(v -> startActivity(new Intent(ReportActivity.this, ProfileActivity.class)));
+    }
+
+    private void initializeUIComponents() {
         firstName = findViewById(R.id.firstName);
         lastName = findViewById(R.id.lastName);
         email = findViewById(R.id.email);
@@ -83,18 +108,7 @@ public class ReportActivity extends AppCompatActivity {
         img5 = findViewById(R.id.img5);
         submitButton = findViewById(R.id.SubmitReport);
         cancelButton = findViewById(R.id.cancelReport);
-        imageButtons = new ImageButton[]{img1, img2, img3, img4, img5};
-        encodedImages = new String[5];
 
-        for (int i = 0; i < imageButtons.length; i++) {
-            final int index = i;
-            imageButtons[i].setOnClickListener(v -> {
-                currentImageIndex = index;
-                openGallery();
-            });
-        }
-
-        // Initialize navigation elements
         guideIcon = findViewById(R.id.guide_icon);
         searchIcon = findViewById(R.id.search_icon);
         navLost = findViewById(R.id.nav_lost);
@@ -102,128 +116,148 @@ public class ReportActivity extends AppCompatActivity {
         navChat = findViewById(R.id.nav_chat);
         navNotifications = findViewById(R.id.nav_notifications);
         navProfile = findViewById(R.id.nav_profile);
-
-        // Set up date picker dialog
-        calendar = Calendar.getInstance();
-        datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                String myFormat = "yyyy-MM-dd";
-                SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-                date.setText(sdf.format(calendar.getTime()));
-            }
-        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-
-        date.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                datePickerDialog.show();
-            }
-        });
-
-        // Set up time picker dialog
-        timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(android.widget.TimePicker view, int hourOfDay, int minute) {
-                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                calendar.set(Calendar.MINUTE, minute);
-
-                String myFormat = "hh:mm a"; // 12-hour format with AM/PM
-                SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-                time.setText(sdf.format(calendar.getTime()));
-            }
-        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false); // Set is24HourView to false
-
-        time.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                timePickerDialog.show();
-            }
-        });
-
-        // Set onClickListeners for form buttons
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                submitReport();
-            }
-        });
-
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish(); // Optionally close the activity
-            }
-        });
-
-        // Set onClickListeners for navigation buttons
-        guideIcon.setOnClickListener(v -> {
-            Intent intent = new Intent(ReportActivity.this, GuidelinesActivity.class);
-            startActivity(intent);
-        });
-
-        searchIcon.setOnClickListener(v -> {
-            Intent intent = new Intent(ReportActivity.this, SearchActivity.class);
-            startActivity(intent);
-        });
-
-        navLost.setOnClickListener(v -> {
-            Intent intent = new Intent(ReportActivity.this, MainActivity.class);
-            startActivity(intent);
-        });
-
-        navFound.setOnClickListener(v -> {
-            Intent intent = new Intent(ReportActivity.this, ClaimedActivity.class);
-            startActivity(intent);
-        });
-
-        navChat.setOnClickListener(v -> {
-            Intent intent = new Intent(ReportActivity.this, ChatActivity.class);
-            startActivity(intent);
-        });
-
-        navNotifications.setOnClickListener(v -> {
-            Intent intent = new Intent(ReportActivity.this, NotificationActivity.class);
-            startActivity(intent);
-        });
-
-        navProfile.setOnClickListener(v -> {
-            Intent intent = new Intent(ReportActivity.this, ProfileActivity.class);
-            startActivity(intent);
-        });
     }
 
-    private void openGallery() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    private void setupDateTimePickers() {
+        calendar = Calendar.getInstance();
+
+        // Date Picker
+        datePickerDialog = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            date.setText(new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(calendar.getTime()));
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+
+        date.setOnClickListener(v -> datePickerDialog.show());
+
+        // Time Picker
+        timePickerDialog = new TimePickerDialog(this, (view, hourOfDay, minute) -> {
+            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            calendar.set(Calendar.MINUTE, minute);
+            time.setText(new SimpleDateFormat("hh:mm a", Locale.US).format(calendar.getTime()));
+        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
+
+        time.setOnClickListener(v -> timePickerDialog.show());
+    }
+
+    private void setImagePicker(ImageButton imageButton, String imageKey) {
+        imageButton.setOnClickListener(v -> {
+            selectedImageButton = imageButton;  // Keep track of the selected button
+            Intent intent = new Intent(Intent.ACTION_PICK);
+            intent.setType("image/*");
+            startActivityForResult(intent, 1); // Use 1 as a request code for all image selections
+        });
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+        if (resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri imageUri = data.getData();
             try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-                imageButtons[currentImageIndex].setImageBitmap(bitmap);
-                encodedImages[currentImageIndex] = encodeImage(bitmap);
-            } catch (IOException e) {
+                InputStream inputStream = getContentResolver().openInputStream(imageUri);
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                String encodedImage = encodeImage(bitmap);
+
+                // Load image and store encoded string based on the selected ImageButton
+                Glide.with(this).load(bitmap).into(selectedImageButton);
+                if (selectedImageButton == img1) encodedImages.put("img1", encodedImage);
+                else if (selectedImageButton == img2) encodedImages.put("img2", encodedImage);
+                else if (selectedImageButton == img3) encodedImages.put("img3", encodedImage);
+                else if (selectedImageButton == img4) encodedImages.put("img4", encodedImage);
+                else if (selectedImageButton == img5) encodedImages.put("img5", encodedImage);
+
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
     private String encodeImage(Bitmap bitmap) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] imageBytes = baos.toByteArray();
-        return Base64.encodeToString(imageBytes, Base64.DEFAULT);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+        return Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
+    }
+
+    private void submitReport() {
+        if (validateInputFields() && encodedImages.size() >= 3) {
+            String url = "http://10.0.2.2/lost_found_db/submit_report.php";
+
+            VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, url,
+                    response -> {
+                        try {
+                            String responseString = new String(response.data, StandardCharsets.UTF_8);
+                            JSONObject jsonResponse = new JSONObject(responseString);
+
+                            if (jsonResponse.getBoolean("success")) {
+                                Toast.makeText(ReportActivity.this, "Report submitted successfully", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(ReportActivity.this, MainActivity.class));
+                                finish();
+                            } else {
+                                String errorMessage = jsonResponse.getString("message");
+                                Toast.makeText(ReportActivity.this, "Error: " + errorMessage, Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(ReportActivity.this, "Error parsing response", Toast.LENGTH_SHORT).show();
+                        }
+                    },
+                    error -> {
+                        String errorMessage = error.getMessage();
+                        if (error.networkResponse != null && error.networkResponse.data != null) {
+                            try {
+                                String responseString = new String(error.networkResponse.data, StandardCharsets.UTF_8);
+                                Toast.makeText(ReportActivity.this, "Error: " + responseString, Toast.LENGTH_LONG).show();
+                            } catch (Exception e) {
+                                Toast.makeText(ReportActivity.this, "Error: " + errorMessage, Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            Toast.makeText(ReportActivity.this, "Network Error: " + errorMessage, Toast.LENGTH_LONG).show();
+                        }
+                    }
+            ) {
+                @Override
+                protected Map<String, String> getStringParams() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("Fname", firstName.getText().toString().trim());
+                    params.put("Lname", lastName.getText().toString().trim());
+                    params.put("email", email.getText().toString().trim());
+                    params.put("contact_no", contactNo.getText().toString().trim());
+                    params.put("dept_college", department.getSelectedItem().toString());
+                    params.put("item_name", itemName.getText().toString().trim());
+                    params.put("item_category", itemCategory.getSelectedItem().toString());
+                    params.put("location_found", location.getText().toString().trim());
+                    params.put("date", date.getText().toString().trim());
+                    params.put("time", convertTo24HourFormat(time.getText().toString().trim()));
+                    params.put("other_details", otherDetails.getText().toString().trim());
+                    return params;
+                }
+
+                @Override
+                public Map<String, DataPart> getByteData() {
+                    Map<String, DataPart> params = new HashMap<>();
+                    for (Map.Entry<String, String> entry : encodedImages.entrySet()) {
+                        byte[] imageBytes = Base64.decode(entry.getValue(), Base64.DEFAULT);
+                        params.put(entry.getKey(), new DataPart(entry.getKey() + ".jpg", imageBytes, "image/jpeg"));
+                    }
+                    return params;
+                }
+            };
+
+            // Add retry policy
+            multipartRequest.setRetryPolicy(new DefaultRetryPolicy(
+                    60000, // 60 seconds timeout
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+            // Add request to queue
+            RequestQueue queue = Volley.newRequestQueue(this);
+            queue.add(multipartRequest);
+        } else {
+            Toast.makeText(this, "Please fill all required fields and upload at least 3 images", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private boolean validateInputFields() {
@@ -233,12 +267,10 @@ public class ReportActivity extends AppCompatActivity {
             firstName.setError("First name is required");
             isValid = false;
         }
-
         if (lastName.getText().toString().trim().isEmpty()) {
             lastName.setError("Last name is required");
             isValid = false;
         }
-
         if (email.getText().toString().trim().isEmpty()) {
             email.setError("Email is required");
             isValid = false;
@@ -246,7 +278,6 @@ public class ReportActivity extends AppCompatActivity {
             email.setError("Invalid email format");
             isValid = false;
         }
-
         if (contactNo.getText().toString().trim().isEmpty()) {
             contactNo.setError("Contact number is required");
             isValid = false;
@@ -254,107 +285,42 @@ public class ReportActivity extends AppCompatActivity {
             contactNo.setError("Invalid phone number format");
             isValid = false;
         }
-
         if (department.getSelectedItemPosition() == 0) {
             Toast.makeText(this, "Please select a department", Toast.LENGTH_SHORT).show();
             isValid = false;
         }
-
         if (itemName.getText().toString().trim().isEmpty()) {
             itemName.setError("Item name is required");
             isValid = false;
         }
-
         if (itemCategory.getSelectedItemPosition() == 0) {
             Toast.makeText(this, "Please select an item category", Toast.LENGTH_SHORT).show();
             isValid = false;
         }
-
         if (location.getText().toString().trim().isEmpty()) {
             location.setError("Location is required");
             isValid = false;
         }
-
         if (date.getText().toString().trim().isEmpty()) {
             date.setError("Date is required");
             isValid = false;
         }
-
         if (time.getText().toString().trim().isEmpty()) {
             time.setError("Time is required");
             isValid = false;
         }
 
-        int uploadedImages = 0;
-        for (String encodedImage : encodedImages) {
-            if (encodedImage != null && !encodedImage.isEmpty()) {
-                uploadedImages++;
-            }
-        }
-
-        if (uploadedImages < 3) {
-            Toast.makeText(this, "Please upload at least 3 images", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        return true;
+        return isValid;
     }
 
     private boolean isValidEmail(String email) {
-        // Use a regular expression to validate the email format
         String emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
         return email.matches(emailRegex);
     }
 
     private boolean isValidPhone(String phone) {
-        // Use a regular expression to validate the phone number format
         String phoneRegex = "^\\+?[0-9]{10,13}$";
         return phone.matches(phoneRegex);
-    }
-
-    private void submitReport() {
-        if (validateInputFields()) {
-            String url = "http://10.0.2.2/lost_found_db/submit_report.php";
-
-            JSONObject jsonBody = new JSONObject();
-            try {
-                jsonBody.put("Fname", firstName.getText().toString().trim());
-                jsonBody.put("Lname", lastName.getText().toString().trim());
-                jsonBody.put("email", email.getText().toString().trim());
-                jsonBody.put("contact_no", contactNo.getText().toString().trim());
-                jsonBody.put("dept_college", department.getSelectedItem().toString());
-                jsonBody.put("item_name", itemName.getText().toString().trim());
-                jsonBody.put("item_category", itemCategory.getSelectedItem().toString().trim());
-                jsonBody.put("location_found", location.getText().toString().trim());
-                jsonBody.put("date", date.getText().toString().trim());
-                jsonBody.put("time", convertTo24HourFormat(time.getText().toString().trim()));
-                jsonBody.put("other_details", otherDetails.getText().toString().trim());
-
-                for (int i = 0; i < encodedImages.length; i++) {
-                    if (encodedImages[i] != null && !encodedImages[i].isEmpty()) {
-                        jsonBody.put("img" + (i + 1), encodedImages[i]);
-                    }
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonBody,
-                    response -> {
-                        Log.d("ReportActivity", "Response: " + response.toString());
-                        Toast.makeText(ReportActivity.this, "Reporting Successful", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(ReportActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
-                    },
-                    error -> {
-                        Log.e("ReportActivity", "Error: " + error.toString());
-                        Toast.makeText(ReportActivity.this, "Error Reporting Item: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                    });
-
-            RequestQueue queue = Volley.newRequestQueue(this);
-            queue.add(jsonObjectRequest);
-        }
     }
 
     private String convertTo24HourFormat(String time12Hour) {
@@ -364,7 +330,7 @@ public class ReportActivity extends AppCompatActivity {
             return sdf24.format(sdf12.parse(time12Hour));
         } catch (Exception e) {
             e.printStackTrace();
-            return time12Hour; // Return original string if parsing fails
+            return time12Hour;
         }
     }
 }

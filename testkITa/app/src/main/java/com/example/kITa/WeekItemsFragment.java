@@ -49,7 +49,7 @@ public class WeekItemsFragment extends Fragment {
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         itemsList = new ArrayList<>();
-        adapter = new WeekItemsAdapter(itemsList, getContext());
+        adapter = new WeekItemsAdapter(itemsList, getContext()); // Pass context here
         recyclerView.setAdapter(adapter);
 
         adapter.setOnItemClickListener(item -> {
@@ -67,6 +67,7 @@ public class WeekItemsFragment extends Fragment {
                     @Override
                     public void onResponse(JSONArray response) {
                         try {
+                            itemsList.clear(); // Clear the list before adding new items
                             for (int i = 0; i < response.length(); i++) {
                                 JSONObject item = response.getJSONObject(i);
                                 String category = item.getString("category");
@@ -75,15 +76,19 @@ public class WeekItemsFragment extends Fragment {
                                     int id = item.getInt("id_item");
                                     String itemName = item.getString("item_name");
                                     String location = item.getString("location_found");
-                                    String img1 = item.getString("img1");
+                                    String img1Path = item.getString("img1");
                                     String date = item.getString("date");
                                     String time = item.getString("time");
                                     String status = item.getString("status");
 
-                                    itemsList.add(new OlderItem(id, img1, itemName, location, date, time, status));
+                                    // Properly construct the image URL
+                                    String imageUrl = "http://10.0.2.2/lost_found_db/uploads/img_reported_items/" + img1Path;
+
+                                    // Add the item to the list
+                                    itemsList.add(new OlderItem(id, imageUrl, itemName, location, date, time, status));
                                 }
                             }
-                            adapter.notifyDataSetChanged();
+                            adapter.notifyDataSetChanged(); // Notify the adapter about data changes
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Toast.makeText(getContext(), "Error parsing data", Toast.LENGTH_SHORT).show();

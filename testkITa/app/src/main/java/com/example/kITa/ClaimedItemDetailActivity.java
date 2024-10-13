@@ -11,18 +11,24 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.denzcoskun.imageslider.ImageSlider;
+import com.denzcoskun.imageslider.constants.ScaleTypes;
+import com.denzcoskun.imageslider.models.SlideModel;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class ClaimedItemDetailActivity extends AppCompatActivity {
 
     private ImageButton guideIcon, searchIcon, navLost, navFound, navChat, navNotifications, navProfile;
-    private TextView itemNameText, statusText, locationText, dateText, timeText, itemCategoryText, otherDetailsText, reportedByText;
-    private TextView claimaintNameText, claimDateText, claimTimeText;
+    private ImageSlider imageSlider;
+    private TextView itemNameText, statusText, locationText, dateText, timeText, itemCategoryText, otherDetailsText, reportedByText, claimaintNameText, claimDateText, claimTimeText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +56,7 @@ public class ClaimedItemDetailActivity extends AppCompatActivity {
         navNotifications = findViewById(R.id.nav_notifications);
         navProfile = findViewById(R.id.nav_profile);
 
+        imageSlider = findViewById(R.id.claimedItemImgSlide); // Initialize ImageSlider
         itemNameText = findViewById(R.id.itemName);
         statusText = findViewById(R.id.status);
         locationText = findViewById(R.id.location);
@@ -115,6 +122,27 @@ public class ClaimedItemDetailActivity extends AppCompatActivity {
                 time24Format = item.getString("claim_time");
                 time12Format = convertTimeTo12HourFormat(time24Format);
                 claimTimeText.setText(time12Format);
+
+                // Populate ImageSlider with available images only (no broken images)
+                List<SlideModel> slideModels = new ArrayList<>();
+                if (!item.isNull("img1") && !item.getString("img1").isEmpty()) {
+                    slideModels.add(new SlideModel("http://10.0.2.2/lost_found_db/uploads/img_reported_items/" + item.getString("img1"), ScaleTypes.CENTER_INSIDE));
+                }
+                if (!item.isNull("img2") && !item.getString("img2").isEmpty()) {
+                    slideModels.add(new SlideModel("http://10.0.2.2/lost_found_db/uploads/img_reported_items/" + item.getString("img2"), ScaleTypes.CENTER_INSIDE));
+                }
+                if (!item.isNull("img3") && !item.getString("img3").isEmpty()) {
+                    slideModels.add(new SlideModel("http://10.0.2.2/lost_found_db/uploads/img_reported_items/" + item.getString("img3"), ScaleTypes.CENTER_INSIDE));
+                }
+                if (!item.isNull("img4") && !item.getString("img4").isEmpty()) {
+                    slideModels.add(new SlideModel("http://10.0.2.2/lost_found_db/uploads/img_reported_items/" + item.getString("img4"), ScaleTypes.CENTER_INSIDE));
+                }
+                if (!item.isNull("img5") && !item.getString("img5").isEmpty()) {
+                    slideModels.add(new SlideModel("http://10.0.2.2/lost_found_db/uploads/img_reported_items/" + item.getString("img5"), ScaleTypes.CENTER_INSIDE));
+                }
+
+                imageSlider.setImageList(slideModels);
+
             } catch (JSONException e) {
                 e.printStackTrace();
                 Toast.makeText(this, "Error displaying item details", Toast.LENGTH_SHORT).show();
@@ -124,10 +152,9 @@ public class ClaimedItemDetailActivity extends AppCompatActivity {
 
     private String convertTimeTo12HourFormat(String time24) {
         try {
-            SimpleDateFormat inputFormat = new SimpleDateFormat("HH:mm:ss");
-            SimpleDateFormat outputFormat = new SimpleDateFormat("hh:mm a");
-            Date date = inputFormat.parse(time24);
-            return outputFormat.format(date);
+            SimpleDateFormat inputFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+            SimpleDateFormat outputFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+            return outputFormat.format(inputFormat.parse(time24));
         } catch (ParseException e) {
             e.printStackTrace();
             return time24;

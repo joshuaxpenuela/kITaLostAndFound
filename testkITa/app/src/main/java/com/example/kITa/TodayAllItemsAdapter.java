@@ -1,7 +1,6 @@
 package com.example.kITa;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 public class TodayAllItemsAdapter extends RecyclerView.Adapter<TodayAllItemsAdapter.ViewHolder> {
@@ -43,7 +43,12 @@ public class TodayAllItemsAdapter extends RecyclerView.Adapter<TodayAllItemsAdap
         TodayItem item = itemsList.get(position);
         holder.itemName.setText(item.getItemName());
         holder.itemLocation.setText(item.getItemLocation());
-        holder.itemImage.setImageResource(R.drawable.ic_uploadphoto);
+
+        // Load the image from the provided imageUrl (img1) using Glide
+        Glide.with(context)
+                .load(item.getImageUrl()) // Load image from the URL
+                .placeholder(R.drawable.ic_uploadphoto)  // Placeholder image in case image doesn't load
+                .into(holder.itemImage);  // Load into itemImage (ImageView)
 
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
@@ -65,11 +70,10 @@ public class TodayAllItemsAdapter extends RecyclerView.Adapter<TodayAllItemsAdap
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            itemImage = itemView.findViewById(R.id.itemImg);
+            itemImage = itemView.findViewById(R.id.itemImg);  // Correctly bind the ImageView (itemImg)
             itemName = itemView.findViewById(R.id.itemName);
             itemLocation = itemView.findViewById(R.id.location);
-            time = itemView.findViewById(R.id.time);
+            time = itemView.findViewById(R.id.time);  // Time field if available
         }
     }
 }
-

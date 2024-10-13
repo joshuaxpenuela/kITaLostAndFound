@@ -29,7 +29,7 @@ public class TodayItemsFragment extends Fragment {
     private ArrayList<TodayItem> itemsList;
     private RequestQueue requestQueue;
 
-    private static final String URL = "http://10.0.2.2/lost_found_db/get_all_items.php";
+    private static final String URL = "http://10.0.2.2/lost_found_db/get_items.php";
 
     @Nullable
     @Override
@@ -75,12 +75,15 @@ public class TodayItemsFragment extends Fragment {
                                     int id = item.getInt("id_item");
                                     String itemName = item.getString("item_name");
                                     String location = item.getString("location_found");
-                                    String img1 = item.getString("img1");
+                                    String img1Path = item.getString("img1");
                                     String date = item.getString("date");
                                     String time = item.getString("time");
                                     String status = item.getString("status");
 
-                                    itemsList.add(new TodayItem(id, img1, itemName, location, date, time, status));
+                                    // Load image URL properly
+                                    String imageUrl = "http://10.0.2.2/lost_found_db/uploads/img_reported_items/" + img1Path;
+
+                                    itemsList.add(new TodayItem(id, imageUrl, itemName, location, date, time, status));
                                 }
                             }
                             adapter.notifyDataSetChanged();

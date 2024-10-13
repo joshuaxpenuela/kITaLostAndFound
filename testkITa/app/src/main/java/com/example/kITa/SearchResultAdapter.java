@@ -7,6 +7,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.ViewHolder> {
@@ -52,7 +54,12 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
         }
 
         void bind(final SearchItem item, final OnItemClickListener listener) {
-            itemImage.setImageResource(item.getImageResourceId());
+            // Load the image using Glide
+            Glide.with(itemImage.getContext())
+                    .load(item.getImageResourceId()) // Using URL now instead of resource ID
+                    .placeholder(R.drawable.ic_uploadphoto) // Placeholder image
+                    .into(itemImage);
+
             itemName.setText(item.getName());
             location.setText(item.getLocation());
             itemView.setOnClickListener(v -> listener.onItemClick(item));

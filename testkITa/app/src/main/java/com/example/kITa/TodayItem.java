@@ -2,7 +2,7 @@ package com.example.kITa;
 
 public class TodayItem {
     private int id;
-    private String imageUrl;
+    private String imageUrl; // Change this from Bitmap to String
     private String itemName;
     private String itemLocation;
     private String date;
@@ -11,7 +11,7 @@ public class TodayItem {
 
     public TodayItem(int id, String imageUrl, String itemName, String itemLocation, String date, String time, String status) {
         this.id = id;
-        this.imageUrl = imageUrl;
+        this.imageUrl = imageUrl; // This should accept a String
         this.itemName = itemName;
         this.itemLocation = itemLocation;
         this.date = date;
@@ -24,7 +24,7 @@ public class TodayItem {
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        return imageUrl; // Updated to return String
     }
 
     public String getItemName() {

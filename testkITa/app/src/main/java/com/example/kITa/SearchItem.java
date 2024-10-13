@@ -4,13 +4,13 @@ public class SearchItem {
     private int id;
     private String name;
     private String location;
-    private int imageResourceId;
+    private String imageResourceId; // Changed to String to hold the URL
 
-    public SearchItem(int id, String name, String location, int imageResourceId) {
+    public SearchItem(int id, String name, String location, String imageResourceId) {
         this.id = id;
         this.name = name;
         this.location = location;
-        this.imageResourceId = imageResourceId;
+        this.imageResourceId = imageResourceId; // Store image URL
     }
 
     public int getId() {
@@ -25,7 +25,7 @@ public class SearchItem {
         return location;
     }
 
-    public int getImageResourceId() {
+    public String getImageResourceId() { // Return the URL instead of resource ID
         return imageResourceId;
     }
 }

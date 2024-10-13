@@ -53,4 +53,5 @@ dependencies {
     implementation (libs.androidx.constraintlayout)
     implementation (libs.com.github.bumptech.glide.glide)
     annotationProcessor (libs.compiler)
+    implementation (libs.denzcoskun.imageslideshow)
 }
