@@ -1,5 +1,7 @@
 package com.example.kITa;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,21 +13,41 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
-    private List<Message> messages;
-    private int currentUserId;
+public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHolder> {
 
-    public MessageAdapter(List<Message> messages, int currentUserId) {
-        this.messages = messages;
-        this.currentUserId = currentUserId;
+    private final Context context;
+    private final List<Message> messages;
+
+    public ChatAdapter(Context context) {
+        this.context = context;
+        this.messages = new ArrayList<>();
     }
+
+    public void addMessage(Message message) {
+        messages.add(message);
+        notifyItemInserted(messages.size() - 1);
+    }
+
+    public void addImage(Uri imageUri) {
+        Message imageMessage = new Message(UserSession.getInstance().getId(), /* receiverId */ 1, null, new Date(), imageUri.toString());
+        messages.add(imageMessage);
+        notifyItemInserted(messages.size() - 1);
+    }
+
+    public void setMessages(List<Message> messages) {
+        this.messages.clear();
+        this.messages.addAll(messages);
+        notifyDataSetChanged();
+    }
+
 
     @Override
     public MessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_message, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_message, parent, false);
         return new MessageViewHolder(view);
     }
 
@@ -76,12 +98,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 }
             });
 
-            if (message.getSenderId() == currentUserId) {
+            if (message.getSenderId() == UserSession.getInstance().getId()) {
                 itemView.setBackgroundResource(R.drawable.sender_message_background);
-                messageText.setTextColor(itemView.getContext().getResources().getColor(R.color.white));
+                messageText.setTextColor(Color.WHITE);
             } else {
                 itemView.setBackgroundResource(R.drawable.receiver_message_background);
-                messageText.setTextColor(itemView.getContext().getResources().getColor(R.color.green));
+                messageText.setTextColor(context.getResources().getColor(R.color.green));
             }
         }
     }

@@ -110,10 +110,11 @@
                 android:layout_weight="1"
                 android:padding="8dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/notifications"
+                android:src="@drawable/ic_notification"
                 android:background="@color/white"
                 android:contentDescription="notifIcon"
-                app:tint="@color/green"/>
+                app:tint="@color/green"
+                />
 
             <ImageButton
                 android:id="@+id/nav_profile"
@@ -145,10 +146,9 @@
             <RelativeLayout
                 android:id="@+id/todayNotifLayout"
                 android:layout_width="match_parent"
-                android:layout_height="300dp">
-
+                android:layout_height="wrap_content">
                 <TextView
-                    android:id="@+id/todayNotification"
+                    android:id="@+id/todayNotifTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
@@ -159,15 +159,27 @@
                     android:textColor="@color/green"
                     android:textSize="24sp"
                     android:textStyle="bold"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/todayNotifRecycleView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/todayNotifTitle"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginTop="-1dp"
+                    android:layout_marginEnd="0dp" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/olderNotifLayout"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/todayNotifLayout"
-                android:layout_height="300dp">
+                >
                 <TextView
-                    android:id="@+id/olderNotification"
+                    android:id="@+id/olderNotifTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
@@ -179,6 +191,17 @@
                     android:textSize="24sp"
                     android:textStyle="bold"
                     />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/olderNotifRecycleView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/olderNotifTitle"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="0dp" />
             </RelativeLayout>
         </RelativeLayout>
     </androidx.core.widget.NestedScrollView>

@@ -1,10 +1,12 @@
 package com.example.kITa;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,7 +21,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Create tables if they don't exist
         db.execSQL("CREATE TABLE IF NOT EXISTS messages (id INTEGER PRIMARY KEY AUTOINCREMENT, sender_id INTEGER, receiver_id INTEGER, message TEXT, is_admin_sender INTEGER, created_at DATETIME DEFAULT CURRENT_TIMESTAMP, media_url TEXT)");
     }
 
@@ -65,15 +66,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return messages;
     }
 
+    @SuppressLint("Range")
     private Message cursorToMessage(Cursor cursor) {
         return new Message(
-                cursor.getInt(cursor.getColumnIndex("id")),
                 cursor.getInt(cursor.getColumnIndex("sender_id")),
                 cursor.getInt(cursor.getColumnIndex("receiver_id")),
                 cursor.getString(cursor.getColumnIndex("message")),
-                cursor.getInt(cursor.getColumnIndex("is_admin_sender")) == 1,
                 new Date(cursor.getLong(cursor.getColumnIndex("created_at"))),
                 cursor.getString(cursor.getColumnIndex("media_url"))
         );
+    }
+
+    public List<Message> getUserMessages(int userId) {
+        List<Message> messages = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(
+                true, // distinct
+                "messages",
+                null,
+                "sender_id = ?",
+                new String[]{String.valueOf(userId)},
+                null,
+                null,
+                "created_at ASC",
+                null
+        );
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                messages.add(cursorToMessage(cursor));
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+        return messages;
     }
 }

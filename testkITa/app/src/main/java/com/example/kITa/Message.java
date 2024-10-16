@@ -2,53 +2,53 @@ package com.example.kITa;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 public class Message {
-    private int id;
+
     private int senderId;
     private int receiverId;
     private String text;
-    private boolean isAdminSender;
-    private Date createdAt;
-    private String mediaUrl;
+    private Date date;
+    private String formattedTime;
+    private String mediaUrl; // Field to store media URL
 
-    public Message(int id, int senderId, int receiverId, String text, boolean isAdminSender, Date createdAt, String mediaUrl) {
-        this.id = id;
+    // Constructor for message details
+    public Message(int senderId, int receiverId, String text, Date date, String mediaUrl) {
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.text = text;
-        this.isAdminSender = isAdminSender;
-        this.createdAt = createdAt;
-        this.mediaUrl = mediaUrl;
+        this.date = date;
+        this.mediaUrl = mediaUrl; // Initialize media URL
     }
 
-    public String getFormattedTime() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        return sdf.format(createdAt);
-    }
-
-    public int getSenderId() {
-        return senderId;
-    }
-
-    public String getMediaUrl() {
-        return mediaUrl;
-    }
-
+    // Method to get the text of the message
     public String getText() {
         return text;
     }
 
-    public void setId(Integer messageId) {
-        this.id = messageId;
+    // Method to get the sender ID
+    public int getSenderId() {
+        return senderId;
     }
 
+    // Method to get the receiver ID
     public int getReceiverId() {
         return receiverId;
     }
 
-    public boolean isAdminSender() {
-        return isAdminSender;
+    // Method to get the media URL
+    public String getMediaUrl() {
+        return mediaUrl;
+    }
+
+    // Method to get formatted time from the date
+    public String getFormattedTime() {
+        if (formattedTime != null) {
+            return formattedTime;
+        } else if (date != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a, dd MMM yyyy");
+            return sdf.format(date);
+        }
+        return "";
     }
 }

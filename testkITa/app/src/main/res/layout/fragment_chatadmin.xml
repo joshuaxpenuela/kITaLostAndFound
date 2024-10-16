@@ -168,7 +168,6 @@
     </RelativeLayout>
 
 
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/chatAdminRecyclerView"
             android:layout_width="match_parent"
