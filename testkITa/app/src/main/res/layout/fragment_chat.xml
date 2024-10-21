@@ -166,7 +166,7 @@
                     android:layout_height="100dp"
                     android:layout_marginTop="10dp"
                     android:layout_below="@+id/MessageTabTitle"
-                    android:backgroundTint="@color/white"
+                    android:backgroundTint="@color/green"
                     android:elevation="10dp"
                     android:clickable="true"
                     app:contentPadding="5dp"
@@ -187,15 +187,16 @@
                                 android:layout_width="80dp"
                                 android:layout_height="60dp"
                                 android:src="@drawable/ic_security"
-                                app:tint="@color/green"
+                                app:tint="@color/white"
                                 />
                             <TextView
                                 android:id="@+id/timeMessage"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="5dp"
+                                android:text="12:00 AM"
                                 android:textAlignment="center"
-                                android:textColor="@color/green"
+                                android:textColor="@color/white"
                                 android:textSize="15sp"
                                 android:textStyle="bold"
                                 />
@@ -213,7 +214,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="5dp"
                                 android:text="Civil Security Services"
-                                android:textColor="@color/green"
+                                android:textColor="@color/white"
                                 android:textSize="23sp"
                                 android:textStyle="bold" />
 
@@ -222,7 +223,8 @@
                                 android:layout_width="300dp"
                                 android:layout_height="38dp"
                                 android:layout_marginTop="0dp"
-                                android:textColor="@color/green"
+                                android:text="No messages yet"
+                                android:textColor="@color/white"
                                 android:textSize="15sp" />
 
                         </LinearLayout>
@@ -267,7 +269,7 @@
     </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addMsg"
+        android:id="@+id/addUsrMsg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

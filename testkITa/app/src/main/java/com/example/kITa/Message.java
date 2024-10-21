@@ -8,8 +8,7 @@ public class Message {
     private int senderId;
     private int receiverId;
     private String text;
-    private Date date;
-    private String formattedTime;
+    private Date date;  // Date field to store the timestamp
     private String mediaUrl; // Field to store media URL
 
     // Constructor for message details
@@ -17,7 +16,7 @@ public class Message {
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.text = text;
-        this.date = date;
+        this.date = date; // Initialize date
         this.mediaUrl = mediaUrl; // Initialize media URL
     }
 
@@ -41,11 +40,14 @@ public class Message {
         return mediaUrl;
     }
 
+    // Method to get the date of the message
+    public Date getDate() {
+        return date; // Add this method to retrieve the date
+    }
+
     // Method to get formatted time from the date
     public String getFormattedTime() {
-        if (formattedTime != null) {
-            return formattedTime;
-        } else if (date != null) {
+        if (date != null) {
             SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a, dd MMM yyyy");
             return sdf.format(date);
         }

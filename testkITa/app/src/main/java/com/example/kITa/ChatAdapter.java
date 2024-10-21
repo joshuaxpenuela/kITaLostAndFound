@@ -11,8 +11,6 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,10 +30,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHol
         notifyItemInserted(messages.size() - 1);
     }
 
+    // Temporarily disable adding images in the chat
     public void addImage(Uri imageUri) {
-        Message imageMessage = new Message(UserSession.getInstance().getId(), /* receiverId */ 1, null, new Date(), imageUri.toString());
-        messages.add(imageMessage);
-        notifyItemInserted(messages.size() - 1);
+        // Do nothing for now since images are not to be displayed
     }
 
     public void setMessages(List<Message> messages) {
@@ -43,7 +40,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHol
         this.messages.addAll(messages);
         notifyDataSetChanged();
     }
-
 
     @Override
     public MessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -75,17 +71,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHol
         }
 
         void bind(Message message) {
-            if (message.getMediaUrl() != null) {
-                messageText.setVisibility(View.GONE);
-                messageImage.setVisibility(View.VISIBLE);
-                Glide.with(itemView.getContext())
-                        .load(Uri.parse(message.getMediaUrl()))
-                        .into(messageImage);
-            } else {
-                messageText.setVisibility(View.VISIBLE);
-                messageImage.setVisibility(View.GONE);
-                messageText.setText(message.getText());
-            }
+            // Only show text messages, hide image field
+            messageText.setVisibility(View.VISIBLE);
+            messageImage.setVisibility(View.GONE);
+            messageText.setText(message.getText());
 
             timeStamp.setText(message.getFormattedTime());
             timeStamp.setVisibility(View.GONE);

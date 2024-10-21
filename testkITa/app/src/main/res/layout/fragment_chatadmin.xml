@@ -177,8 +177,6 @@
             app:layout_constraintBottom_toTopOf="@id/MsgControl"
             />
 
-
-
     <RelativeLayout
         android:id="@+id/MsgControl"
         android:layout_width="match_parent"

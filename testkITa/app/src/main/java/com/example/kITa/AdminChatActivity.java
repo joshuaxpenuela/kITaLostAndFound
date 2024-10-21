@@ -1,11 +1,9 @@
 package com.example.kITa;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -26,6 +24,7 @@ public class AdminChatActivity extends AppCompatActivity {
     private RecyclerView chatRecyclerView;
     private ChatAdapter chatAdapter;
     private DatabaseHelper databaseHelper;
+    private Uri selectedImageUri; // Store the selected image URI
 
     private static final int PICK_IMAGE_REQUEST = 1;
 
@@ -34,7 +33,7 @@ public class AdminChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_chatadmin);
 
-        databaseHelper = new DatabaseHelper(this); // Initialize DatabaseHelper instance
+        databaseHelper = new DatabaseHelper(this);
         initializeViews();
         setupRecyclerView();
         loadPreviousMessages();
@@ -93,23 +92,52 @@ public class AdminChatActivity extends AppCompatActivity {
 
     private void sendMessage() {
         String messageText = messageInput.getText().toString().trim();
-        if (!messageText.isEmpty()) {
-            ApiClient.sendMessageToAdmins(UserSession.getInstance().getId(), messageText, new ApiCallback<Boolean>() {
-                @Override
-                public void onSuccess(Boolean success) {
-                    if (success) {
-                        chatAdapter.addMessage(new Message(UserSession.getInstance().getId(), /* receiverId */ 1, messageText, new Date(), null));
-                        messageInput.setText("");
-                    } else {
-                        Toast.makeText(AdminChatActivity.this, "Failed to send message", Toast.LENGTH_SHORT).show();
-                    }
-                }
+        int senderId = UserSession.getInstance().getId();
+        int receiverId = 1; // Set to the receiver ID as needed
 
-                @Override
-                public void onError(String error) {
-                    Toast.makeText(AdminChatActivity.this, "Error: " + error, Toast.LENGTH_SHORT).show();
-                }
-            });
+        // If there's a message to send
+        if (!messageText.isEmpty()) {
+            // If an image was selected, send it
+            if (selectedImageUri != null) {
+                ApiClient.uploadImage(senderId, selectedImageUri, new ApiCallback<Boolean>() {
+                    @Override
+                    public void onSuccess(Boolean success) {
+                        if (success) {
+                            // Insert message into local database with image
+                            chatAdapter.addMessage(new Message(senderId, receiverId, messageText, new Date(), selectedImageUri.toString()));
+                            messageInput.setText("");
+                            selectedImageUri = null; // Reset the image URI
+                        } else {
+                            Toast.makeText(AdminChatActivity.this, "Image upload failed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Toast.makeText(AdminChatActivity.this, "Error: " + error, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                // Send text message only
+                ApiClient.sendMessageToAdmins(senderId, messageText, new ApiCallback<Boolean>() {
+                    @Override
+                    public void onSuccess(Boolean success) {
+                        if (success) {
+                            // Insert message into local database as text
+                            databaseHelper.insertMessage(senderId, receiverId, messageText, false, null); // media_url is null
+                            chatAdapter.addMessage(new Message(senderId, receiverId, messageText, new Date(), null));
+                            messageInput.setText("");
+                        } else {
+                            Toast.makeText(AdminChatActivity.this, "Failed to send message", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Toast.makeText(AdminChatActivity.this, "Error: " + error, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
         }
     }
 
@@ -123,22 +151,8 @@ public class AdminChatActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            Uri selectedImageUri = data.getData();
-            ApiClient.uploadImage(UserSession.getInstance().getId(), selectedImageUri, new ApiCallback<Boolean>() {
-                @Override
-                public void onSuccess(Boolean success) {
-                    if (success) {
-                        chatAdapter.addImage(selectedImageUri);
-                    } else {
-                        Toast.makeText(AdminChatActivity.this, "Image upload failed", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onError(String error) {
-                    Toast.makeText(AdminChatActivity.this, "Error: " + error, Toast.LENGTH_SHORT).show();
-                }
-            });
+            selectedImageUri = data.getData(); // Store the selected image URI
+            chatAdapter.addImage(selectedImageUri); // Optional: Add image to the chat
         }
     }
 }

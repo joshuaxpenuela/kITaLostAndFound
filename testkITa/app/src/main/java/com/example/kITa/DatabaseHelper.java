@@ -85,8 +85,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 true, // distinct
                 "messages",
                 null,
-                "sender_id = ?",
-                new String[]{String.valueOf(userId)},
+                "sender_id = ? OR receiver_id = ?",
+                new String[]{String.valueOf(userId), String.valueOf(userId)},
                 null,
                 null,
                 "created_at ASC",
@@ -95,7 +95,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         if (cursor != null && cursor.moveToFirst()) {
             do {
-                messages.add(cursorToMessage(cursor));
+                Message message = cursorToMessage(cursor);
+                if (message.getMediaUrl() == null || message.getMediaUrl().isEmpty()) {
+                    // If it's a text message, ensure mediaUrl is null
+                    message = new Message(message.getSenderId(), message.getReceiverId(), message.getText(), message.getDate(), null);
+                }
+                messages.add(message);
             } while (cursor.moveToNext());
             cursor.close();
         }

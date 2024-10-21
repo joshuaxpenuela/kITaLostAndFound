@@ -2,6 +2,7 @@ package com.example.kITa;
 
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -23,6 +24,8 @@ public class ApiClient {
 
     // URL of your server
     private static final String SERVER_URL = "http://10.0.2.2/lost_found_db/";
+
+    // ------- User to Admin Functions -------
 
     public static void sendMessageToAdmins(int senderId, String message, ApiCallback<Boolean> callback) {
         new AsyncTask<Void, Void, Boolean>() {
@@ -112,7 +115,6 @@ public class ApiClient {
         }.execute();
     }
 
-
     public static void uploadImage(int senderId, Uri imageUri, ApiCallback<Boolean> callback) {
         new AsyncTask<Void, Void, Boolean>() {
             protected Boolean doInBackground(Void... voids) {
@@ -198,6 +200,157 @@ public class ApiClient {
                     callback.onSuccess(message);
                 } else {
                     callback.onError("Failed to fetch the latest message.");
+                }
+            }
+        }.execute();
+    }
+
+
+    // ------- User to User Functions -------
+
+    public static void sendMessageToUser(int senderId, int receiverId, String message, ApiCallback<Boolean> callback) {
+        new AsyncTask<Void, Void, Boolean>() {
+            protected Boolean doInBackground(Void... voids) {
+                try {
+                    URL url = new URL(SERVER_URL + "send_message_to_user.php");
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("POST");
+                    conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                    conn.setDoOutput(true);
+
+                    String postData = "sender_id=" + senderId + "&receiver_id=" + receiverId + "&message=" + message;
+                    OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+                    writer.write(postData);
+                    writer.flush();
+                    writer.close();
+
+                    int responseCode = conn.getResponseCode();
+                    return responseCode == HttpURLConnection.HTTP_OK;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+
+            protected void onPostExecute(Boolean success) {
+                callback.onSuccess(success);
+            }
+        }.execute();
+    }
+
+    public static void getUserConversations(int userId, ApiCallback<List<UserConversation>> callback) {
+        new AsyncTask<Void, Void, List<UserConversation>>() {
+            protected List<UserConversation> doInBackground(Void... voids) {
+                try {
+                    URL url = new URL(SERVER_URL + "get_user_conversations.php");
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("POST");
+                    conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                    conn.setDoOutput(true);
+
+                    OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+                    writer.write("user_id=" + userId);
+                    writer.flush();
+                    writer.close();
+
+                    BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    StringBuilder response = new StringBuilder();
+                    String line;
+
+                    while ((line = in.readLine()) != null) {
+                        response.append(line);
+                    }
+
+                    in.close();
+                    conn.disconnect();
+
+                    JSONObject jsonResponse = new JSONObject(response.toString());
+                    List<UserConversation> conversations = new ArrayList<>();
+                    if (jsonResponse.getBoolean("success")) {
+                        JSONArray jsonConversations = jsonResponse.getJSONArray("conversations");
+                        for (int i = 0; i < jsonConversations.length(); i++) {
+                            JSONObject jsonConversation = jsonConversations.getJSONObject(i);
+                            int senderId = jsonConversation.getInt("sender_id");
+                            int receiverId = jsonConversation.getInt("receiver_id");
+                            String message = jsonConversation.getString("message");
+                            String createdAt = jsonConversation.getString("created_at");
+
+                            conversations.add(new UserConversation(senderId, receiverId, message, createdAt));
+                        }
+                    }
+
+                    return conversations;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(List<UserConversation> conversations) {
+                if (conversations != null) {
+                    callback.onSuccess(conversations);
+                } else {
+                    callback.onError("Failed to load conversations");
+                }
+            }
+        }.execute();
+    }
+
+    public static void searchUsers(String query, ApiCallback<List<User>> callback) {
+        new AsyncTask<Void, Void, List<User>>() {
+            @Override
+            protected List<User> doInBackground(Void... voids) {
+                try {
+                    URL url = new URL(SERVER_URL + "search_users.php");
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("POST");
+                    conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                    conn.setDoOutput(true);
+
+                    OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+                    writer.write("query=" + query);
+                    writer.flush();
+                    writer.close();
+
+                    BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    StringBuilder response = new StringBuilder();
+                    String line;
+
+                    while ((line = in.readLine()) != null) {
+                        response.append(line);
+                    }
+
+                    in.close();
+                    conn.disconnect();
+
+                    JSONObject jsonResponse = new JSONObject(response.toString());
+                    List<User> users = new ArrayList<>();
+                    if (jsonResponse.getBoolean("success")) {
+                        JSONArray jsonUsers = jsonResponse.getJSONArray("users");
+                        for (int i = 0; i < jsonUsers.length(); i++) {
+                            JSONObject jsonUser = jsonUsers.getJSONObject(i);
+                            int id = jsonUser.getInt("id");
+                            String Fname = jsonUser.getString("Fname");
+                            String Lname = jsonUser.getString("Lname");
+
+                            users.add(new User(id, Fname, Lname));
+                        }
+                    }
+
+                    return users;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(List<User> users) {
+                if (users != null) {
+                    callback.onSuccess(users);
+                } else {
+                    callback.onError("Failed to fetch users");
                 }
             }
         }.execute();
