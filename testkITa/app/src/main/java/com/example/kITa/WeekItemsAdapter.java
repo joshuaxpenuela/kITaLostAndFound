@@ -46,7 +46,7 @@ public class WeekItemsAdapter extends RecyclerView.Adapter<WeekItemsAdapter.View
         // Check if item is not null before setting details
         if (item != null) {
             holder.itemName.setText(item.getItemName());
-            holder.itemLocation.setText(item.getItemLocation());
+            holder.itemDetails.setText(item.getItemDetails());
 
             // Load the image using Glide
             Glide.with(context)
@@ -66,6 +66,7 @@ public class WeekItemsAdapter extends RecyclerView.Adapter<WeekItemsAdapter.View
             holder.itemDate.setText("N/A");
             holder.itemTime.setText("N/A");
             holder.itemImage.setImageResource(R.drawable.ic_uploadphoto); // Set placeholder image
+            holder.itemDetails.setText("No Details");
         }
     }
 
@@ -76,7 +77,7 @@ public class WeekItemsAdapter extends RecyclerView.Adapter<WeekItemsAdapter.View
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView itemImage;
-        TextView itemName, itemLocation, itemDate, itemTime;
+        TextView itemName, itemLocation, itemDate, itemTime, itemDetails;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -85,6 +86,7 @@ public class WeekItemsAdapter extends RecyclerView.Adapter<WeekItemsAdapter.View
             itemLocation = itemView.findViewById(R.id.location); // Ensure this matches your layout
             itemDate = itemView.findViewById(R.id.date); // Ensure this matches your layout
             itemTime = itemView.findViewById(R.id.time); // Ensure this matches your layout
+            itemDetails = itemView.findViewById(R.id.itemDetails);
         }
     }
 }

@@ -8,8 +8,9 @@ public class TodayItem {
     private String date;
     private String time;
     private String status;
+    private String itemDetails;
 
-    public TodayItem(int id, String imageUrl, String itemName, String itemLocation, String date, String time, String status) {
+    public TodayItem(int id, String imageUrl, String itemName, String itemLocation, String date, String time, String status, String itemDetails) {
         this.id = id;
         this.imageUrl = imageUrl; // This should accept a String
         this.itemName = itemName;
@@ -17,6 +18,7 @@ public class TodayItem {
         this.date = date;
         this.time = time;
         this.status = status;
+        this.itemDetails = itemDetails;
     }
 
     public int getId() {
@@ -46,4 +48,6 @@ public class TodayItem {
     public String getStatus() {
         return status;
     }
+
+    public String getItemDetails() {return itemDetails;};
 }

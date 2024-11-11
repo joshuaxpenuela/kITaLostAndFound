@@ -42,7 +42,7 @@ public class TodayAllItemsAdapter extends RecyclerView.Adapter<TodayAllItemsAdap
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         TodayItem item = itemsList.get(position);
         holder.itemName.setText(item.getItemName());
-        holder.itemLocation.setText(item.getItemLocation());
+        holder.itemDetails.setText(item.getItemDetails());
 
         // Load the image from the provided imageUrl (img1) using Glide
         Glide.with(context)
@@ -66,7 +66,7 @@ public class TodayAllItemsAdapter extends RecyclerView.Adapter<TodayAllItemsAdap
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView itemImage;
-        TextView itemName, itemLocation, time;
+        TextView itemName, itemLocation, time, itemDetails;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -74,6 +74,7 @@ public class TodayAllItemsAdapter extends RecyclerView.Adapter<TodayAllItemsAdap
             itemName = itemView.findViewById(R.id.itemName);
             itemLocation = itemView.findViewById(R.id.location);
             time = itemView.findViewById(R.id.time);  // Time field if available
+            itemDetails = itemLocation.findViewById(R.id.itemDetails);
         }
     }
 }

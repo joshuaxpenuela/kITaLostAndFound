@@ -44,13 +44,13 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView itemImage;
         TextView itemName;
-        TextView location;
+        TextView itemDetails;
 
         ViewHolder(View itemView) {
             super(itemView);
             itemImage = itemView.findViewById(R.id.itemImg);
             itemName = itemView.findViewById(R.id.itemName);
-            location = itemView.findViewById(R.id.location);
+            itemDetails = itemView.findViewById(R.id.itemDetails);
         }
 
         void bind(final SearchItem item, final OnItemClickListener listener) {
@@ -61,7 +61,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
                     .into(itemImage);
 
             itemName.setText(item.getName());
-            location.setText(item.getLocation());
+            itemDetails.setText(item.getItemDetails());
             itemView.setOnClickListener(v -> listener.onItemClick(item));
         }
     }

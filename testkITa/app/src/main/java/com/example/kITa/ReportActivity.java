@@ -7,40 +7,23 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Base64;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.bumptech.glide.Glide;
-
+import com.android.volley.toolbox.JsonObjectRequest;
+import org.json.JSONArray;
+import java.util.ArrayList;
+import android.widget.*;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-
+import com.android.volley.*;
+import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 public class ReportActivity extends AppCompatActivity {
 
@@ -55,6 +38,8 @@ public class ReportActivity extends AppCompatActivity {
     private DatePickerDialog datePickerDialog;
     private TimePickerDialog timePickerDialog;
     private Map<String, String> encodedImages = new HashMap<>();
+    private ArrayList<String> collegeList;
+    private ArrayAdapter<String> collegeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +50,7 @@ public class ReportActivity extends AppCompatActivity {
         initializeUIComponents();
         setupDateTimePickers();
         setupNavigation();
+        setupCollegeSpinner(); // Add this line
 
         // Set onClickListeners for ImageButtons to open image picker
         setImagePicker(img1, "img1");
@@ -75,18 +61,32 @@ public class ReportActivity extends AppCompatActivity {
 
         // Set onClickListeners for form buttons
         submitButton.setOnClickListener(v -> submitReport());
-        cancelButton.setOnClickListener(v -> finish());
+        cancelButton.setOnClickListener(v -> showDiscardDialog(MainActivity.class));
     }
 
     private void setupNavigation() {
-        // Set onClickListeners for navigation buttons
-        guideIcon.setOnClickListener(v -> startActivity(new Intent(ReportActivity.this, GuidelinesActivity.class)));
-        searchIcon.setOnClickListener(v -> startActivity(new Intent(ReportActivity.this, SearchActivity.class)));
-        navLost.setOnClickListener(v -> startActivity(new Intent(ReportActivity.this, MainActivity.class)));
-        navFound.setOnClickListener(v -> startActivity(new Intent(ReportActivity.this, ClaimedActivity.class)));
-        navChat.setOnClickListener(v -> startActivity(new Intent(ReportActivity.this, ChatActivity.class)));
-        navNotifications.setOnClickListener(v -> startActivity(new Intent(ReportActivity.this, NotificationActivity.class)));
-        navProfile.setOnClickListener(v -> startActivity(new Intent(ReportActivity.this, ProfileActivity.class)));
+        guideIcon.setOnClickListener(v -> showDiscardDialog(GuidelinesActivity.class));
+        searchIcon.setOnClickListener(v -> showDiscardDialog(SearchActivity.class));
+        navLost.setOnClickListener(v -> showDiscardDialog(MainActivity.class));
+        navFound.setOnClickListener(v -> showDiscardDialog(ClaimedActivity.class));
+        navChat.setOnClickListener(v -> showDiscardDialog(ChatActivity.class));
+        navNotifications.setOnClickListener(v -> showDiscardDialog(NotificationActivity.class));
+        navProfile.setOnClickListener(v -> showDiscardDialog(ProfileActivity.class));
+    }
+
+    private void showDiscardDialog(Class<?> destinationClass) {
+        DiscardReportDialog dialog = new DiscardReportDialog(this, () -> {
+            startActivity(new Intent(ReportActivity.this, destinationClass));
+            finish();
+        });
+        dialog.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        // Show discard dialog when the back button is pressed
+        DiscardReportDialog dialog = new DiscardReportDialog(this, this::finish);
+        dialog.show();
     }
 
     private void initializeUIComponents() {
@@ -118,6 +118,40 @@ public class ReportActivity extends AppCompatActivity {
         navProfile = findViewById(R.id.nav_profile);
     }
 
+    private void setupCollegeSpinner() {
+        collegeList = new ArrayList<>();
+        collegeList.add("Select College"); // Add default option
+
+        collegeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, collegeList);
+        collegeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        department.setAdapter(collegeAdapter);
+
+        fetchColleges();
+    }
+
+    private void fetchColleges() {
+        String url = "http://10.0.2.2/lost_found_db/college.php";
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                response -> {
+                    try {
+                        if (response.getBoolean("success")) {
+                            JSONArray collegesArray = response.getJSONArray("colleges");
+                            for (int i = 0; i < collegesArray.length(); i++) {
+                                collegeList.add(collegesArray.getString(i));
+                            }
+                            collegeAdapter.notifyDataSetChanged();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(ReportActivity.this, "Error parsing colleges data", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                error -> Toast.makeText(ReportActivity.this, "Error fetching colleges: " + error.getMessage(), Toast.LENGTH_SHORT).show());
+
+        Volley.newRequestQueue(this).add(request);
+    }
+
     private void setupDateTimePickers() {
         calendar = Calendar.getInstance();
 
@@ -129,6 +163,7 @@ public class ReportActivity extends AppCompatActivity {
             date.setText(new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(calendar.getTime()));
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 
+        datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
         date.setOnClickListener(v -> datePickerDialog.show());
 
         // Time Picker
@@ -159,15 +194,27 @@ public class ReportActivity extends AppCompatActivity {
             try {
                 InputStream inputStream = getContentResolver().openInputStream(imageUri);
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                String encodedImage = encodeImage(bitmap);
 
-                // Load image and store encoded string based on the selected ImageButton
+                if (bitmap.getByteCount() > 5 * 1024 * 1024) {
+                    Toast.makeText(this, "Image size exceeds 5MB", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                String encodedImage = encodeImage(bitmap);
                 Glide.with(this).load(bitmap).into(selectedImageButton);
-                if (selectedImageButton == img1) encodedImages.put("img1", encodedImage);
-                else if (selectedImageButton == img2) encodedImages.put("img2", encodedImage);
-                else if (selectedImageButton == img3) encodedImages.put("img3", encodedImage);
-                else if (selectedImageButton == img4) encodedImages.put("img4", encodedImage);
-                else if (selectedImageButton == img5) encodedImages.put("img5", encodedImage);
+
+                // Use selectedImageButton to determine which key to use in encodedImages
+                if (selectedImageButton == img1) {
+                    encodedImages.put("img1", encodedImage);
+                } else if (selectedImageButton == img2) {
+                    encodedImages.put("img2", encodedImage);
+                } else if (selectedImageButton == img3) {
+                    encodedImages.put("img3", encodedImage);
+                } else if (selectedImageButton == img4) {
+                    encodedImages.put("img4", encodedImage);
+                } else if (selectedImageButton == img5) {
+                    encodedImages.put("img5", encodedImage);
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -182,7 +229,7 @@ public class ReportActivity extends AppCompatActivity {
     }
 
     private void submitReport() {
-        if (validateInputFields() && encodedImages.size() >= 3) {
+        if (validateInputFields() && encodedImages.size() >= 1) {
             String url = "http://10.0.2.2/lost_found_db/submit_report.php";
 
             VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, url,
@@ -229,9 +276,10 @@ public class ReportActivity extends AppCompatActivity {
                     params.put("item_name", itemName.getText().toString().trim());
                     params.put("item_category", itemCategory.getSelectedItem().toString());
                     params.put("location_found", location.getText().toString().trim());
-                    params.put("date", date.getText().toString().trim());
-                    params.put("time", convertTo24HourFormat(time.getText().toString().trim()));
+                    params.put("report_date", date.getText().toString().trim());
+                    params.put("report_time", convertTo24HourFormat(time.getText().toString().trim()));
                     params.put("other_details", otherDetails.getText().toString().trim());
+
                     return params;
                 }
 
@@ -246,17 +294,13 @@ public class ReportActivity extends AppCompatActivity {
                 }
             };
 
-            // Add retry policy
             multipartRequest.setRetryPolicy(new DefaultRetryPolicy(
-                    60000, // 60 seconds timeout
-                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                    60000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-            // Add request to queue
             RequestQueue queue = Volley.newRequestQueue(this);
             queue.add(multipartRequest);
         } else {
-            Toast.makeText(this, "Please fill all required fields and upload at least 3 images", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please fill all required fields and upload at least 1 image", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -285,8 +329,8 @@ public class ReportActivity extends AppCompatActivity {
             contactNo.setError("Invalid phone number format");
             isValid = false;
         }
-        if (department.getSelectedItemPosition() == 0) {
-            Toast.makeText(this, "Please select a department", Toast.LENGTH_SHORT).show();
+        if (department.getSelectedItem().toString().equals("Select College")) {
+            Toast.makeText(this, "Please select a college", Toast.LENGTH_SHORT).show();
             isValid = false;
         }
         if (itemName.getText().toString().trim().isEmpty()) {

@@ -7,7 +7,7 @@
     <string name="action_settings">Settings</string>
 
     <string-array name="department_array">
-        <item>Select Department</item>
+        <item>Select College</item>
         <item>CAFENR</item>
         <item>CAS</item>
         <item>CCJ</item>
@@ -24,6 +24,7 @@
     </string-array>
 
     <string-array name="category_array">
+        <item>Select Item Category</item>
         <item>ID</item>
         <item>Gadgets/Electronics</item>
         <item>Accessories</item>

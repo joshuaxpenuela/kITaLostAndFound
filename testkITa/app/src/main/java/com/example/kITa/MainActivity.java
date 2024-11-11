@@ -135,21 +135,22 @@ public class MainActivity extends AppCompatActivity {
                                 String itemName = item.getString("item_name");
                                 String location = item.getString("location_found");
                                 String img1Path = item.getString("img1");
-                                String date = item.getString("date");
-                                String time = item.getString("time");
+                                String date = item.getString("report_date");
+                                String time = item.getString("report_time");
                                 String category = item.getString("category");
                                 String status = item.getString("status");
+                                String itemDetails = item.getString("other_details");
 
                                 // Properly fetch the image from the uploads directory
                                 String imageUrl = "http://10.0.2.2/lost_found_db/uploads/img_reported_items/" + img1Path;
 
                                 if (status.equals("Unclaimed")) {
                                     if (category.equals("today")) {
-                                        todayItemsList.add(new TodayItem(id, imageUrl, itemName, location, date, time, status));
+                                        todayItemsList.add(new TodayItem(id, imageUrl, itemName, location, date, time, status, itemDetails));
                                     } else if (category.equals("week")) {
-                                        weekItemsList.add(new OlderItem(id, imageUrl, itemName, location, date, time, status));
+                                        weekItemsList.add(new OlderItem(id, imageUrl, itemName, location, date, time, status, itemDetails));
                                     } else if (category.equals("older")) {
-                                        olderItemsList.add(new OlderItem(id, imageUrl, itemName, location, date, time, status));
+                                        olderItemsList.add(new OlderItem(id, imageUrl, itemName, location, date, time, status, itemDetails));
                                     }
                                 }
                             }

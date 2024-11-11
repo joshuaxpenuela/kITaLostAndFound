@@ -37,7 +37,7 @@ public class ClaimedItemsAdapter extends RecyclerView.Adapter<ClaimedItemsAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ClaimedItem item = itemsList.get(position);
         holder.itemName.setText(item.getItemName());
-        holder.itemLocation.setText(item.getLocation());
+        holder.itemDetails.setText(item.getItemDetails());
 
         // Load img1 into ImageView using Glide
         Glide.with(holder.itemImage.getContext())
@@ -59,13 +59,14 @@ public class ClaimedItemsAdapter extends RecyclerView.Adapter<ClaimedItemsAdapte
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView itemImage;
-        TextView itemName, itemLocation;
+        TextView itemName, itemLocation, itemDetails;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             itemImage = itemView.findViewById(R.id.itemImg);  // ImageView for img1
             itemName = itemView.findViewById(R.id.itemName);
             itemLocation = itemView.findViewById(R.id.location);
+            itemDetails = itemView.findViewById(R.id.itemDetails);
         }
     }
 }

@@ -108,9 +108,9 @@ public class ClaimedItemDetailActivity extends AppCompatActivity {
                 itemNameText.setText(item.getString("item_name"));
                 statusText.setText(item.getString("status"));
                 locationText.setText(item.getString("location_found"));
-                dateText.setText(item.getString("date"));
+                dateText.setText(item.getString("report_date"));
 
-                String time24Format = item.getString("time");
+                String time24Format = item.getString("report_time");
                 String time12Format = convertTimeTo12HourFormat(time24Format);
                 timeText.setText(time12Format);
 

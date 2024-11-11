@@ -38,7 +38,7 @@
             android:layout_height="50dp"
             android:adjustViewBounds="true"
             android:layout_weight="3"
-            android:padding="78dp"
+            android:padding="72dp"
             android:scaleType="centerCrop"
             android:src="@drawable/kitalogo"
             android:contentDescription="kitaLogo"
@@ -241,6 +241,7 @@
             android:padding="10dp"
             android:hint="Contact Number"
             android:inputType="number"
+            android:maxLength="11"
             android:background="@drawable/text_input_bg"/>
 
         <TextView
@@ -250,7 +251,7 @@
             android:layout_below="@+id/contactNo"
             android:layout_marginStart="20dp"
             android:layout_marginTop="19dp"
-            android:text="College or Deparment"
+            android:text="College"
             android:textColor="@color/green"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -266,7 +267,6 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="6dp"
             android:layout_marginEnd="20dp"
-            android:entries="@array/department_array"
             android:hint="Department or College"
             android:textSize="15sp" />
 

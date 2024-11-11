@@ -92,12 +92,13 @@ public class ClaimedActivity extends AppCompatActivity {
                             String itemName = item.optString("item_name", "Unknown Item");
                             String location = item.optString("location_found", "Unknown Location");
                             String img1Path = item.optString("img1", ""); // Fetching img1 path
+                            String itemDetails = item.optString("other_details");
 
                             // Build image URL
                             String imageUrl = "http://10.0.2.2/lost_found_db/uploads/img_reported_items/" + img1Path;
 
                             // Add item to the list with image URL
-                            claimedItemsList.add(new ClaimedItem(id, itemName, location, imageUrl));
+                            claimedItemsList.add(new ClaimedItem(id, itemName, location, imageUrl, itemDetails));
                         }
                         claimedItemsAdapter.notifyDataSetChanged();
                     } catch (JSONException e) {

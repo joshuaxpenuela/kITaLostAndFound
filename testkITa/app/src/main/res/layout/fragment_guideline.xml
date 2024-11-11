@@ -41,17 +41,18 @@
                 />
 
             <!-- Logo Image -->
+
+            <!-- Search Icon -->
             <ImageView
                 android:id="@+id/logo_image"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="3"
-                android:padding="78dp"
+                android:contentDescription="kitaLogo"
+                android:padding="72dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/kitalogo"
-                android:contentDescription="kitaLogo"/>
+                android:src="@drawable/kitalogo" />
 
-            <!-- Search Icon -->
             <ImageButton
                 android:id="@+id/search_icon"
                 android:layout_width="0dp"
@@ -152,11 +153,13 @@
                 android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
+                android:layout_marginTop="15dp"
                 android:layout_marginBottom="16dp"
                 android:text="Lost and Found Guidelines"
                 android:textColor="@color/green"
-                android:textSize="22sp"
+                android:textSize="25sp"
                 android:textStyle="bold" />
 
             <!-- For Finder Section -->
@@ -242,16 +245,309 @@
                 android:layout_below="@id/textView7"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="30dp"
-                android:layout_marginBottom="0dp"
                 android:justificationMode="inter_word"
                 android:text="@string/CivilSecurityGuide"
                 android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView8"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="30dp"
+                android:textAlignment="center"
+                android:text="Application Guide"
+                android:textColor="@color/green"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                />
+
+            <ImageView
+                android:id="@+id/GuideIcon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_below="@id/textView9"
+                android:layout_marginTop="20dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="30dp"
+                android:src="@drawable/ic_guide"
+                app:tint="@color/green"/>
+
+            <TextView
+                android:id="@+id/GuideIconText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textView9"
+                android:layout_toEndOf="@id/lostIcon"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="10dp"
+                android:text="Lost and Found Guidelines Tab"
+                android:textSize="20dp"
+                android:textColor="@color/green"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:id="@+id/GuideIconDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/GuideIconText"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="30dp"
+                android:layout_toEndOf="@id/GuideIcon"
+                android:justificationMode="inter_word"
+                android:text="The guideline provides users with guidelines on the procedures for reporting and claiming lost items, as well as instructions for using the application features."
+                android:textSize="13dp" />
+
+            <ImageView
+                android:id="@+id/lostIcon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_below="@id/GuideIconDesc"
+                android:layout_marginTop="25dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="30dp"
+                android:src="@drawable/ic_lost"
+                app:tint="@color/green"/>
+
+            <TextView
+                android:id="@+id/lostIconText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/GuideIconDesc"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="30dp"
+                android:layout_toEndOf="@id/lostIcon"
+                android:text="Unclaimed Item Tab (Main Menu)"
+                android:textColor="@color/green"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/lostIconDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/lostIconText"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="30dp"
+                android:layout_toEndOf="@id/lostIcon"
+                android:text="This tab allows users to view the three most recently reported unclaimed items, categorized by the current day, week, and earlier reports. By selecting 'See More', users can access the complete list of reported items. Each item listing includes detailed information, along with the option to contact the reporter via email."
+                android:justificationMode="inter_word"
+                android:textSize="13dp" />
+
+            <ImageView
+                android:id="@+id/foundIcon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_below="@id/lostIconDesc"
+                android:layout_marginTop="25dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="30dp"
+                android:src="@drawable/ic_found"
+                app:tint="@color/green"/>
+
+            <TextView
+                android:id="@+id/foundIconText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/lostIconDesc"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="30dp"
+                android:layout_toEndOf="@id/foundIcon"
+                android:text="Claimed Item Tab"
+                android:textColor="@color/green"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/foundIconDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/foundIconText"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="30dp"
+                android:layout_toEndOf="@id/foundIcon"
+                android:justificationMode="inter_word"
+                android:text="Users can view a list of claimed items with full details available for each entry upon selection"
+                android:textSize="13dp" />
+
+            <ImageView
+                android:id="@+id/MessageIcon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_below="@id/foundIconDesc"
+                android:layout_marginTop="25dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="30dp"
+                android:src="@drawable/ic_chat"
+                app:tint="@color/green"/>
+
+            <TextView
+                android:id="@+id/MessageIconText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/foundIconDesc"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="30dp"
+                android:layout_toEndOf="@id/MessageIcon"
+                android:text="Messaging Tab"
+                android:textColor="@color/green"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/MessageIconDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/MessageIconText"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="30dp"
+                android:layout_toEndOf="@id/MessageIcon"
+                android:justificationMode="inter_word"
+                android:text="The Messaging tab lets users communicate directly with the admin regarding lost items, claim procedures, and item retrieval locations."
+                android:textSize="13dp" />
+
+            <ImageView
+                android:id="@+id/NotifIcon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_below="@id/MessageIconDesc"
+                android:layout_marginTop="25dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="30dp"
+                android:src="@drawable/ic_notification"
+                app:tint="@color/green"/>
+
+            <TextView
+                android:id="@+id/NotificonText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/MessageIconDesc"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="11dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="30dp"
+                android:layout_toEndOf="@id/NotifIcon"
+                android:text="Notification Tab"
+                android:textColor="@color/green"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/NotificonDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/NotificonText"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="30dp"
+                android:layout_toEndOf="@id/NotifIcon"
+                android:justificationMode="inter_word"
+                android:text="Claimants receive notifications with specific details on when and where they can retrieve unclaimed items."
+                android:textSize="13dp" />
+
+            <ImageView
+                android:id="@+id/ProfileIcon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_below="@id/NotificonDesc"
+                android:layout_marginTop="25dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="30dp"
+                android:src="@drawable/ic_profile"
+                app:tint="@color/green"/>
+
+            <TextView
+                android:id="@+id/ProfileIconText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/NotificonDesc"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="30dp"
+                android:layout_toEndOf="@id/ProfileIcon"
+                android:text="Profile Tab"
+                android:textColor="@color/green"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/ProfileIconDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ProfileIconText"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="30dp"
+                android:layout_toEndOf="@id/ProfileIcon"
+                android:justificationMode="inter_word"
+                android:text="The profile tab provides users with access to their account information, allowing them to view and update personal details as needed."
+                android:textSize="13dp" />
+
+            <ImageView
+                android:id="@+id/SearchIcon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_below="@id/ProfileIconDesc"
+                android:layout_marginTop="25dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="30dp"
+                android:src="@drawable/ic_search"
+                app:tint="@color/green"/>
+
+            <TextView
+                android:id="@+id/SearchIconText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ProfileIconDesc"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="30dp"
+                android:layout_toEndOf="@id/SearchIcon"
+                android:text="Search Tab"
+                android:textColor="@color/green"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/SearchIconDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/SearchIconText"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="40dp"
+                android:layout_toEndOf="@id/SearchIcon"
+                android:justificationMode="inter_word"
+                android:text="The Search tab allows users to locate unclaimed items by filtering through categories or searching by item name."
+                android:textSize="13dp" />
         </RelativeLayout>
     </androidx.core.widget.NestedScrollView>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

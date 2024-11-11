@@ -44,7 +44,7 @@
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="3"
-                android:padding="78dp"
+                android:padding="72dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/kitalogo"
                 android:contentDescription="kitaLogo"/>
@@ -240,45 +240,7 @@
                 android:layout_marginBottom="20dp"
                 android:layout_below="@id/cssMsgLayout"
                 >
-
-                <TextView
-                    android:id="@+id/UserChatText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="20dp"
-                    android:text="Users"
-                    android:textColor="@color/green"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/UserChatRecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/UserChatText"
-                    android:layout_marginTop="10dp"
-                    android:paddingBottom="10dp"
-                    />
             </RelativeLayout>
         </RelativeLayout>
     </androidx.core.widget.NestedScrollView>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addUsrMsg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="25dp"
-        android:layout_marginBottom="30dp"
-        android:contentDescription="addUserMsg"
-        app:backgroundTintMode="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:tint="@color/green"
-        app:srcCompat="@android:drawable/ic_input_add"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

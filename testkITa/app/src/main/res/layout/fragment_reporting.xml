@@ -44,7 +44,7 @@
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="3"
-                android:padding="78dp"
+                android:padding="72dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/kitalogo"
                 android:contentDescription="kitaLogo"/>
@@ -235,7 +235,7 @@
                 android:text="Contact No."
                 android:textColor="@color/green"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
 
             <EditText
                 android:id="@+id/contactNo"
@@ -250,6 +250,7 @@
                 android:background="@drawable/text_input_bg"
                 android:hint="Contact Number"
                 android:inputType="number"
+                android:maxLength="11"
                 android:padding="10dp" />
 
             <TextView
@@ -259,7 +260,7 @@
                 android:layout_below="@+id/contactNo"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="6dp"
-                android:text="College or Deparment"
+                android:text="College"
                 android:textColor="@color/green"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -274,7 +275,6 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="6dp"
                 android:layout_marginEnd="20dp"
-                android:entries="@array/department_array"
                 android:hint="Department or College"
                 android:textSize="15sp"
                 style="@style/CustomSpinnerStyle"/>
@@ -283,7 +283,7 @@
                 android:id="@+id/itemNameText"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/department"
+                android:layout_below="@+id/itemCategory"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="6sp"
                 android:text="Item Name"
@@ -312,7 +312,7 @@
                 android:id="@+id/itemCategoryText"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/itemName"
+                android:layout_below="@+id/department"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="6sp"
                 android:text="Item Category"
@@ -340,7 +340,7 @@
                 android:id="@+id/locationText"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/itemCategory"
+                android:layout_below="@+id/otherDetails"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="6sp"
                 android:text="Location Found"
@@ -412,10 +412,10 @@
                 android:id="@+id/otherDetailsText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/date"
+                android:layout_below="@id/itemName"
                 android:layout_marginTop="6dp"
                 android:layout_marginStart="20dp"
-                android:text="Other Details"
+                android:text="Other Item's Details"
                 android:textColor="@color/green"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -442,7 +442,7 @@
                 android:id="@+id/uploadImageText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/otherDetails"
+                android:layout_below="@id/date"
                 android:layout_marginTop="6dp"
                 android:layout_marginStart="20dp"
                 android:text="Upload Images"
@@ -451,11 +451,21 @@
                 android:textStyle="bold"
                 />
 
+            <TextView
+                android:id="@+id/uploadImageDisclaimer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/uploadImageText"
+                android:layout_marginStart="20dp"
+                android:text="* Maximum of 5MB per photo"
+                android:textStyle="bold"
+                />
+
             <HorizontalScrollView
                 android:id="@+id/horizontalScrollView"
                 android:layout_width="match_parent"
                 android:layout_height="140dp"
-                android:layout_below="@id/uploadImageText">
+                android:layout_below="@id/uploadImageDisclaimer">
 
                 <LinearLayout
                     android:id="@+id/uploadImages"

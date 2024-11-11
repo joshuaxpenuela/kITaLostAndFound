@@ -8,11 +8,10 @@
     android:background="@drawable/gradient"
  >
 
-
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="163dp"
-        android:layout_height="84dp"
+        android:layout_width="200dp"
+        android:layout_height="120dp"
         android:layout_marginStart="80dp"
         android:layout_marginTop="120dp"
         android:layout_marginEnd="80dp"
@@ -21,41 +20,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <TextView
-        android:id="@+id/forgetPassTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Are you?"
-        android:textColor="@color/green"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageView" />
-
-
     <Button
         android:id="@+id/claimantUser"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="25dp"
         android:backgroundTint="@color/green"
         android:enabled="true"
         android:fontFamily="sans-serif-black"
         android:gravity="center"
         android:padding="13dp"
-        android:text="Claimant"
+        android:text="Seeker"
         android:textColor="#FFFFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/forgetPassTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/finderUser" />
 
     <Button
         android:id="@+id/finderUser"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:backgroundTint="@color/white"
         android:enabled="true"
         android:fontFamily="sans-serif-black"
@@ -65,7 +50,7 @@
         android:textColor="@color/green"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/claimantUser"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
         app:strokeColor="@color/green"
         app:strokeWidth="2dp" />
 

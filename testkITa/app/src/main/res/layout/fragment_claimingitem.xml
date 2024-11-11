@@ -32,19 +32,19 @@
             />
 
         <!-- Logo Image -->
+
+        <!-- Search Icon -->
         <ImageView
             android:id="@+id/logo_image"
             android:layout_width="0dp"
             android:layout_height="50dp"
-            android:adjustViewBounds="true"
             android:layout_weight="3"
-            android:padding="78dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/kitalogo"
+            android:adjustViewBounds="true"
             android:contentDescription="kitaLogo"
-            />
+            android:padding="72dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/kitalogo" />
 
-        <!-- Search Icon -->
         <ImageButton
             android:id="@+id/search_icon"
             android:layout_width="0dp"

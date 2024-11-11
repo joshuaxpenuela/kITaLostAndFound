@@ -76,14 +76,15 @@ public class TodayItemsFragment extends Fragment {
                                     String itemName = item.getString("item_name");
                                     String location = item.getString("location_found");
                                     String img1Path = item.getString("img1");
-                                    String date = item.getString("date");
-                                    String time = item.getString("time");
+                                    String date = item.getString("report_date");
+                                    String time = item.getString("report_time");
                                     String status = item.getString("status");
+                                    String itemDetails = item.getString("other_details");
 
                                     // Load image URL properly
                                     String imageUrl = "http://10.0.2.2/lost_found_db/uploads/img_reported_items/" + img1Path;
 
-                                    itemsList.add(new TodayItem(id, imageUrl, itemName, location, date, time, status));
+                                    itemsList.add(new TodayItem(id, imageUrl, itemName, location, date, time, status, itemDetails));
                                 }
                             }
                             adapter.notifyDataSetChanged();

@@ -3,6 +3,7 @@ package com.example.kITa;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -15,10 +16,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -27,7 +35,8 @@ public class RegisterActivity extends AppCompatActivity {
     private Spinner department;
     private Button signUp;
     private ProgressBar loading;
-    private TextView loginLink; // TextView for LoginLink
+    private TextView loginLink;
+    private List<String> collegesList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +53,12 @@ public class RegisterActivity extends AppCompatActivity {
         department = findViewById(R.id.department);
         signUp = findViewById(R.id.signUp);
         loading = findViewById(R.id.loading);
-        loginLink = findViewById(R.id.LoginLink); // Initialize loginLink
+        loginLink = findViewById(R.id.LoginLink);
+
+        // Initialize colleges list and fetch data
+        collegesList = new ArrayList<>();
+        collegesList.add("Select College"); // Default option
+        fetchColleges();
 
         // Set onClick listener for signUp button
         signUp.setOnClickListener(new View.OnClickListener() {
@@ -58,12 +72,60 @@ public class RegisterActivity extends AppCompatActivity {
         loginLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Redirect to LoginActivity
                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                 startActivity(intent);
-                finish(); // Prevent going back to RegisterActivity
+                finish();
             }
         });
+    }
+
+    private void fetchColleges() {
+        String url = "http://10.0.2.2/lost_found_db/college.php";
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            if (response.getBoolean("success")) {
+                                JSONArray collegesArray = response.getJSONArray("colleges");
+                                for (int i = 0; i < collegesArray.length(); i++) {
+                                    collegesList.add(collegesArray.getString(i));
+                                }
+                                setupSpinner();
+                            } else {
+                                Toast.makeText(RegisterActivity.this,
+                                        "Failed to fetch colleges: " + response.getString("message"),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(RegisterActivity.this,
+                                    "Error parsing college data",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(RegisterActivity.this,
+                                "Error fetching colleges: " + error.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        Volley.newRequestQueue(this).add(request);
+    }
+
+    private void setupSpinner() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_spinner_item,
+                collegesList
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        department.setAdapter(adapter);
     }
 
     private void registerUser() {
@@ -77,11 +139,15 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Check if any field is empty
         if (fName.isEmpty() || lName.isEmpty() || userEmail.isEmpty() || userPassword.isEmpty()
-                || userConfirmPassword.isEmpty() || userContactNo.isEmpty() || userDept.equals("Select Department")) {
+                || userConfirmPassword.isEmpty() || userContactNo.isEmpty()) {
             Toast.makeText(RegisterActivity.this, "All fields are required", Toast.LENGTH_SHORT).show();
-            if (userDept.equals("Select Department")) {
-                ((TextView)department.getSelectedView()).setError("Please select a department");
-            }
+            return;
+        }
+
+        // Check if department is "Select College"
+        if (userDept.equals("Select College")) {
+            ((TextView)department.getSelectedView()).setError("Please select a valid department");
+            department.requestFocus();
             return;
         }
 
@@ -101,14 +167,14 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        // Validate password strength (optional, add your own criteria)
+        // Validate password strength
         if (userPassword.length() < 8) {
             password.setError("Password must be at least 8 characters long");
             password.requestFocus();
             return;
         }
 
-        // Validate contact number (optional, add your own criteria)
+        // Validate contact number
         if (!userContactNo.matches("\\d+")) {
             contactNo.setError("Enter a valid contact number");
             contactNo.requestFocus();
@@ -126,7 +192,6 @@ public class RegisterActivity extends AppCompatActivity {
                         loading.setVisibility(View.GONE);
                         if (response.equals("success")) {
                             Toast.makeText(RegisterActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
-                            // Redirect to LoginActivity after successful registration
                             Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                             startActivity(intent);
                             finish();
@@ -134,6 +199,10 @@ public class RegisterActivity extends AppCompatActivity {
                             email.setError("This email is already registered");
                             email.requestFocus();
                             Toast.makeText(RegisterActivity.this, "Email already exists", Toast.LENGTH_SHORT).show();
+                        } else if (response.equals("contact_exists")) {
+                            contactNo.setError("This contact number is already registered");
+                            contactNo.requestFocus();
+                            Toast.makeText(RegisterActivity.this, "Contact number already exists", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(RegisterActivity.this, "Registration Failed: " + response, Toast.LENGTH_SHORT).show();
                         }
@@ -159,7 +228,6 @@ public class RegisterActivity extends AppCompatActivity {
             }
         };
 
-        // Add request to the queue
         Volley.newRequestQueue(this).add(stringRequest);
     }
 }

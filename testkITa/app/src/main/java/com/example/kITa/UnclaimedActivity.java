@@ -129,10 +129,10 @@ public class UnclaimedActivity extends AppCompatActivity {
         itemNameText.setText(item.getString("item_name"));
         statusText.setText(item.getString("status"));
         locationText.setText(item.getString("location_found"));
-        dateText.setText(item.getString("date"));
+        dateText.setText(item.getString("report_date"));
 
         // Convert time to 12-hour format before displaying it
-        String time = item.getString("time");
+        String time = item.getString("report_time");
         String formattedTime = convertTimeTo12HourFormat(time);
         timeText.setText(formattedTime);
 

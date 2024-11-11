@@ -41,7 +41,7 @@ public class TodayItemsAdapter extends RecyclerView.Adapter<TodayItemsAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         TodayItem item = itemsList.get(position);
         holder.itemName.setText(item.getItemName());
-        holder.itemLocation.setText(item.getItemLocation());
+        holder.itemDetails.setText(item.getItemDetails());
 
         // Use Glide to load the image into the ImageView
         Glide.with(context)
@@ -63,13 +63,13 @@ public class TodayItemsAdapter extends RecyclerView.Adapter<TodayItemsAdapter.Vi
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView itemImage;
-        TextView itemName, itemLocation;
+        TextView itemName, itemDetails;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             itemImage = itemView.findViewById(R.id.itemImg);  // Bind the correct ImageView
             itemName = itemView.findViewById(R.id.itemName);
-            itemLocation = itemView.findViewById(R.id.location);
+            itemDetails = itemView.findViewById(R.id.itemDetails);
         }
     }
 }

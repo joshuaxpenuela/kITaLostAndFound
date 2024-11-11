@@ -3,7 +3,7 @@ package com.example.kITa;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -14,15 +14,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class UpdateProfileActivity extends AppCompatActivity {
@@ -44,6 +45,8 @@ public class UpdateProfileActivity extends AppCompatActivity {
     private RequestQueue requestQueue;
     private String email;
     private int id;
+    private ArrayAdapter<String> departmentAdapter;
+    private List<String> collegesList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +71,16 @@ public class UpdateProfileActivity extends AppCompatActivity {
         navProfile = findViewById(R.id.nav_profile);
 
         requestQueue = Volley.newRequestQueue(this);
+
+        // Initialize colleges list and adapter
+        collegesList = new ArrayList<>();
+        collegesList.add("Select College"); // Add default option
+        departmentAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, collegesList);
+        departmentAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        departmentSpinner.setAdapter(departmentAdapter);
+
+        // Fetch colleges from database
+        fetchColleges();
 
         // Retrieve email from UserSession
         UserSession userSession = UserSession.getInstance();
@@ -121,6 +134,42 @@ public class UpdateProfileActivity extends AppCompatActivity {
         });
     }
 
+    private void fetchColleges() {
+        String url = "http://10.0.2.2/lost_found_db/college.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                response -> {
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        if (jsonResponse.getBoolean("success")) {
+                            collegesList.clear();
+                            collegesList.add("Select College"); // Add default option
+
+                            // Add colleges from response
+                            for (int i = 0; i < jsonResponse.getJSONArray("colleges").length(); i++) {
+                                collegesList.add(jsonResponse.getJSONArray("colleges").getString(i));
+                            }
+                            departmentAdapter.notifyDataSetChanged();
+                        } else {
+                            Toast.makeText(UpdateProfileActivity.this,
+                                    "Failed to fetch colleges: " + jsonResponse.getString("message"),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(UpdateProfileActivity.this,
+                                "Error parsing colleges: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                },
+                error -> Toast.makeText(UpdateProfileActivity.this,
+                        "Error fetching colleges: " + error.getMessage(),
+                        Toast.LENGTH_SHORT).show()
+        );
+
+        requestQueue.add(stringRequest);
+    }
+
     private boolean validateInputFields() {
         boolean isValid = true;
 
@@ -142,8 +191,8 @@ public class UpdateProfileActivity extends AppCompatActivity {
             isValid = false;
         }
 
-        if (departmentSpinner.getSelectedItemPosition() == 0) {
-            Toast.makeText(this, "Please select a department", Toast.LENGTH_SHORT).show();
+        if (departmentSpinner.getSelectedItem().toString().equals("Select College")) {
+            Toast.makeText(this, "Please select a college", Toast.LENGTH_SHORT).show();
             isValid = false;
         }
 
@@ -151,8 +200,6 @@ public class UpdateProfileActivity extends AppCompatActivity {
     }
 
     private boolean isValidPhoneNumber(String phoneNumber) {
-        // Add your own phone number validation logic here
-        // For example, you can use a regular expression to validate the phone number format
         return phoneNumber.matches("^\\+?[0-9]{10,13}$");
     }
 
@@ -177,12 +224,15 @@ public class UpdateProfileActivity extends AppCompatActivity {
                         String status = jsonResponse.getString("status");
                         if (status.equals("success")) {
                             Toast.makeText(UpdateProfileActivity.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
-                            // Update the UserSession with the new details
                             UserSession.getInstance().saveUserData(id, firstName, lastName, email, contactNo, department);
                             finish();
                         } else {
                             String error = jsonResponse.optString("message", "Unknown error");
                             Toast.makeText(UpdateProfileActivity.this, error, Toast.LENGTH_SHORT).show();
+                            if (error.equals("Contact number already exists")) {
+                                contactNoEditText.setError("Contact number already in use");
+                                contactNoEditText.requestFocus();
+                            }
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -198,10 +248,10 @@ public class UpdateProfileActivity extends AppCompatActivity {
                 Map<String, String> params = new HashMap<>();
                 params.put("id", String.valueOf(id));
                 params.put("email", email);
-                params.put("firstName", firstNameEditText.getText().toString().trim());
-                params.put("lastName", lastNameEditText.getText().toString().trim());
-                params.put("contactNo", contactNoEditText.getText().toString().trim());
-                params.put("department", departmentSpinner.getSelectedItem().toString().trim());
+                params.put("firstName", firstName);
+                params.put("lastName", lastName);
+                params.put("contactNo", contactNo);
+                params.put("department", department);
                 return params;
             }
         };

@@ -125,7 +125,8 @@ public class SearchActivity extends AppCompatActivity {
                                     item.getInt("id_item"),
                                     item.getString("item_name"),
                                     item.getString("location_found"),
-                                    "http://10.0.2.2/lost_found_db/uploads/img_reported_items/" + item.getString("img1") // Use the image URL
+                                    "http://10.0.2.2/lost_found_db/uploads/img_reported_items/" + item.getString("img1"),
+                                    item.getString("other_details")
                             ));
                         }
                         searchResultAdapter.notifyDataSetChanged();

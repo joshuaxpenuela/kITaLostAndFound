@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient">
 
-
     <EditText
         android:id="@+id/email"
         android:layout_width="0dp"
@@ -169,6 +168,7 @@
         android:textSize="15sp"
         android:hint="Contact No."
         android:inputType="phone"
+        android:maxLength="11"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -188,7 +188,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/contactNo"
         style="@style/CustomSpinnerStyle"
-        android:entries="@array/department_array"/>
+        />
     <TextView
         android:id="@+id/noteEmail"
         android:layout_width="wrap_content"
@@ -206,8 +206,8 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="163dp"
-        android:layout_height="84dp"
+        android:layout_width="200dp"
+        android:layout_height="120dp"
         android:layout_marginStart="80dp"
         android:layout_marginTop="35dp"
         android:layout_marginEnd="80dp"

@@ -20,9 +20,7 @@ public class ChatActivity extends AppCompatActivity {
     private ImageButton guideIcon, searchIcon, navLost, navFound, navChat, navNotifications, navProfile;
     private CardView cssCardView;
     private TextView messageTextView, timeMessageTextView;
-    private RecyclerView userChatRecyclerView;
     private ExistingUserChatAdapter chatAdapter;
-    private FloatingActionButton addUsrMsg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +29,6 @@ public class ChatActivity extends AppCompatActivity {
 
         initializeViews();
         setClickListeners();
-        loadUserConversations();
         loadLatestAdminMessage();
     }
 
@@ -44,14 +41,10 @@ public class ChatActivity extends AppCompatActivity {
         navNotifications = findViewById(R.id.nav_notifications);
         navProfile = findViewById(R.id.nav_profile);
         cssCardView = findViewById(R.id.CSSCardView);
-        addUsrMsg = findViewById(R.id.addUsrMsg);
 
         messageTextView = findViewById(R.id.message);
         timeMessageTextView = findViewById(R.id.timeMessage);
-        userChatRecyclerView = findViewById(R.id.UserChatRecyclerView);
-        userChatRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         chatAdapter = new ExistingUserChatAdapter(this);
-        userChatRecyclerView.setAdapter(chatAdapter);
     }
 
     private void setClickListeners() {
@@ -64,26 +57,8 @@ public class ChatActivity extends AppCompatActivity {
         navProfile.setOnClickListener(v -> startActivity(new Intent(ChatActivity.this, ProfileActivity.class)));
 
         cssCardView.setOnClickListener(v -> startActivity(new Intent(ChatActivity.this, AdminChatActivity.class)));
-
-        addUsrMsg.setOnClickListener(v -> {
-            UserSearchDialogFragment dialog = new UserSearchDialogFragment();
-            dialog.show(getSupportFragmentManager(), "UserSearchDialogFragment");
-        });
     }
 
-    private void loadUserConversations() {
-        ApiClient.getUserConversations(UserSession.getInstance().getId(), new ApiCallback<List<UserConversation>>() {
-            @Override
-            public void onSuccess(List<UserConversation> conversations) {
-                chatAdapter.setConversations(conversations);  // This method is now available
-            }
-
-            @Override
-            public void onError(String error) {
-                Toast.makeText(ChatActivity.this, "Error loading conversations: " + error, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
     private void loadLatestAdminMessage() {
         ApiClient.getLatestAdminMessage(new ApiCallback<Message>() {

@@ -6,12 +6,14 @@ public class ClaimedItem {
     private String itemName;
     private String location;
     private String img1; // Add img1 field
+    private String itemDetails;
 
-    public ClaimedItem(int id, String itemName, String location, String img1) {
+    public ClaimedItem(int id, String itemName, String location, String img1, String itemDetails) {
         this.id = id;
         this.itemName = itemName;
         this.location = location;
         this.img1 = img1; // Initialize img1
+        this.itemDetails = itemDetails;
     }
 
     public int getId() {
@@ -29,4 +31,6 @@ public class ClaimedItem {
     public String getImg1() {
         return img1; // Getter for img1 (image URL)
     }
+
+    public String getItemDetails() {return itemDetails;}
 }

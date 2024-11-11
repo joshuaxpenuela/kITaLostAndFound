@@ -46,7 +46,7 @@ public class OlderItemsAdapter extends RecyclerView.Adapter<OlderItemsAdapter.Vi
         // Check for null values before setting them
         if (item != null) {
             holder.itemName.setText(item.getItemName());
-            holder.itemLocation.setText(item.getItemLocation());
+            holder.itemDetails.setText(item.getItemDetails());
 
             // Load the image using Glide
             Glide.with(context)
@@ -62,7 +62,7 @@ public class OlderItemsAdapter extends RecyclerView.Adapter<OlderItemsAdapter.Vi
         } else {
             // Handle case when item is null
             holder.itemName.setText("Unknown Item");
-            holder.itemLocation.setText("Unknown Location");
+            holder.itemDetails.setText("No Details");
             holder.itemDate.setText("N/A");
             holder.itemTime.setText("N/A");
             holder.itemImage.setImageResource(R.drawable.ic_uploadphoto); // Set placeholder image
@@ -76,13 +76,13 @@ public class OlderItemsAdapter extends RecyclerView.Adapter<OlderItemsAdapter.Vi
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView itemImage;
-        TextView itemName, itemLocation, itemDate, itemTime;
+        TextView itemName, itemDetails, itemDate, itemTime;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             itemImage = itemView.findViewById(R.id.itemImg); // Ensure this matches your layout
             itemName = itemView.findViewById(R.id.itemName); // Ensure this matches your layout
-            itemLocation = itemView.findViewById(R.id.location); // Ensure this matches your layout
+            itemDetails = itemView.findViewById(R.id.itemDetails);
             itemDate = itemView.findViewById(R.id.date); // Ensure this matches your layout
             itemTime = itemView.findViewById(R.id.time); // Ensure this matches your layout
         }
