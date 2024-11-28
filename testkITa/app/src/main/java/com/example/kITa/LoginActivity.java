@@ -1,9 +1,13 @@
 package com.example.kITa;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -11,8 +15,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
@@ -58,6 +60,42 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        // Show custom dialog when back button is pressed
+        super.onBackPressed();
+        showUserSelectDialog();
+    }
+
+    private void showUserSelectDialog() {
+        // Create a custom dialog
+        Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialogbox_userselect);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCancelable(false);
+
+        // Get dialog buttons
+        Button proceedButton = dialog.findViewById(R.id.ProceedUserSelect);
+        Button cancelButton = dialog.findViewById(R.id.CancelUserSelect);
+
+        // Proceed button click listener
+        proceedButton.setOnClickListener(v -> {
+            dialog.dismiss();
+            Intent intent = new Intent(LoginActivity.this, UserSelectActivity.class);
+            startActivity(intent);
+            finish();
+        });
+
+        // Cancel button click listener
+        cancelButton.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+
+        // Show the dialog
+        dialog.show();
+    }
+
     private void loginUser() {
         String email = emailEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
@@ -67,7 +105,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        String url = "http://10.0.2.2/lost_found_db/login_req.php"; // Update with your server URL
+        String url = "https://hookworm-advanced-shortly.ngrok-free.app/lost_found_db/login_req.php"; // Update with your server URL
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {

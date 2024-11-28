@@ -72,9 +72,9 @@ public class TodayAllItemsAdapter extends RecyclerView.Adapter<TodayAllItemsAdap
             super(itemView);
             itemImage = itemView.findViewById(R.id.itemImg);  // Correctly bind the ImageView (itemImg)
             itemName = itemView.findViewById(R.id.itemName);
-            itemLocation = itemView.findViewById(R.id.location);
-            time = itemView.findViewById(R.id.time);  // Time field if available
-            itemDetails = itemLocation.findViewById(R.id.itemDetails);
+            itemLocation = itemView.findViewById(R.id.location); // Initialize itemLocation correctly
+            time = itemView.findViewById(R.id.time);  // Initialize time if available
+            itemDetails = itemView.findViewById(R.id.itemDetails); // Bind directly from itemView
         }
     }
 }

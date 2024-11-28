@@ -1,6 +1,7 @@
 package com.example.kITa;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -21,15 +22,39 @@ public class ChatActivity extends AppCompatActivity {
     private CardView cssCardView;
     private TextView messageTextView, timeMessageTextView;
     private ExistingUserChatAdapter chatAdapter;
+    private int currentUserId;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Check if email is empty before setting content view
+        if (isEmailEmpty()) {
+            // Stay in the current activity
+            Toast.makeText(this, "Please log-in as Seeker to proceed messaging.", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
         setContentView(R.layout.fragment_chat);
+
+        // Initialize SharedPreferences
+        sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+
+        // Retrieve the current user's ID
+        currentUserId = getCurrentUserId();
 
         initializeViews();
         setClickListeners();
         loadLatestAdminMessage();
+    }
+
+    // Method to check if email is empty
+    private boolean isEmailEmpty() {
+        UserSession userSession = UserSession.getInstance();
+        String email = userSession.getEmail();
+        return email == null || email.trim().isEmpty();
     }
 
     private void initializeViews() {
@@ -48,36 +73,61 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void setClickListeners() {
-        guideIcon.setOnClickListener(v -> startActivity(new Intent(ChatActivity.this, GuidelinesActivity.class)));
-        searchIcon.setOnClickListener(v -> startActivity(new Intent(ChatActivity.this, SearchActivity.class)));
-        navLost.setOnClickListener(v -> startActivity(new Intent(ChatActivity.this, MainActivity.class)));
-        navFound.setOnClickListener(v -> startActivity(new Intent(ChatActivity.this, ClaimedActivity.class)));
-        navChat.setOnClickListener(v -> { finish(); startActivity(getIntent()); });
-        navNotifications.setOnClickListener(v -> startActivity(new Intent(ChatActivity.this, NotificationActivity.class)));
-        navProfile.setOnClickListener(v -> startActivity(new Intent(ChatActivity.this, ProfileActivity.class)));
+        // Modify click listeners to check email before navigation
+        guideIcon.setOnClickListener(v -> navigateIfEmailNotEmpty(GuidelinesActivity.class));
+        searchIcon.setOnClickListener(v -> navigateIfEmailNotEmpty(SearchActivity.class));
+        navLost.setOnClickListener(v -> navigateIfEmailNotEmpty(MainActivity.class));
+        navFound.setOnClickListener(v -> navigateIfEmailNotEmpty(ClaimedActivity.class));
+        navChat.setOnClickListener(v -> {
+            if (isEmailEmpty()) {
+                Toast.makeText(this, "Please complete your profile", Toast.LENGTH_SHORT).show();
+            } else {
+                finish();
+                startActivity(getIntent());
+            }
+        });
+        navNotifications.setOnClickListener(v -> navigateIfEmailNotEmpty(NotificationActivity.class));
+        navProfile.setOnClickListener(v -> navigateIfEmailNotEmpty(ProfileActivity.class));
 
-        cssCardView.setOnClickListener(v -> startActivity(new Intent(ChatActivity.this, AdminChatActivity.class)));
+        cssCardView.setOnClickListener(v -> navigateIfEmailNotEmpty(AdminChatActivity.class));
     }
 
+    // Helper method to navigate only if email is not empty
+    private void navigateIfEmailNotEmpty(Class<?> destinationActivity) {
+        if (isEmailEmpty()) {
+            Toast.makeText(this, "Please complete your profile", Toast.LENGTH_SHORT).show();
+        } else {
+            startActivity(new Intent(ChatActivity.this, destinationActivity));
+        }
+    }
 
     private void loadLatestAdminMessage() {
-        ApiClient.getLatestAdminMessage(new ApiCallback<Message>() {
+        // Pass the current user's ID to the getLatestAdminMessage method
+        ApiClient.getLatestAdminMessage(currentUserId, new ApiCallback<Message>() {
             @Override
             public void onSuccess(Message message) {
                 if (message != null) {
                     messageTextView.setText(message.getText());
                     timeMessageTextView.setText(message.getFormattedTime());
                 } else {
-                    messageTextView.setText("");
+                    messageTextView.setText("No messages");
                     timeMessageTextView.setText("");
                 }
-
             }
 
             @Override
             public void onError(String error) {
                 Toast.makeText(ChatActivity.this, "Error loading admin messages: " + error, Toast.LENGTH_SHORT).show();
+                messageTextView.setText("Error loading messages");
+                timeMessageTextView.setText("");
             }
         });
+    }
+
+    // Method to get the current user's ID from SharedPreferences
+    private int getCurrentUserId() {
+        // Retrieve the user ID from SharedPreferences
+        // Replace "user_id" with the key you use to store the user ID
+        return sharedPreferences.getInt("user_id", -1);
     }
 }

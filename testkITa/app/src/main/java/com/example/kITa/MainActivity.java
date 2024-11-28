@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private RequestQueue requestQueue;
 
     private static final String TAG = "MainActivity";
-    private static final String URL = "http://10.0.2.2/lost_found_db/get_items.php";
+    private static final String URL = "https://hookworm-advanced-shortly.ngrok-free.app/lost_found_db/get_items.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
                                 String itemDetails = item.getString("other_details");
 
                                 // Properly fetch the image from the uploads directory
-                                String imageUrl = "http://10.0.2.2/lost_found_db/uploads/img_reported_items/" + img1Path;
+                                String imageUrl = "https://hookworm-advanced-shortly.ngrok-free.app/lost_found_db/uploads/img_reported_items/" + img1Path;
 
                                 if (status.equals("Unclaimed")) {
                                     if (category.equals("today")) {

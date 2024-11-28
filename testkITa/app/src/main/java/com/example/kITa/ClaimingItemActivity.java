@@ -29,7 +29,7 @@ import java.util.Map;
 public class ClaimingItemActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
-    private static final String SUBMIT_CLAIM_URL = "http://10.0.2.2/lost_found_db/submit_claim.php";
+    private static final String SUBMIT_CLAIM_URL = "https://hookworm-advanced-shortly.ngrok-free.app/lost_found_db/submit_claim.php";
 
     private ImageButton proofOfID;
     private EditText descriptionText;

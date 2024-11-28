@@ -49,19 +49,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             super(itemView);
             messageText = itemView.findViewById(R.id.messageText);
             timeStamp = itemView.findViewById(R.id.timeStamp);
-            messageImage = itemView.findViewById(R.id.messageImage);
         }
 
         void bind(Message message) {
             if (message.getMediaUrl() != null) {
                 messageText.setVisibility(View.GONE);
-                messageImage.setVisibility(View.VISIBLE);
-                Glide.with(itemView.getContext())
-                        .load(Uri.parse(message.getMediaUrl()))
-                        .into(messageImage);
             } else {
                 messageText.setVisibility(View.VISIBLE);
-                messageImage.setVisibility(View.GONE);
                 messageText.setText(message.getText());
             }
 

@@ -130,7 +130,7 @@ public class ReportActivity extends AppCompatActivity {
     }
 
     private void fetchColleges() {
-        String url = "http://10.0.2.2/lost_found_db/college.php";
+        String url = "https://hookworm-advanced-shortly.ngrok-free.app/lost_found_db/college.php";
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
@@ -192,13 +192,22 @@ public class ReportActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri imageUri = data.getData();
             try {
+                // Get file size in bytes
                 InputStream inputStream = getContentResolver().openInputStream(imageUri);
-                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                if (inputStream != null) {
+                    int fileSizeInBytes = inputStream.available(); // Get size in bytes
+                    inputStream.close();
 
-                if (bitmap.getByteCount() > 5 * 1024 * 1024) {
-                    Toast.makeText(this, "Image size exceeds 5MB", Toast.LENGTH_SHORT).show();
-                    return;
+                    if (fileSizeInBytes > 5 * 1024 * 1024) { // Check if it exceeds 5MB
+                        Toast.makeText(this, "Image size exceeds 5MB", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                 }
+
+                // Decode and encode the image
+                inputStream = getContentResolver().openInputStream(imageUri); // Re-open the input stream
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                inputStream.close();
 
                 String encodedImage = encodeImage(bitmap);
                 Glide.with(this).load(bitmap).into(selectedImageButton);
@@ -218,6 +227,7 @@ public class ReportActivity extends AppCompatActivity {
 
             } catch (Exception e) {
                 e.printStackTrace();
+                Toast.makeText(this, "Error processing the image", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -230,7 +240,7 @@ public class ReportActivity extends AppCompatActivity {
 
     private void submitReport() {
         if (validateInputFields() && encodedImages.size() >= 1) {
-            String url = "http://10.0.2.2/lost_found_db/submit_report.php";
+            String url = "https://hookworm-advanced-shortly.ngrok-free.app/lost_found_db/submit_report.php";
 
             VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, url,
                     response -> {

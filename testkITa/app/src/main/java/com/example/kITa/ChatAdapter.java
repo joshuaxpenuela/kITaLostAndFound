@@ -1,54 +1,39 @@
 package com.example.kITa;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.net.Uri;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHolder> {
+public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder> {
+    private List<Message> messages;
+    private Context context;
+    private int currentUserId;
 
-    private final Context context;
-    private final List<Message> messages;
-
-    public ChatAdapter(Context context) {
+    public ChatAdapter(Context context, List<Message> messages, int currentUserId) {
         this.context = context;
-        this.messages = new ArrayList<>();
+        this.messages = new ArrayList<>(messages);
+        this.currentUserId = currentUserId;
     }
 
-    public void addMessage(Message message) {
-        messages.add(message);
-        notifyItemInserted(messages.size() - 1);
-    }
-
-    // Temporarily disable adding images in the chat
-    public void addImage(Uri imageUri) {
-        // Do nothing for now since images are not to be displayed
-    }
-
-    public void setMessages(List<Message> messages) {
-        this.messages.clear();
-        this.messages.addAll(messages);
-        notifyDataSetChanged();
-    }
-
+    @NonNull
     @Override
-    public MessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ChatViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_message, parent, false);
-        return new MessageViewHolder(view);
+        return new ChatViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(MessageViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ChatViewHolder holder, int position) {
         Message message = messages.get(position);
         holder.bind(message);
     }
@@ -58,42 +43,48 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHol
         return messages.size();
     }
 
-    class MessageViewHolder extends RecyclerView.ViewHolder {
-        TextView messageText;
-        TextView timeStamp;
-        ImageView messageImage;
+    public void addMessage(Message message) {
+        messages.add(message);
+        notifyItemInserted(messages.size() - 1);
+    }
 
-        MessageViewHolder(View itemView) {
+    public void updateMessages(List<Message> newMessages) {
+        messages.clear();
+        messages.addAll(newMessages);
+        notifyDataSetChanged();
+    }
+
+    class ChatViewHolder extends RecyclerView.ViewHolder {
+        TextView messageText, timeStamp;
+        ConstraintLayout messageContainer;
+
+        ChatViewHolder(@NonNull View itemView) {
             super(itemView);
             messageText = itemView.findViewById(R.id.messageText);
             timeStamp = itemView.findViewById(R.id.timeStamp);
-            messageImage = itemView.findViewById(R.id.messageImage);
+            messageContainer = itemView.findViewById(R.id.messageContainer);
         }
 
         void bind(Message message) {
-            // Only show text messages, hide image field
-            messageText.setVisibility(View.VISIBLE);
-            messageImage.setVisibility(View.GONE);
             messageText.setText(message.getText());
-
             timeStamp.setText(message.getFormattedTime());
-            timeStamp.setVisibility(View.GONE);
 
-            itemView.setOnClickListener(v -> {
-                if (timeStamp.getVisibility() == View.VISIBLE) {
-                    timeStamp.setVisibility(View.GONE);
-                } else {
-                    timeStamp.setVisibility(View.VISIBLE);
-                }
-            });
+            // Determine message bubble color and alignment based on sender
+            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) messageText.getLayoutParams();
 
-            if (message.getSenderId() == UserSession.getInstance().getId()) {
-                itemView.setBackgroundResource(R.drawable.sender_message_background);
-                messageText.setTextColor(Color.WHITE);
+            if (message.getSenderId() == currentUserId) {
+                // User's messages (right side)
+                params.horizontalBias = 1.0f; // Align to right
+                messageText.setBackgroundResource(R.drawable.sender_message_background);
+                messageText.setTextColor(context.getResources().getColor(R.color.white));
             } else {
-                itemView.setBackgroundResource(R.drawable.receiver_message_background);
+                // Admin's messages (left side)
+                params.horizontalBias = 0.0f; // Align to left
+                messageText.setBackgroundResource(R.drawable.receiver_message_background);
                 messageText.setTextColor(context.getResources().getColor(R.color.green));
             }
+
+            messageText.setLayoutParams(params);
         }
     }
 }

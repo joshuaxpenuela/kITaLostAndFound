@@ -139,7 +139,7 @@ public class PinActivity extends AppCompatActivity {
     }
 
     private void verifyOTP(final String otp) {
-        String url = "http://10.0.2.2/lost_found_db/pin_verification.php";
+        String url = "https://firmly-touched-anemone.ngrok-free.app/lost_found_db/pin_verification.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -182,7 +182,7 @@ public class PinActivity extends AppCompatActivity {
     }
 
     private void resendOTP() {
-        String url = "http://10.0.2.2/lost_found_db/resend_otp.php";
+        String url = "https://firmly-touched-anemone.ngrok-free.app/lost_found_db/resend_otp.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override

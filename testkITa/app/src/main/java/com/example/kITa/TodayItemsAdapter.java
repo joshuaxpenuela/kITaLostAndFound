@@ -38,22 +38,34 @@ public class TodayItemsAdapter extends RecyclerView.Adapter<TodayItemsAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TodayItemsAdapter.ViewHolder holder, int position) {
         TodayItem item = itemsList.get(position);
-        holder.itemName.setText(item.getItemName());
-        holder.itemDetails.setText(item.getItemDetails());
 
-        // Use Glide to load the image into the ImageView
-        Glide.with(context)
-                .load(item.getImageUrl())
-                .placeholder(R.drawable.ic_uploadphoto)  // Add a placeholder image
-                .into(holder.itemImage);  // Use itemImg for ImageView
+        // Check if item is not null before setting details
+        if (item != null) {
+            holder.itemName.setText(item.getItemName());
+            holder.itemDetails.setText(item.getItemDetails());
 
-        holder.itemView.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onItemClick(item);
-            }
-        });
+            // Load the image using Glide
+            Glide.with(context)
+                    .load(item.getImageUrl()) // Get image URL from the item
+                    .placeholder(R.drawable.ic_uploadphoto) // Placeholder image
+                    .into(holder.itemImage); // Load into ImageView
+
+            holder.itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onItemClick(item);
+                }
+            });
+        } else {
+            // Handle case when item is null
+            holder.itemName.setText("Unknown Item");
+            holder.itemLocation.setText("Unknown Location");
+            holder.itemDate.setText("N/A");
+            holder.itemTime.setText("N/A");
+            holder.itemImage.setImageResource(R.drawable.ic_uploadphoto); // Set placeholder image
+            holder.itemDetails.setText("No Details");
+        }
     }
 
     @Override
@@ -63,12 +75,15 @@ public class TodayItemsAdapter extends RecyclerView.Adapter<TodayItemsAdapter.Vi
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView itemImage;
-        TextView itemName, itemDetails;
+        TextView itemName, itemLocation, itemDate, itemTime, itemDetails;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             itemImage = itemView.findViewById(R.id.itemImg);  // Bind the correct ImageView
             itemName = itemView.findViewById(R.id.itemName);
+            itemLocation = itemView.findViewById(R.id.location); // Ensure this matches your layout
+            itemDate = itemView.findViewById(R.id.date); // Ensure this matches your layout
+            itemTime = itemView.findViewById(R.id.time); // Ensure this matches your layout
             itemDetails = itemView.findViewById(R.id.itemDetails);
         }
     }

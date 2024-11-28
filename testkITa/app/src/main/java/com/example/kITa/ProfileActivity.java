@@ -58,7 +58,7 @@ public class ProfileActivity extends AppCompatActivity {
             UserSession.getInstance().clearSession();
 
             // Handle logout logic
-            Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+            Intent intent = new Intent(ProfileActivity.this, UserSelectActivity.class);
             startActivity(intent);
             finish();
         });
@@ -115,7 +115,7 @@ public class ProfileActivity extends AppCompatActivity {
             contactNoTextView.setText(userSession.getContactNo());
             deptTextView.setText(userSession.getDept());
         } else {
-            Toast.makeText(this, "No email provided", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please log-in as Seeker.", Toast.LENGTH_SHORT).show();
             Log.e("ProfileActivity", "No email in UserSession.");
         }
     }
