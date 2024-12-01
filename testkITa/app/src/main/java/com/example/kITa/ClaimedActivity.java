@@ -30,7 +30,7 @@ public class ClaimedActivity extends AppCompatActivity {
     private RequestQueue requestQueue;
 
     private static final String TAG = "ClaimedActivity";
-    private static final String URL = "https://hookworm-advanced-shortly.ngrok-free.app/lost_found_db/get_claimed_items.php";
+    private static final String URL = "http://10.0.2.2/lost_found_db/get_claimed_items.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

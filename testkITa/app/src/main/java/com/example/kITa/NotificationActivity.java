@@ -31,7 +31,7 @@ public class NotificationActivity extends AppCompatActivity {
     private RecyclerView todayNotifRecyclerView, olderNotifRecyclerView;
     private NotificationAdapter todayAdapter, olderAdapter;
     private List<NotificationItem> todayNotifications, olderNotifications;
-    private static final String FETCH_NOTIFICATIONS_URL = "https://hookworm-advanced-shortly.ngrok-free.app/lost_found_db/fetch_notifications.php";
+    private static final String FETCH_NOTIFICATIONS_URL = "http://10.0.2.2/lost_found_db/fetch_notifications.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

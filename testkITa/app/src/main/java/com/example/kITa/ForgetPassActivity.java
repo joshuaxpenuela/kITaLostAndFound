@@ -54,7 +54,7 @@ public class ForgetPassActivity extends AppCompatActivity {
     }
 
     private void sendOTPRequest(final String email) {
-        String url = "https://hookworm-advanced-shortly.ngrok-free.app/lost_found_db/forget_password.php";
+        String url = "http://10.0.2.2/lost_found_db/forget_password.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {

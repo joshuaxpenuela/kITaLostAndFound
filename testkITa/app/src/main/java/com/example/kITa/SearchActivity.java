@@ -110,7 +110,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void searchItems(String query, String category) {
-        String url = "https://hookworm-advanced-shortly.ngrok-free.app/lost_found_db/search_items.php?search=" + query;
+        String url = "http://10.0.2.2/lost_found_db/search_items.php?search=" + query;
         if (!category.isEmpty()) {
             url += "&category=" + category;
         }
@@ -125,7 +125,7 @@ public class SearchActivity extends AppCompatActivity {
                                     item.getInt("id_item"),
                                     item.getString("item_name"),
                                     item.getString("location_found"),
-                                    "https://hookworm-advanced-shortly.ngrok-free.app/lost_found_db/uploads/img_reported_items/" + item.getString("img1"),
+                                    "http://10.0.2.2/lost_found_db/uploads/img_reported_items/" + item.getString("img1"),
                                     item.getString("other_details")
                             ));
                         }

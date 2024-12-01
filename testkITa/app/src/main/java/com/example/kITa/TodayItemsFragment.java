@@ -29,7 +29,7 @@ public class TodayItemsFragment extends Fragment {
     private ArrayList<TodayItem> itemsList;
     private RequestQueue requestQueue;
 
-    private static final String URL = "https://hookworm-advanced-shortly.ngrok-free.app/lost_found_db/get_items.php";
+    private static final String URL = "http://10.0.2.2/lost_found_db/get_items.php";
 
     @Nullable
     @Override
@@ -82,7 +82,7 @@ public class TodayItemsFragment extends Fragment {
                                     String itemDetails = item.getString("other_details");
 
                                     // Load image URL properly
-                                    String imageUrl = "https://hookworm-advanced-shortly.ngrok-free.app/lost_found_db/uploads/img_reported_items/" + img1Path;
+                                    String imageUrl = "http://10.0.2.2/lost_found_db/uploads/img_reported_items/" + img1Path;
 
                                     itemsList.add(new TodayItem(id, imageUrl, itemName, location, date, time, status, itemDetails));
                                 }

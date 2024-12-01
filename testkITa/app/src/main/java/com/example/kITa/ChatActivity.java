@@ -21,7 +21,6 @@ public class ChatActivity extends AppCompatActivity {
     private ImageButton guideIcon, searchIcon, navLost, navFound, navChat, navNotifications, navProfile;
     private CardView cssCardView;
     private TextView messageTextView, timeMessageTextView;
-    private ExistingUserChatAdapter chatAdapter;
     private int currentUserId;
     private SharedPreferences sharedPreferences;
 
@@ -69,7 +68,6 @@ public class ChatActivity extends AppCompatActivity {
 
         messageTextView = findViewById(R.id.message);
         timeMessageTextView = findViewById(R.id.timeMessage);
-        chatAdapter = new ExistingUserChatAdapter(this);
     }
 
     private void setClickListeners() {

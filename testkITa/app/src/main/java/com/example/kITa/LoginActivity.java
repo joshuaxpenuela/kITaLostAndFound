@@ -105,7 +105,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        String url = "https://hookworm-advanced-shortly.ngrok-free.app/lost_found_db/login_req.php"; // Update with your server URL
+        String url = "http://10.0.2.2/lost_found_db/login_req.php"; // Update with your server URL
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {

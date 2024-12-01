@@ -135,7 +135,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
     }
 
     private void fetchColleges() {
-        String url = "https://hookworm-advanced-shortly.ngrok-free.app/lost_found_db/college.php";
+        String url = "http://10.0.2.2/lost_found_db/college.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 response -> {
@@ -209,7 +209,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
         String contactNo = contactNoEditText.getText().toString().trim();
         String department = departmentSpinner.getSelectedItem().toString();
 
-        String url = "https://hookworm-advanced-shortly.ngrok-free.app/lost_found_db/update_profile.php";
+        String url = "http://10.0.2.2/lost_found_db/update_profile.php";
 
         if (email == null || email.isEmpty()) {
             Toast.makeText(UpdateProfileActivity.this, "Email is not set", Toast.LENGTH_SHORT).show();

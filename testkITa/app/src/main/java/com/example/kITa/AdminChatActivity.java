@@ -3,14 +3,17 @@ package com.example.kITa;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -22,10 +25,9 @@ public class AdminChatActivity extends AppCompatActivity {
     private RecyclerView chatRecyclerView;
     private ChatAdapter chatAdapter;
     private DatabaseHelper databaseHelper;
-    private Uri selectedImageUri;
+    private Uri selectedImageUri; // Store the selected image URI
 
     private static final int PICK_IMAGE_REQUEST = 1;
-    private int currentUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,14 +37,11 @@ public class AdminChatActivity extends AppCompatActivity {
         databaseHelper = new DatabaseHelper(this);
         initializeViews();
         setupRecyclerView();
-        loadMessages();
+        loadPreviousMessages();
 
         setNavbarListeners();
 
         sendMessageButton.setOnClickListener(v -> sendMessage());
-
-        // Periodically check for new admin messages
-        checkForNewAdminMessages();
     }
 
     private void initializeViews() {
@@ -62,41 +61,27 @@ public class AdminChatActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
         int currentUserId = UserSession.getInstance().getId();
-        List<Message> userMessages = databaseHelper.getUserMessages(currentUserId);
-        chatAdapter = new ChatAdapter(this, userMessages, currentUserId);
+        List<Message> messages = new ArrayList<>();
+        chatAdapter = new ChatAdapter(this, messages, currentUserId);
         chatRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         chatRecyclerView.setAdapter(chatAdapter);
     }
 
-    private void loadMessages() {
+    private void loadPreviousMessages() {
         int userId = UserSession.getInstance().getId();
         ApiClient.getUserMessages(userId, new ApiCallback<List<Message>>() {
             @Override
             public void onSuccess(List<Message> messages) {
                 chatAdapter.updateMessages(messages);
-                chatRecyclerView.scrollToPosition(messages.size() - 1);
-            }
-
-            @Override
-            public void onError(String error) {
-                Toast.makeText(AdminChatActivity.this, "Error loading messages: " + error, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void checkForNewAdminMessages() {
-        ApiClient.getLatestAdminMessage(currentUserId, new ApiCallback<Message>() {
-            @Override
-            public void onSuccess(Message message) {
-                if (message != null) {
-                    chatAdapter.addMessage(message);
-                    chatRecyclerView.scrollToPosition(chatAdapter.getItemCount() - 1);
+                // Scroll to the bottom of the RecyclerView
+                if (!messages.isEmpty()) {
+                    chatRecyclerView.scrollToPosition(messages.size() - 1);
                 }
             }
 
             @Override
             public void onError(String error) {
-                // Optional: Handle error silently or log
+                Toast.makeText(AdminChatActivity.this, "Error loading messages: " + error, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -115,15 +100,21 @@ public class AdminChatActivity extends AppCompatActivity {
         String messageText = messageInput.getText().toString().trim();
         int senderId = UserSession.getInstance().getId();
 
+        // If there's a message to send
         if (!messageText.isEmpty()) {
+            // Send text message to admins
             ApiClient.sendMessageToAdmins(senderId, messageText, new ApiCallback<Boolean>() {
                 @Override
                 public void onSuccess(Boolean success) {
                     if (success) {
-                        Message newMessage = new Message(senderId, 1, messageText, new Date(), null);
-                        databaseHelper.insertMessage(senderId, 1, messageText, false, null);
+                        // Create a new message and add it to the adapter
+                        Message newMessage = new Message(senderId, 0, messageText, new Date(), null);
                         chatAdapter.addMessage(newMessage);
+
+                        // Clear the input field
                         messageInput.setText("");
+
+                        // Scroll to the bottom of the RecyclerView
                         chatRecyclerView.scrollToPosition(chatAdapter.getItemCount() - 1);
                     } else {
                         Toast.makeText(AdminChatActivity.this, "Failed to send message", Toast.LENGTH_SHORT).show();

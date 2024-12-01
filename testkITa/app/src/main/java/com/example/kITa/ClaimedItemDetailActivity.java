@@ -81,7 +81,7 @@ public class ClaimedItemDetailActivity extends AppCompatActivity {
     }
 
     private void fetchItemDetails(int itemId) {
-        String url = "https://hookworm-advanced-shortly.ngrok-free.app/lost_found_db/get_claimed_items_details.php?id_item=" + itemId;
+        String url = "http://10.0.2.2/lost_found_db/get_claimed_items_details.php?id_item=" + itemId;
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
@@ -126,19 +126,19 @@ public class ClaimedItemDetailActivity extends AppCompatActivity {
                 // Populate ImageSlider with available images only (no broken images)
                 List<SlideModel> slideModels = new ArrayList<>();
                 if (!item.isNull("img1") && !item.getString("img1").isEmpty()) {
-                    slideModels.add(new SlideModel("https://hookworm-advanced-shortly.ngrok-free.app/lost_found_db/uploads/img_reported_items/" + item.getString("img1"), ScaleTypes.CENTER_INSIDE));
+                    slideModels.add(new SlideModel("http://10.0.2.2/lost_found_db/uploads/img_reported_items/" + item.getString("img1"), ScaleTypes.CENTER_INSIDE));
                 }
                 if (!item.isNull("img2") && !item.getString("img2").isEmpty()) {
-                    slideModels.add(new SlideModel("https://hookworm-advanced-shortly.ngrok-free.app/lost_found_db/uploads/img_reported_items/" + item.getString("img2"), ScaleTypes.CENTER_INSIDE));
+                    slideModels.add(new SlideModel("http://10.0.2.2/lost_found_db/uploads/img_reported_items/" + item.getString("img2"), ScaleTypes.CENTER_INSIDE));
                 }
                 if (!item.isNull("img3") && !item.getString("img3").isEmpty()) {
-                    slideModels.add(new SlideModel("https://hookworm-advanced-shortly.ngrok-free.app/lost_found_db/uploads/img_reported_items/" + item.getString("img3"), ScaleTypes.CENTER_INSIDE));
+                    slideModels.add(new SlideModel("http://10.0.2.2/lost_found_db/uploads/img_reported_items/" + item.getString("img3"), ScaleTypes.CENTER_INSIDE));
                 }
                 if (!item.isNull("img4") && !item.getString("img4").isEmpty()) {
-                    slideModels.add(new SlideModel("https://hookworm-advanced-shortly.ngrok-free.app/lost_found_db/uploads/img_reported_items/" + item.getString("img4"), ScaleTypes.CENTER_INSIDE));
+                    slideModels.add(new SlideModel("http://10.0.2.2/lost_found_db/uploads/img_reported_items/" + item.getString("img4"), ScaleTypes.CENTER_INSIDE));
                 }
                 if (!item.isNull("img5") && !item.getString("img5").isEmpty()) {
-                    slideModels.add(new SlideModel("https://hookworm-advanced-shortly.ngrok-free.app/lost_found_db/uploads/img_reported_items/" + item.getString("img5"), ScaleTypes.CENTER_INSIDE));
+                    slideModels.add(new SlideModel("http://10.0.2.2/lost_found_db/uploads/img_reported_items/" + item.getString("img5"), ScaleTypes.CENTER_INSIDE));
                 }
 
                 imageSlider.setImageList(slideModels);

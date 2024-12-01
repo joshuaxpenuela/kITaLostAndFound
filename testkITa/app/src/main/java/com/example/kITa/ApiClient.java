@@ -10,15 +10,17 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class ApiClient {
 
     // URL of your server
-    private static final String SERVER_URL = "https://hookworm-advanced-shortly.ngrok-free.app/lost_found_db/";
+    private static final String SERVER_URL = "http://10.0.2.2/lost_found_db/";
 
     // ------- User to Admin Functions -------
 
@@ -32,14 +34,31 @@ public class ApiClient {
                     conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                     conn.setDoOutput(true);
 
-                    String postData = "sender_id=" + senderId + "&message=" + message;
+                    // Get current timestamp in the format expected by MySQL
+                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                    String currentTimestamp = dateFormat.format(new Date());
+
+                    String postData = "sender_id=" + senderId +
+                            "&message=" + java.net.URLEncoder.encode(message, "UTF-8") +
+                            "&created_at=" + java.net.URLEncoder.encode(currentTimestamp, "UTF-8");
+
                     OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
                     writer.write(postData);
                     writer.flush();
                     writer.close();
 
                     int responseCode = conn.getResponseCode();
-                    return responseCode == HttpURLConnection.HTTP_OK;
+                    BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    StringBuilder content = new StringBuilder();
+                    String inputLine;
+                    while ((inputLine = in.readLine()) != null) {
+                        content.append(inputLine);
+                    }
+                    in.close();
+
+                    // Parse the response
+                    JSONObject jsonResponse = new JSONObject(content.toString());
+                    return jsonResponse.getBoolean("success");
                 } catch (Exception e) {
                     e.printStackTrace();
                     return false;
@@ -84,13 +103,22 @@ public class ApiClient {
 
                     if (jsonResponse.getBoolean("success")) {
                         JSONArray jsonMessages = jsonResponse.getJSONArray("messages");
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
                         for (int i = 0; i < jsonMessages.length(); i++) {
                             JSONObject jsonMessage = jsonMessages.getJSONObject(i);
                             String text = jsonMessage.getString("message");
                             String createdAt = jsonMessage.getString("created_at");
-                            String mediaUrl = jsonMessage.optString("media_url", null);
+                            int senderId = jsonMessage.has("sender_id") ?
+                                    jsonMessage.getInt("sender_id") : userId;
 
-                            messages.add(new Message(userId, 1, text, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(createdAt), mediaUrl));
+                            messages.add(new Message(
+                                    senderId,
+                                    userId,
+                                    text,
+                                    sdf.parse(createdAt),
+                                    null
+                            ));
                         }
                     }
                     return messages;

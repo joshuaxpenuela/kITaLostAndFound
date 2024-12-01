@@ -130,7 +130,7 @@ public class ReportActivity extends AppCompatActivity {
     }
 
     private void fetchColleges() {
-        String url = "https://hookworm-advanced-shortly.ngrok-free.app/lost_found_db/college.php";
+        String url = "http://10.0.2.2/lost_found_db/college.php";
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
@@ -240,7 +240,7 @@ public class ReportActivity extends AppCompatActivity {
 
     private void submitReport() {
         if (validateInputFields() && encodedImages.size() >= 1) {
-            String url = "https://hookworm-advanced-shortly.ngrok-free.app/lost_found_db/submit_report.php";
+            String url = "http://10.0.2.2/lost_found_db/submit_report.php";
 
             VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, url,
                     response -> {

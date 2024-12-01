@@ -80,7 +80,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void fetchColleges() {
-        String url = "https://hookworm-advanced-shortly.ngrok-free.app/lost_found_db/college.php";
+        String url = "http://10.0.2.2/lost_found_db/college.php";
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -185,7 +185,7 @@ public class RegisterActivity extends AppCompatActivity {
         loading.setVisibility(View.VISIBLE);
 
         // Create and send the registration request
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://hookworm-advanced-shortly.ngrok-free.app/lost_found_db/register_req.php",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://10.0.2.2/lost_found_db/register_req.php",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
