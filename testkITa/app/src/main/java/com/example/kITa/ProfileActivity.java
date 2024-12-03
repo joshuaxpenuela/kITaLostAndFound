@@ -98,15 +98,21 @@ public class ProfileActivity extends AppCompatActivity {
             startActivity(getIntent());
         });
 
+        // Updated edit profile click listener
         editProfile.setOnClickListener(v -> {
-            Intent intent = new Intent(ProfileActivity.this, UpdateProfileActivity.class);
-            startActivity(intent);
+            UserSession userSession = UserSession.getInstance();
+            if (userSession.getEmail() != null && !userSession.getEmail().isEmpty()) {
+                Intent intent = new Intent(ProfileActivity.this, UpdateProfileActivity.class);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "Please log-in as Seeker to update your profile.", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
     private void loadUserProfile() {
         UserSession userSession = UserSession.getInstance();
-        if (userSession.getEmail() != null) {
+        if (userSession.getEmail() != null && !userSession.getEmail().isEmpty()) {
             Log.d("ProfileActivity", "Email: " + userSession.getEmail());
 
             String fullName = userSession.getFirstName() + " " + userSession.getLastName();

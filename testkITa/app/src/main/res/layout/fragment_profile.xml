@@ -240,7 +240,7 @@
             android:layout_below="@+id/contactNo"
             android:layout_marginStart="20dp"
             android:layout_marginTop="12dp"
-            android:text="College or Deparment"
+            android:text="College"
             android:textColor="@color/green"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -252,7 +252,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="15dp"
             android:layout_below="@id/departmentText"
-            android:text="College/Dept"
+            android:text="User's College"
             android:textSize="20sp"
             android:textColor="@color/green"
             />

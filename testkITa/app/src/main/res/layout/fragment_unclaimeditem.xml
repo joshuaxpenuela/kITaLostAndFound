@@ -349,7 +349,7 @@
                 android:layout_marginEnd="50dp"
                 android:layout_marginBottom="40dp"
                 android:backgroundTint="@color/white"
-                android:text="Send Email to Reporter"
+                android:text="Send Email"
                 android:textColor="@color/green"
                 android:textSize="20sp"
                 android:textStyle="bold"

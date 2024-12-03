@@ -249,7 +249,9 @@ public class ReportActivity extends AppCompatActivity {
                             JSONObject jsonResponse = new JSONObject(responseString);
 
                             if (jsonResponse.getBoolean("success")) {
-                                Toast.makeText(ReportActivity.this, "Report submitted successfully", Toast.LENGTH_SHORT).show();
+                                Toast toast = Toast.makeText(ReportActivity.this, "Report submitted successfully. Kindly surrender the lost item in CvSU-Main Gate 2.", Toast.LENGTH_LONG);
+                                toast.setDuration(Toast.LENGTH_LONG); // Extend display time to 6 seconds
+                                toast.show();
                                 startActivity(new Intent(ReportActivity.this, MainActivity.class));
                                 finish();
                             } else {

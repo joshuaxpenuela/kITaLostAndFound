@@ -78,8 +78,33 @@ public class UnclaimedActivity extends AppCompatActivity {
         reportedByText = findViewById(R.id.Fname);
         claimItemBtn = findViewById(R.id.claimItemBtn);
         sendEmailBtn = findViewById(R.id.sendEmail);
-        sendEmailBtn.setOnClickListener(v -> sendEmailToReporter());
+
+        // Update sendEmailBtn click listener
+        sendEmailBtn.setOnClickListener(v -> {
+            // Retrieve user email from UserSession
+            String userEmail = UserSession.getInstance().getEmail();
+
+            // Perform comprehensive email validation before allowing email functionality
+            if (userEmail == null || userEmail.isEmpty()) {
+                // Prevent email sending and show an informative toast
+                Toast.makeText(this, "Please log in as a Seeker to send an email", Toast.LENGTH_SHORT).show();
+                sendEmailBtn.setEnabled(false); // Optionally disable the button
+                return;
+            }
+
+            // If email exists, proceed with sending email
+            sendEmailToReporter();
+        });
+
+        // Update claimItemBtn click listener to check email
         claimItemBtn.setOnClickListener(v -> {
+            // Check if user has an email in UserSession
+            String userEmail = UserSession.getInstance().getEmail();
+            if (userEmail == null || userEmail.isEmpty()) {
+                Toast.makeText(this, "Please log-in as Seeker to claim this lost item", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             int itemId = getIntent().getIntExtra("item_id", -1);
             if (itemId != -1) {
                 Intent intent = new Intent(UnclaimedActivity.this, ClaimingItemActivity.class);
@@ -165,6 +190,15 @@ public class UnclaimedActivity extends AppCompatActivity {
     }
 
     private void sendEmailToReporter() {
+        // Retrieve user email from UserSession
+        String userEmail = UserSession.getInstance().getEmail();
+
+        // Validate user email before allowing email functionality
+        if (userEmail == null || userEmail.isEmpty()) {
+            Toast.makeText(this, "Please log in as a Seeker to send an email", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         try {
             int itemId = getIntent().getIntExtra("item_id", -1);
             if (itemId != -1) {
@@ -202,6 +236,15 @@ public class UnclaimedActivity extends AppCompatActivity {
     }
 
     private void openGmailCompose(String email) {
+        // Retrieve user email from UserSession
+        String userEmail = UserSession.getInstance().getEmail();
+
+        // Validate user email before allowing email composition
+        if (userEmail == null || userEmail.isEmpty()) {
+            Toast.makeText(this, "Please log in as a Seeker to send an email", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("mailto:"));
         intent.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
