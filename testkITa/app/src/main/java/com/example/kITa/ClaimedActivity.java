@@ -2,7 +2,9 @@ package com.example.kITa;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -41,6 +43,7 @@ public class ClaimedActivity extends AppCompatActivity {
         setupClickListeners();
         setupRecyclerView();
         fetchClaimedItems();
+        toggleNavigationBasedOnEmail();
     }
 
     private void initializeViews() {
@@ -53,6 +56,12 @@ public class ClaimedActivity extends AppCompatActivity {
         navProfile = findViewById(R.id.nav_profile);
 
         claimedItemsRecyclerView = findViewById(R.id.claimedItemsRecyclerView);
+    }
+
+    private void toggleNavigationBasedOnEmail() {
+        boolean isEmailEmpty = TextUtils.isEmpty(UserSession.getInstance().getEmail());
+        navChat.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
+        navNotifications.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
     }
 
     private void setupClickListeners() {

@@ -3,18 +3,13 @@ package com.example.kITa;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.util.List;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -45,8 +40,15 @@ public class ChatActivity extends AppCompatActivity {
         currentUserId = getCurrentUserId();
 
         initializeViews();
+        toggleNavigationBasedOnEmail();
         setClickListeners();
         loadLatestAdminMessage();
+    }
+
+    private void toggleNavigationBasedOnEmail() {
+        boolean isEmailEmpty = isEmailEmpty();
+        navChat.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
+        navNotifications.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
     }
 
     // Method to check if email is empty
@@ -71,21 +73,22 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void setClickListeners() {
-        // Modify click listeners to check email before navigation
         guideIcon.setOnClickListener(v -> navigateIfEmailNotEmpty(GuidelinesActivity.class));
         searchIcon.setOnClickListener(v -> navigateIfEmailNotEmpty(SearchActivity.class));
         navLost.setOnClickListener(v -> navigateIfEmailNotEmpty(MainActivity.class));
         navFound.setOnClickListener(v -> navigateIfEmailNotEmpty(ClaimedActivity.class));
+        navProfile.setOnClickListener(v -> navigateIfEmailNotEmpty(ProfileActivity.class));
+
         navChat.setOnClickListener(v -> {
             if (isEmailEmpty()) {
-                Toast.makeText(this, "Please complete your profile", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please log-in to access chat", Toast.LENGTH_SHORT).show();
             } else {
                 finish();
                 startActivity(getIntent());
             }
         });
+
         navNotifications.setOnClickListener(v -> navigateIfEmailNotEmpty(NotificationActivity.class));
-        navProfile.setOnClickListener(v -> navigateIfEmailNotEmpty(ProfileActivity.class));
 
         cssCardView.setOnClickListener(v -> navigateIfEmailNotEmpty(AdminChatActivity.class));
     }
@@ -93,7 +96,7 @@ public class ChatActivity extends AppCompatActivity {
     // Helper method to navigate only if email is not empty
     private void navigateIfEmailNotEmpty(Class<?> destinationActivity) {
         if (isEmailEmpty()) {
-            Toast.makeText(this, "Please complete your profile", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please log-in to access this feature", Toast.LENGTH_SHORT).show();
         } else {
             startActivity(new Intent(ChatActivity.this, destinationActivity));
         }

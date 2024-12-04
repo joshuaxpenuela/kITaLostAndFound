@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:orientation="vertical"
-        android:background="@drawable/toolbar_dropshadow"
+        android:background="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -65,10 +65,11 @@
 
         <!-- Second row with Bottom Navigation icons -->
         <LinearLayout
+            android:id="@+id/navBarLayout"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:orientation="horizontal"
-            android:background="@color/white">
+            >
 
             <ImageButton
                 android:id="@+id/nav_lost"
@@ -102,7 +103,8 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_chat"
                 android:background="@color/white"
-                android:contentDescription="chatIcon"/>
+                android:contentDescription="chatIcon"
+                android:visibility="gone"/>
 
             <ImageButton
                 android:id="@+id/nav_notifications"
@@ -113,7 +115,8 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_notification"
                 android:background="@color/white"
-                android:contentDescription="notifIcon"/>
+                android:contentDescription="notifIcon"
+                android:visibility="gone"/>
 
             <ImageButton
                 android:id="@+id/nav_profile"

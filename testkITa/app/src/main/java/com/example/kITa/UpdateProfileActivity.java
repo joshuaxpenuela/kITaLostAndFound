@@ -199,8 +199,10 @@ public class UpdateProfileActivity extends AppCompatActivity {
         return isValid;
     }
 
-    private boolean isValidPhoneNumber(String phoneNumber) {
-        return phoneNumber.matches("^\\+?[0-9]{10,13}$");
+    private boolean isValidPhoneNumber(String phone) {
+        // Regex for phone numbers starting with "09" and having exactly 11 digits
+        String phoneRegex = "^09\\d{9}$";
+        return phone.matches(phoneRegex);
     }
 
     private void updateProfile() {

@@ -2,6 +2,7 @@ package com.example.kITa;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -42,6 +43,7 @@ public class SearchActivity extends AppCompatActivity {
 
         initializeViews();
         setupClickListeners();
+        toggleNavigationBasedOnEmail();
 
         searchEditText = findViewById(R.id.search);
         searchFilterBtn = findViewById(R.id.searchFilter);
@@ -81,6 +83,12 @@ public class SearchActivity extends AppCompatActivity {
         navChat = findViewById(R.id.nav_chat);
         navNotifications = findViewById(R.id.nav_notifications);
         navProfile = findViewById(R.id.nav_profile);
+    }
+
+    private void toggleNavigationBasedOnEmail() {
+        boolean isEmailEmpty = TextUtils.isEmpty(UserSession.getInstance().getEmail());
+        navChat.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
+        navNotifications.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
     }
 
     private void setupClickListeners() {

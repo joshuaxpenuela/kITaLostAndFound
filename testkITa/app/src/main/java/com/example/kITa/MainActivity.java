@@ -2,7 +2,9 @@ package com.example.kITa;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         setupClickListeners();
         setupRecyclerViews();
         fetchItems();
+        toggleNavigationBasedOnEmail();
     }
 
     private void initializeViews() {
@@ -84,6 +87,12 @@ public class MainActivity extends AppCompatActivity {
         todaySeeMore.setOnClickListener(v -> openMainActivity2(0));
         weekSeeMore.setOnClickListener(v -> openMainActivity2(1));
         olderSeeMore.setOnClickListener(v -> openMainActivity2(2));
+    }
+
+    private void toggleNavigationBasedOnEmail() {
+        boolean isEmailEmpty = TextUtils.isEmpty(UserSession.getInstance().getEmail());
+        navChat.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
+        navNotifications.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
     }
 
     private void openMainActivity2(int tabIndex) {

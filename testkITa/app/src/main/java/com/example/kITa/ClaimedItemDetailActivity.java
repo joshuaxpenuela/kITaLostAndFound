@@ -2,7 +2,9 @@ package com.example.kITa;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +39,7 @@ public class ClaimedItemDetailActivity extends AppCompatActivity {
 
         initializeViews();
         setupClickListeners();
+        toggleNavigationBasedOnEmail();
 
         int itemId = getIntent().getIntExtra("item_id", -1);
         Log.d("ClaimedItemDetail", "Received item ID: " + itemId);
@@ -78,6 +81,12 @@ public class ClaimedItemDetailActivity extends AppCompatActivity {
         navChat.setOnClickListener(v -> startActivity(new Intent(ClaimedItemDetailActivity.this, ChatActivity.class)));
         navNotifications.setOnClickListener(v -> startActivity(new Intent(ClaimedItemDetailActivity.this, NotificationActivity.class)));
         navProfile.setOnClickListener(v -> startActivity(new Intent(ClaimedItemDetailActivity.this, ProfileActivity.class)));
+    }
+
+    private void toggleNavigationBasedOnEmail() {
+        boolean isEmailEmpty = TextUtils.isEmpty(UserSession.getInstance().getEmail());
+        navChat.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
+        navNotifications.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
     }
 
     private void fetchItemDetails(int itemId) {

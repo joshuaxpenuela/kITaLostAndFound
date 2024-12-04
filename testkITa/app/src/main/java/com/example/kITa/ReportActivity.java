@@ -6,11 +6,16 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.text.InputFilter;
+import android.text.Spanned;
+import android.text.TextUtils;
 import android.util.Base64;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONArray;
 import java.util.ArrayList;
+
+import android.view.View;
 import android.widget.*;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -51,6 +56,7 @@ public class ReportActivity extends AppCompatActivity {
         setupDateTimePickers();
         setupNavigation();
         setupCollegeSpinner(); // Add this line
+        toggleNavigationBasedOnEmail();
 
         // Set onClickListeners for ImageButtons to open image picker
         setImagePicker(img1, "img1");
@@ -62,6 +68,20 @@ public class ReportActivity extends AppCompatActivity {
         // Set onClickListeners for form buttons
         submitButton.setOnClickListener(v -> submitReport());
         cancelButton.setOnClickListener(v -> showDiscardDialog(MainActivity.class));
+
+        InputFilter nameFilter = new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                for (int i = start; i < end; i++) {
+                    if (!Character.isLetter(source.charAt(i)) && !Character.isSpaceChar(source.charAt(i))) {
+                        return ""; // Reject input that is not a letter or space
+                    }
+                }
+                return null; // Acceptable input
+            }
+        };
+        firstName.setFilters(new InputFilter[]{nameFilter});
+        lastName.setFilters(new InputFilter[]{nameFilter});
     }
 
     private void setupNavigation() {
@@ -72,6 +92,12 @@ public class ReportActivity extends AppCompatActivity {
         navChat.setOnClickListener(v -> showDiscardDialog(ChatActivity.class));
         navNotifications.setOnClickListener(v -> showDiscardDialog(NotificationActivity.class));
         navProfile.setOnClickListener(v -> showDiscardDialog(ProfileActivity.class));
+    }
+
+    private void toggleNavigationBasedOnEmail() {
+        boolean isEmailEmpty = TextUtils.isEmpty(UserSession.getInstance().getEmail());
+        navChat.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
+        navNotifications.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
     }
 
     private void showDiscardDialog(Class<?> destinationClass) {
@@ -319,11 +345,12 @@ public class ReportActivity extends AppCompatActivity {
     private boolean validateInputFields() {
         boolean isValid = true;
 
-        if (firstName.getText().toString().trim().isEmpty()) {
+        if (TextUtils.isEmpty(firstName.getText().toString().trim())) {
             firstName.setError("First name is required");
             isValid = false;
         }
-        if (lastName.getText().toString().trim().isEmpty()) {
+        // Validate lastName
+        if (TextUtils.isEmpty(lastName.getText().toString().trim())) {
             lastName.setError("Last name is required");
             isValid = false;
         }
@@ -375,7 +402,8 @@ public class ReportActivity extends AppCompatActivity {
     }
 
     private boolean isValidPhone(String phone) {
-        String phoneRegex = "^\\+?[0-9]{10,13}$";
+        // Regex for phone numbers starting with "09" and having exactly 11 digits
+        String phoneRegex = "^09\\d{9}$";
         return phone.matches(phoneRegex);
     }
 

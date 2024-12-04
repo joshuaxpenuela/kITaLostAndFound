@@ -3,7 +3,9 @@ package com.example.kITa;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -46,6 +48,9 @@ public class UnclaimedActivity extends AppCompatActivity {
         // Initialize views
         initializeViews();
         setupClickListeners();
+        toggleNavigationBasedOnEmail();
+
+        manageButtonVisibility();
 
         int itemId = getIntent().getIntExtra("item_id", -1);
         Log.d(TAG, "Received item_id: " + itemId);
@@ -57,6 +62,21 @@ public class UnclaimedActivity extends AppCompatActivity {
             finish();
         }
     }
+
+    private void manageButtonVisibility() {
+        String userEmail = UserSession.getInstance().getEmail();
+
+        if (userEmail == null || userEmail.isEmpty()) {
+            // Hide claim and send email buttons when no email is present
+            claimItemBtn.setVisibility(View.GONE);
+            sendEmailBtn.setVisibility(View.GONE);
+        } else {
+            // Show buttons if email is present
+            claimItemBtn.setVisibility(View.VISIBLE);
+            sendEmailBtn.setVisibility(View.VISIBLE);
+        }
+    }
+
 
     private void initializeViews() {
         guideIcon = findViewById(R.id.guide_icon);
@@ -81,24 +101,16 @@ public class UnclaimedActivity extends AppCompatActivity {
 
         // Update sendEmailBtn click listener
         sendEmailBtn.setOnClickListener(v -> {
-            // Retrieve user email from UserSession
             String userEmail = UserSession.getInstance().getEmail();
-
-            // Perform comprehensive email validation before allowing email functionality
             if (userEmail == null || userEmail.isEmpty()) {
-                // Prevent email sending and show an informative toast
                 Toast.makeText(this, "Please log in as a Seeker to send an email", Toast.LENGTH_SHORT).show();
-                sendEmailBtn.setEnabled(false); // Optionally disable the button
                 return;
             }
-
-            // If email exists, proceed with sending email
             sendEmailToReporter();
         });
 
-        // Update claimItemBtn click listener to check email
+        // Update claimItemBtn click listener
         claimItemBtn.setOnClickListener(v -> {
-            // Check if user has an email in UserSession
             String userEmail = UserSession.getInstance().getEmail();
             if (userEmail == null || userEmail.isEmpty()) {
                 Toast.makeText(this, "Please log-in as Seeker to claim this lost item", Toast.LENGTH_SHORT).show();
@@ -124,6 +136,12 @@ public class UnclaimedActivity extends AppCompatActivity {
         navChat.setOnClickListener(v -> startActivity(new Intent(UnclaimedActivity.this, ChatActivity.class)));
         navNotifications.setOnClickListener(v -> startActivity(new Intent(UnclaimedActivity.this, NotificationActivity.class)));
         navProfile.setOnClickListener(v -> startActivity(new Intent(UnclaimedActivity.this, ProfileActivity.class)));
+    }
+
+    private void toggleNavigationBasedOnEmail() {
+        boolean isEmailEmpty = TextUtils.isEmpty(UserSession.getInstance().getEmail());
+        navChat.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
+        navNotifications.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
     }
 
     private void fetchItemDetails(int itemId) {

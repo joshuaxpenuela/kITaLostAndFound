@@ -67,6 +67,7 @@
 
         <!-- Second row with Bottom Navigation icons -->
         <LinearLayout
+            android:id="@+id/navBarLayout"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:orientation="horizontal"
@@ -104,7 +105,8 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_chat"
                 android:background="@color/white"
-                android:contentDescription="chatIcon"/>
+                android:contentDescription="chatIcon"
+                android:visibility="gone"/>
 
             <ImageButton
                 android:id="@+id/nav_notifications"
@@ -115,7 +117,8 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_notification"
                 android:background="@color/white"
-                android:contentDescription="notifIcon"/>
+                android:contentDescription="notifIcon"
+                android:visibility="gone"/>
 
             <ImageButton
                 android:id="@+id/nav_profile"

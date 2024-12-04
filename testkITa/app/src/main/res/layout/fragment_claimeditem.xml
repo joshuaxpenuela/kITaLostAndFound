@@ -70,65 +70,72 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar2">
 
-        <ImageButton
-            android:id="@+id/nav_lost"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:padding="8dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_lost"
-            android:background="@color/white"
-            android:contentDescription="lostIcon"
-            />
+        <LinearLayout
+            android:id="@+id/navBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:background="@drawable/toolbar_dropshadow">
 
-        <ImageButton
-            android:id="@+id/nav_found"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:padding="8dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_found"
-            android:background="@color/white"
-            android:contentDescription="foundIcon"
-            app:tint="@color/green"
-            />
+            <ImageButton
+                android:id="@+id/nav_lost"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_lost"
+                android:background="@color/white"
+                android:contentDescription="lostIcon"
+                />
 
-        <ImageButton
-            android:id="@+id/nav_chat"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:padding="8dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_chat"
-            android:background="@color/white"
-            android:contentDescription="chatIcon"
-            />
+            <ImageButton
+                android:id="@+id/nav_found"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_found"
+                android:background="@color/white"
+                android:contentDescription="foundIcon"
+                app:tint="@color/green" />
 
-        <ImageButton
-            android:id="@+id/nav_notifications"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:padding="8dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_notification"
-            android:background="@color/white"
-            android:contentDescription="notifIcon"/>
+            <ImageButton
+                android:id="@+id/nav_chat"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_chat"
+                android:background="@color/white"
+                android:contentDescription="chatIcon"
+                android:visibility="gone"/>
 
-        <ImageButton
-            android:id="@+id/nav_profile"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:padding="8dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_profile"
-            android:background="@color/white"
-            android:contentDescription="profileIcon"
-            />
+            <ImageButton
+                android:id="@+id/nav_notifications"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_notification"
+                android:background="@color/white"
+                android:contentDescription="notifIcon"
+                android:visibility="gone"/>
+
+            <ImageButton
+                android:id="@+id/nav_profile"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_profile"
+                android:background="@color/white"
+                android:contentDescription="profileIcon"/>
+        </LinearLayout>
     </LinearLayout>
 
 

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,7 +28,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public class NotificationActivity extends AppCompatActivity {
-    private ImageButton guideIcon, searchIcon, navLost, navFound, navChat, navNotifications, navProfile;
+    private ImageButton guideIcon, searchIcon, navLost, navFound, navNotifications, navProfile, navChat;
     private RecyclerView todayNotifRecyclerView, olderNotifRecyclerView;
     private NotificationAdapter todayAdapter, olderAdapter;
     private List<NotificationItem> todayNotifications, olderNotifications;
@@ -46,9 +47,16 @@ public class NotificationActivity extends AppCompatActivity {
         }
 
         initializeViews();
+        toggleNavigationBasedOnEmail();
         setupRecyclerViews();
         setupClickListeners();
         fetchNotifications();
+    }
+
+    private void toggleNavigationBasedOnEmail() {
+        boolean isEmailEmpty = TextUtils.isEmpty(UserSession.getInstance().getEmail());
+        navChat.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
+        navNotifications.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
     }
 
     private void initializeViews() {
@@ -79,20 +87,24 @@ public class NotificationActivity extends AppCompatActivity {
     }
 
     private void setupClickListeners() {
-        // Add email check to each navigation click listener
         guideIcon.setOnClickListener(v -> navigateIfEmailValid(GuidelinesActivity.class));
         searchIcon.setOnClickListener(v -> navigateIfEmailValid(SearchActivity.class));
         navLost.setOnClickListener(v -> navigateIfEmailValid(MainActivity.class));
         navFound.setOnClickListener(v -> navigateIfEmailValid(ClaimedActivity.class));
-        navChat.setOnClickListener(v -> navigateIfEmailValid(ChatActivity.class));
-        navNotifications.setOnClickListener(v -> {
-            finish();
-            startActivity(getIntent());
-        });
         navProfile.setOnClickListener(v -> navigateIfEmailValid(ProfileActivity.class));
+
+        navNotifications.setOnClickListener(v -> {
+            if (TextUtils.isEmpty(UserSession.getInstance().getEmail())) {
+                Toast.makeText(this, "Please log-in to access notifications", Toast.LENGTH_SHORT).show();
+            } else {
+                finish();
+                startActivity(getIntent());
+            }
+        });
+
+        navChat.setOnClickListener(v -> navigateIfEmailValid(ChatActivity.class));
     }
 
-    // Helper method to check email before navigation
     private void navigateIfEmailValid(Class<?> activityClass) {
         if (TextUtils.isEmpty(UserSession.getInstance().getEmail())) {
             Toast.makeText(this, "Please log in to access this feature", Toast.LENGTH_SHORT).show();
@@ -108,7 +120,6 @@ public class NotificationActivity extends AppCompatActivity {
                 response -> {
                     Log.d("NotificationResponse", "Response: " + response);
                     try {
-                        // First check if response contains error
                         if (response.contains("error")) {
                             JSONObject errorObj = new JSONObject(response);
                             String error = errorObj.getString("error");
@@ -118,7 +129,6 @@ public class NotificationActivity extends AppCompatActivity {
                             return;
                         }
 
-                        // Try to parse as JSONArray
                         JSONArray jsonArray = new JSONArray(response);
                         processNotifications(jsonArray);
 
@@ -152,7 +162,6 @@ public class NotificationActivity extends AppCompatActivity {
             }
         };
 
-        // Set retry policy
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(
                 10000,  // 10 seconds timeout
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,

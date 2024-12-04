@@ -2,6 +2,8 @@ package com.example.kITa;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
 import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
@@ -25,6 +27,7 @@ public class MainActivity2 extends AppCompatActivity {
         setupViewPager();
         setupTabLayout();
         setupClickListeners();
+        toggleNavigationBasedOnEmail();
 
         int tabIndex = getIntent().getIntExtra("TAB_INDEX", 0);
         viewPager.setCurrentItem(tabIndex);
@@ -41,6 +44,12 @@ public class MainActivity2 extends AppCompatActivity {
         navNotifications = findViewById(R.id.nav_notifications);
         navProfile = findViewById(R.id.nav_profile);
         fab = findViewById(R.id.fab);
+    }
+
+    private void toggleNavigationBasedOnEmail() {
+        boolean isEmailEmpty = TextUtils.isEmpty(UserSession.getInstance().getEmail());
+        navChat.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
+        navNotifications.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
     }
 
     private void setupViewPager() {
