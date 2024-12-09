@@ -14,9 +14,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -65,7 +63,7 @@ public class ClaimedActivity extends AppCompatActivity {
     }
 
     private void setupClickListeners() {
-        guideIcon.setOnClickListener(v -> startActivity(new Intent(ClaimedActivity.this, GuidelinesActivity.class)));
+        guideIcon.setOnClickListener(v -> startActivity(new Intent(ClaimedActivity.this, PreGuidelineActivity.class)));
         searchIcon.setOnClickListener(v -> startActivity(new Intent(ClaimedActivity.this, SearchActivity.class)));
         navLost.setOnClickListener(v -> startActivity(new Intent(ClaimedActivity.this, MainActivity.class)));
         navFound.setOnClickListener(v -> {

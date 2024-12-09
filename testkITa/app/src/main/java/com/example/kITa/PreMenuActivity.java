@@ -2,9 +2,7 @@ package com.example.kITa;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,17 +15,17 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class PreMenuActivity extends AppCompatActivity {
 
-    private ImageButton guideIcon, searchIcon, navLost, navChat, navNotifications, navProfile;
-    private FloatingActionButton fab;
+    private ImageButton guideIcon, searchIcon, kitaLogo;
+    private ExtendedFloatingActionButton Login;
     private TextView todaySeeMore, weekSeeMore, olderSeeMore;
 
     private RecyclerView todayItemsRecyclerView, weekItemsRecyclerView, olderItemsRecyclerView;
@@ -37,29 +35,25 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<OlderItem> weekItemsList, olderItemsList;
     private RequestQueue requestQueue;
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "PreMenuActivity";
     private static final String URL = "http://10.0.2.2/lost_found_db/get_items.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.fragment_premenu);
 
         initializeViews();
         setupClickListeners();
         setupRecyclerViews();
         fetchItems();
-        toggleNavigationBasedOnEmail();
     }
 
     private void initializeViews() {
         guideIcon = findViewById(R.id.guide_icon);
         searchIcon = findViewById(R.id.search_icon);
-        navLost = findViewById(R.id.nav_lost);
-        navChat = findViewById(R.id.nav_chat);
-        navNotifications = findViewById(R.id.nav_notifications);
-        navProfile = findViewById(R.id.nav_profile);
-        fab = findViewById(R.id.fab);
+        kitaLogo = findViewById(R.id.kitaLogo);
+        Login = findViewById(R.id.Login);
 
         todayItemsRecyclerView = findViewById(R.id.todayItemsRecycleView);
         weekItemsRecyclerView = findViewById(R.id.weekItemsRecycleView);
@@ -71,30 +65,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupClickListeners() {
-        guideIcon.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, GuidelinesActivity.class)));
-        searchIcon.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, SearchActivity.class)));
-        navLost.setOnClickListener(v -> {
+        guideIcon.setOnClickListener(v -> startActivity(new Intent(PreMenuActivity.this, PreGuidelineActivity.class)));
+        searchIcon.setOnClickListener(v -> startActivity(new Intent(PreMenuActivity.this, PreSearchActivity.class)));
+        kitaLogo.setOnClickListener(v -> {
             finish();
             startActivity(getIntent());
         });
-        navChat.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ChatActivity.class)));
-        navNotifications.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, NotificationActivity.class)));
-        navProfile.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ProfileActivity.class)));
-        fab.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ReportActivity.class)));
+        Login.setOnClickListener(v -> startActivity(new Intent(PreMenuActivity.this, PreLoginActivity.class)));
 
-        todaySeeMore.setOnClickListener(v -> openMainActivity2(0));
-        weekSeeMore.setOnClickListener(v -> openMainActivity2(1));
-        olderSeeMore.setOnClickListener(v -> openMainActivity2(2));
+        todaySeeMore.setOnClickListener(v -> openPreMenuActivity2(0));
+        weekSeeMore.setOnClickListener(v -> openPreMenuActivity2(1));
+        olderSeeMore.setOnClickListener(v -> openPreMenuActivity2(2));
     }
 
-    private void toggleNavigationBasedOnEmail() {
-        boolean isEmailEmpty = TextUtils.isEmpty(UserSession.getInstance().getEmail());
-        navChat.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
-        navNotifications.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
-    }
-
-    private void openMainActivity2(int tabIndex) {
-        Intent intent = new Intent(MainActivity.this, MainActivity2.class);
+    private void openPreMenuActivity2(int tabIndex) {
+        Intent intent = new Intent(PreMenuActivity.this, PreMenuActivity2.class);
         intent.putExtra("TAB_INDEX", tabIndex);
         startActivity(intent);
     }
@@ -116,13 +101,13 @@ public class MainActivity extends AppCompatActivity {
         weekItemsRecyclerView.setAdapter(weekItemsAdapter);
         olderItemsRecyclerView.setAdapter(olderItemsAdapter);
 
-        todayItemsAdapter.setOnItemClickListener(item -> startUnclaimedActivity(item.getId()));
-        weekItemsAdapter.setOnItemClickListener(item -> startUnclaimedActivity(item.getId()));
-        olderItemsAdapter.setOnItemClickListener(item -> startUnclaimedActivity(item.getId()));
+        todayItemsAdapter.setOnItemClickListener(item -> startPreUnclaimedActivity(item.getId()));
+        weekItemsAdapter.setOnItemClickListener(item -> startPreUnclaimedActivity(item.getId()));
+        olderItemsAdapter.setOnItemClickListener(item -> startPreUnclaimedActivity(item.getId()));
     }
 
-    private void startUnclaimedActivity(int itemId) {
-        Intent intent = new Intent(MainActivity.this, UnclaimedActivity.class);
+    private void startPreUnclaimedActivity(int itemId) {
+        Intent intent = new Intent(PreMenuActivity.this, PreUnclaimedActivity.class);
         intent.putExtra("item_id", itemId);
         startActivity(intent);
     }
@@ -166,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                             olderItemsAdapter.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Toast.makeText(MainActivity.this, "Error parsing data", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PreMenuActivity.this, "Error parsing data", Toast.LENGTH_SHORT).show();
                         }
                     }
                 },
@@ -174,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.e(TAG, "Error fetching data: " + error.toString());
-                        Toast.makeText(MainActivity.this, "Error fetching data", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PreMenuActivity.this, "Error fetching data", Toast.LENGTH_SHORT).show();
                     }
                 });
 

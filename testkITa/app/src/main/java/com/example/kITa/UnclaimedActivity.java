@@ -32,7 +32,7 @@ import java.util.Locale;
 
 public class UnclaimedActivity extends AppCompatActivity {
 
-    private ImageButton guideIcon, searchIcon, navLost, navFound, navChat, navNotifications, navProfile;
+    private ImageButton guideIcon, searchIcon, navLost, navChat, navNotifications, navProfile;
     private ImageSlider imageSlider;
     private TextView itemNameText, statusText, locationText, dateText, timeText, itemCategoryText, otherDetailsText, reportedByText;
     private Button claimItemBtn, sendEmailBtn;
@@ -82,7 +82,6 @@ public class UnclaimedActivity extends AppCompatActivity {
         guideIcon = findViewById(R.id.guide_icon);
         searchIcon = findViewById(R.id.search_icon);
         navLost = findViewById(R.id.nav_lost);
-        navFound = findViewById(R.id.nav_found);
         navChat = findViewById(R.id.nav_chat);
         navNotifications = findViewById(R.id.nav_notifications);
         navProfile = findViewById(R.id.nav_profile);
@@ -132,7 +131,6 @@ public class UnclaimedActivity extends AppCompatActivity {
         guideIcon.setOnClickListener(v -> startActivity(new Intent(UnclaimedActivity.this, GuidelinesActivity.class)));
         searchIcon.setOnClickListener(v -> startActivity(new Intent(UnclaimedActivity.this, SearchActivity.class)));
         navLost.setOnClickListener(v -> startActivity(new Intent(UnclaimedActivity.this, MainActivity.class)));
-        navFound.setOnClickListener(v -> startActivity(new Intent(UnclaimedActivity.this, ClaimedActivity.class)));
         navChat.setOnClickListener(v -> startActivity(new Intent(UnclaimedActivity.this, ChatActivity.class)));
         navNotifications.setOnClickListener(v -> startActivity(new Intent(UnclaimedActivity.this, NotificationActivity.class)));
         navProfile.setOnClickListener(v -> startActivity(new Intent(UnclaimedActivity.this, ProfileActivity.class)));

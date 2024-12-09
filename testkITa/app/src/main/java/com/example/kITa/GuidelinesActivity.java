@@ -12,7 +12,6 @@ public class GuidelinesActivity extends AppCompatActivity {
     private ImageButton guideIcon;
     private ImageButton searchIcon;
     private ImageButton navLost;
-    private ImageButton navFound;
     private ImageButton navChat;
     private ImageButton navNotifications;
     private ImageButton navProfile;
@@ -26,13 +25,10 @@ public class GuidelinesActivity extends AppCompatActivity {
         guideIcon = findViewById(R.id.guide_icon);
         searchIcon = findViewById(R.id.search_icon);
         navLost = findViewById(R.id.nav_lost);
-        navFound = findViewById(R.id.nav_found);
         navChat = findViewById(R.id.nav_chat);
         navNotifications = findViewById(R.id.nav_notifications);
         navProfile = findViewById(R.id.nav_profile);
 
-        // Call toggleNavigationBasedOnEmail() AFTER buttons are initialized
-        toggleNavigationBasedOnEmail();
 
         // Set onClickListeners
         guideIcon.setOnClickListener(v -> {
@@ -48,11 +44,6 @@ public class GuidelinesActivity extends AppCompatActivity {
 
         navLost.setOnClickListener(v -> {
             Intent intent = new Intent(GuidelinesActivity.this, MainActivity.class);
-            startActivity(intent);
-        });
-
-        navFound.setOnClickListener(v -> {
-            Intent intent = new Intent(GuidelinesActivity.this, ClaimedActivity.class);
             startActivity(intent);
         });
 
@@ -72,11 +63,4 @@ public class GuidelinesActivity extends AppCompatActivity {
         });
     }
 
-    private void toggleNavigationBasedOnEmail() {
-        boolean isEmailEmpty = TextUtils.isEmpty(UserSession.getInstance().getEmail());
-        if (navChat != null && navNotifications != null) {
-            navChat.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
-            navNotifications.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
-        }
-    }
 }

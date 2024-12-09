@@ -3,12 +3,10 @@ package com.example.kITa;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,7 +19,7 @@ public class AdminChatActivity extends AppCompatActivity {
 
     private EditText messageInput;
     private ImageButton sendMessageButton, uploadImgButton;
-    private ImageButton guideIcon, searchIcon, navLost, navFound, navChat, navNotifications, navProfile;
+    private ImageButton guideIcon, searchIcon, navLost, navChat, navNotifications, navProfile;
     private RecyclerView chatRecyclerView;
     private ChatAdapter chatAdapter;
     private DatabaseHelper databaseHelper;
@@ -53,7 +51,6 @@ public class AdminChatActivity extends AppCompatActivity {
         guideIcon = findViewById(R.id.guide_icon);
         searchIcon = findViewById(R.id.search_icon);
         navLost = findViewById(R.id.nav_lost);
-        navFound = findViewById(R.id.nav_found);
         navChat = findViewById(R.id.nav_chat);
         navNotifications = findViewById(R.id.nav_notifications);
         navProfile = findViewById(R.id.nav_profile);
@@ -87,10 +84,9 @@ public class AdminChatActivity extends AppCompatActivity {
     }
 
     private void setNavbarListeners() {
-        guideIcon.setOnClickListener(v -> startActivity(new Intent(this, GuidelinesActivity.class)));
+        guideIcon.setOnClickListener(v -> startActivity(new Intent(this, PreGuidelineActivity.class)));
         searchIcon.setOnClickListener(v -> startActivity(new Intent(this, SearchActivity.class)));
         navLost.setOnClickListener(v -> startActivity(new Intent(this, MainActivity.class)));
-        navFound.setOnClickListener(v -> startActivity(new Intent(this, ClaimedActivity.class)));
         navChat.setOnClickListener(v -> { finish(); startActivity(getIntent()); });
         navNotifications.setOnClickListener(v -> startActivity(new Intent(this, NotificationActivity.class)));
         navProfile.setOnClickListener(v -> startActivity(new Intent(this, ProfileActivity.class)));

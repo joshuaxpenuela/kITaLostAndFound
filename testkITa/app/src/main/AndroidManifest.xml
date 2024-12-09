@@ -29,7 +29,7 @@
 
         <!-- Default activity when the app starts -->
         <activity
-            android:name=".UserSelectActivity"
+            android:name=".PreMenuActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -68,7 +68,7 @@
         </activity>
 
         <activity
-            android:name=".GuidelinesActivity"
+            android:name=".PreGuidelineActivity"
             android:exported="true">
         </activity>
 
@@ -127,13 +127,39 @@
         </activity>
 
         <activity
-            android:name=".UserChatActivity"
+            android:name=".ClaimingItemActivity"
             android:exported="true">
         </activity>
 
         <activity
-            android:name=".ClaimingItemActivity"
-            android:exported="true">
+            android:name=".PreMenuActivity2"
+            android:exported="true"
+            >
         </activity>
+
+        <activity
+            android:name=".PreSearchActivity"
+            android:exported="true"
+            >
+        </activity>
+
+        <activity
+            android:name=".PreUnclaimedActivity"
+            android:exported="true"
+            >
+        </activity>
+
+        <activity
+            android:name=".GuidelinesActivity"
+            android:exported="true"
+            >
+        </activity>
+
+        <activity
+            android:name=".PreLoginActivity"
+            android:exported="true"
+            >
+        </activity>
+
     </application>
 </manifest>

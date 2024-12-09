@@ -28,7 +28,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public class NotificationActivity extends AppCompatActivity {
-    private ImageButton guideIcon, searchIcon, navLost, navFound, navNotifications, navProfile, navChat;
+    private ImageButton guideIcon, searchIcon, navLost, navNotifications, navProfile, navChat;
     private RecyclerView todayNotifRecyclerView, olderNotifRecyclerView;
     private NotificationAdapter todayAdapter, olderAdapter;
     private List<NotificationItem> todayNotifications, olderNotifications;
@@ -63,7 +63,6 @@ public class NotificationActivity extends AppCompatActivity {
         guideIcon = findViewById(R.id.guide_icon);
         searchIcon = findViewById(R.id.search_icon);
         navLost = findViewById(R.id.nav_lost);
-        navFound = findViewById(R.id.nav_found);
         navChat = findViewById(R.id.nav_chat);
         navNotifications = findViewById(R.id.nav_notifications);
         navProfile = findViewById(R.id.nav_profile);
@@ -90,7 +89,6 @@ public class NotificationActivity extends AppCompatActivity {
         guideIcon.setOnClickListener(v -> navigateIfEmailValid(GuidelinesActivity.class));
         searchIcon.setOnClickListener(v -> navigateIfEmailValid(SearchActivity.class));
         navLost.setOnClickListener(v -> navigateIfEmailValid(MainActivity.class));
-        navFound.setOnClickListener(v -> navigateIfEmailValid(ClaimedActivity.class));
         navProfile.setOnClickListener(v -> navigateIfEmailValid(ProfileActivity.class));
 
         navNotifications.setOnClickListener(v -> {

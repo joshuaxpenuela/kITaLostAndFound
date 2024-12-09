@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -37,7 +36,6 @@ public class UpdateProfileActivity extends AppCompatActivity {
     private ImageButton guideIcon;
     private ImageButton searchIcon;
     private ImageButton navLost;
-    private ImageButton navFound;
     private ImageButton navChat;
     private ImageButton navNotifications;
     private ImageButton navProfile;
@@ -65,7 +63,6 @@ public class UpdateProfileActivity extends AppCompatActivity {
         guideIcon = findViewById(R.id.guide_icon);
         searchIcon = findViewById(R.id.search_icon);
         navLost = findViewById(R.id.nav_lost);
-        navFound = findViewById(R.id.nav_found);
         navChat = findViewById(R.id.nav_chat);
         navNotifications = findViewById(R.id.nav_notifications);
         navProfile = findViewById(R.id.nav_profile);
@@ -110,11 +107,6 @@ public class UpdateProfileActivity extends AppCompatActivity {
 
         navLost.setOnClickListener(v -> {
             Intent intent = new Intent(UpdateProfileActivity.this, MainActivity.class);
-            startActivity(intent);
-        });
-
-        navFound.setOnClickListener(v -> {
-            Intent intent = new Intent(UpdateProfileActivity.this, ClaimedActivity.class);
             startActivity(intent);
         });
 

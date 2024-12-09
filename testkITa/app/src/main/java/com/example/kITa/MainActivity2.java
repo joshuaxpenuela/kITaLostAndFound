@@ -15,7 +15,7 @@ public class MainActivity2 extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private ViewPager2 viewPager;
-    private ImageButton guideIcon, searchIcon, navLost, navFound, navChat, navNotifications, navProfile;
+    private ImageButton guideIcon, searchIcon, navLost, navChat, navNotifications, navProfile;
     private FloatingActionButton fab;
 
     @Override
@@ -39,7 +39,6 @@ public class MainActivity2 extends AppCompatActivity {
         guideIcon = findViewById(R.id.guide_icon);
         searchIcon = findViewById(R.id.search_icon);
         navLost = findViewById(R.id.nav_lost);
-        navFound = findViewById(R.id.nav_found);
         navChat = findViewById(R.id.nav_chat);
         navNotifications = findViewById(R.id.nav_notifications);
         navProfile = findViewById(R.id.nav_profile);
@@ -81,7 +80,6 @@ public class MainActivity2 extends AppCompatActivity {
             finish();
             startActivity(new Intent(MainActivity2.this, MainActivity.class));
         });
-        navFound.setOnClickListener(v -> startActivity(new Intent(MainActivity2.this, ClaimedActivity.class)));
         navChat.setOnClickListener(v -> startActivity(new Intent(MainActivity2.this, ChatActivity.class)));
         navNotifications.setOnClickListener(v -> startActivity(new Intent(MainActivity2.this, NotificationActivity.class)));
         navProfile.setOnClickListener(v -> startActivity(new Intent(MainActivity2.this, ProfileActivity.class)));

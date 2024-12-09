@@ -13,7 +13,7 @@ import androidx.cardview.widget.CardView;
 
 public class ChatActivity extends AppCompatActivity {
 
-    private ImageButton guideIcon, searchIcon, navLost, navFound, navChat, navNotifications, navProfile;
+    private ImageButton guideIcon, searchIcon, navLost, navChat, navNotifications, navProfile;
     private CardView cssCardView;
     private TextView messageTextView, timeMessageTextView;
     private int currentUserId;
@@ -62,7 +62,6 @@ public class ChatActivity extends AppCompatActivity {
         guideIcon = findViewById(R.id.guide_icon);
         searchIcon = findViewById(R.id.search_icon);
         navLost = findViewById(R.id.nav_lost);
-        navFound = findViewById(R.id.nav_found);
         navChat = findViewById(R.id.nav_chat);
         navNotifications = findViewById(R.id.nav_notifications);
         navProfile = findViewById(R.id.nav_profile);
@@ -76,7 +75,6 @@ public class ChatActivity extends AppCompatActivity {
         guideIcon.setOnClickListener(v -> navigateIfEmailNotEmpty(GuidelinesActivity.class));
         searchIcon.setOnClickListener(v -> navigateIfEmailNotEmpty(SearchActivity.class));
         navLost.setOnClickListener(v -> navigateIfEmailNotEmpty(MainActivity.class));
-        navFound.setOnClickListener(v -> navigateIfEmailNotEmpty(ClaimedActivity.class));
         navProfile.setOnClickListener(v -> navigateIfEmailNotEmpty(ProfileActivity.class));
 
         navChat.setOnClickListener(v -> {

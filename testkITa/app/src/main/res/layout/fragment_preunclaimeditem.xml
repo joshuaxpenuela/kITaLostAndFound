@@ -10,122 +10,60 @@
 
     <!-- Top toolbar with icons -->
     <LinearLayout
-        android:id="@+id/toolbar2"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/white"
-        app:labelVisibilityMode="unlabeled"
-        app:layout_constraintStart_toStartOf="@id/toolbar"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <!-- Guide Icon -->
-        <ImageButton
-            android:id="@+id/guide_icon"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:padding="8dp"
-            android:scaleType="fitCenter"
-            android:background="@color/white"
-            android:src="@drawable/ic_guide"
-            android:contentDescription="guideIcon"
-            />
-
-        <!-- Logo Image -->
-        <ImageView
-            android:id="@+id/logo_image"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:adjustViewBounds="true"
-            android:layout_weight="3"
-            android:padding="72dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/kitalogo"
-            android:contentDescription="kitaLogo"
-            />
-
-        <!-- Search Icon -->
-        <ImageButton
-            android:id="@+id/search_icon"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:padding="8dp"
-            android:layout_weight="1"
-            android:scaleType="fitCenter"
-            android:background="@color/white"
-            android:src="@drawable/ic_search"
-            android:contentDescription="searchIcon"
-            />
-    </LinearLayout>
-
-    <!-- Main Bottom Navigation Bar -->
-    <LinearLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:background="@drawable/toolbar_dropshadow"
-        android:orientation="horizontal"
-        app:labelVisibilityMode="unlabeled"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar2">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- First row with Guide, Logo, and Search icons -->
         <LinearLayout
-            android:id="@+id/navBarLayout"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:orientation="horizontal"
-            android:background="@drawable/toolbar_dropshadow">
+            android:background="@drawable/toolbar_dropshadow"
+            >
 
+            <!-- Guide Icon -->
             <ImageButton
-                android:id="@+id/nav_lost"
+                android:id="@+id/guide_icon"
                 android:layout_width="0dp"
-                android:layout_height="48dp"
+                android:layout_height="50dp"
                 android:layout_weight="1"
                 android:padding="8dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_lost"
                 android:background="@color/white"
-                android:contentDescription="lostIcon"
-                app:tint="@color/green" />
+                android:src="@drawable/ic_guide"
+                android:contentDescription="guideIcon"/>
 
+            <!-- Logo Image -->
             <ImageButton
-                android:id="@+id/nav_chat"
+                android:id="@+id/kitaLogo"
                 android:layout_width="0dp"
-                android:layout_height="48dp"
+                android:layout_height="50dp"
+                android:layout_weight="3"
+                android:padding="72dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/kitalogo"
+                android:background="@color/white"
+                android:contentDescription="kitaLogo"/>
+
+            <!-- Search Icon -->
+            <ImageButton
+                android:id="@+id/search_icon"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
                 android:layout_weight="1"
                 android:padding="8dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_chat"
                 android:background="@color/white"
-                android:contentDescription="chatIcon"
-                />
-
-            <ImageButton
-                android:id="@+id/nav_notifications"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:padding="8dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_notification"
-                android:background="@color/white"
-                android:contentDescription="notifIcon"
-                />
-
-            <ImageButton
-                android:id="@+id/nav_profile"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:padding="8dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_profile"
-                android:background="@color/white"
-                android:contentDescription="profileIcon"/>
+                android:src="@drawable/ic_search"
+                android:contentDescription="searchIcon"/>
         </LinearLayout>
     </LinearLayout>
-
 
     <!-- Main Content Container -->
     <androidx.core.widget.NestedScrollView
@@ -317,40 +255,22 @@
                 />
 
             <Button
-                android:id="@+id/claimItemBtn"
+                android:id="@+id/claimRegister"
                 android:layout_width="180dp"
                 android:layout_height="60dp"
                 android:layout_below="@+id/Fname"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
                 android:layout_marginStart="50dp"
-                android:layout_marginTop="35dp"
+                android:layout_marginTop="30dp"
                 android:layout_marginEnd="50dp"
+                android:layout_marginBottom="21dp"
                 android:backgroundTint="@color/green"
-                android:text="Request Claim"
+                android:text="Register to Claim"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/sendEmail"
-                android:layout_width="180dp"
-                android:layout_height="60dp"
-                android:layout_below="@+id/claimItemBtn"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="50dp"
-                android:layout_marginBottom="40dp"
-                android:backgroundTint="@color/white"
-                android:text="Send Email"
-                android:textColor="@color/green"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:strokeColor="@color/green"
-                app:strokeWidth="2dp"
-                />
         </RelativeLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

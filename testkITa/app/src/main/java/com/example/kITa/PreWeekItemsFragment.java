@@ -6,30 +6,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 
-public class OlderItemsFragment extends Fragment {
+public class PreWeekItemsFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private OlderItemsAdapter adapter;
+    private WeekItemsAdapter adapter;
     private ArrayList<OlderItem> itemsList;
     private RequestQueue requestQueue;
 
@@ -53,11 +49,11 @@ public class OlderItemsFragment extends Fragment {
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         itemsList = new ArrayList<>();
-        adapter = new OlderItemsAdapter(itemsList, getContext()); // Use updated constructor
+        adapter = new WeekItemsAdapter(itemsList, getContext()); // Pass context here
         recyclerView.setAdapter(adapter);
 
         adapter.setOnItemClickListener(item -> {
-            Intent intent = new Intent(getActivity(), UnclaimedActivity.class);
+            Intent intent = new Intent(getActivity(), PreUnclaimedActivity.class);
             intent.putExtra("item_id", item.getId());
             startActivity(intent);
         });
@@ -76,7 +72,7 @@ public class OlderItemsFragment extends Fragment {
                                 JSONObject item = response.getJSONObject(i);
                                 String category = item.getString("category");
 
-                                if (category.equals("older")) {
+                                if (category.equals("week")) {
                                     int id = item.getInt("id_item");
                                     String itemName = item.getString("item_name");
                                     String location = item.getString("location_found");

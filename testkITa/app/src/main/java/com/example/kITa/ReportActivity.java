@@ -34,7 +34,7 @@ public class ReportActivity extends AppCompatActivity {
 
     private EditText firstName, lastName, email, contactNo, itemName, location, date, time, otherDetails;
     private Spinner department, itemCategory;
-    private ImageButton guideIcon, searchIcon, navLost, navFound, navChat, navNotifications, navProfile;
+    private ImageButton guideIcon, searchIcon, navLost, navChat, navNotifications, navProfile;
     private Calendar calendar;
     private ImageButton img1, img2, img3, img4, img5;
     private Button submitButton, cancelButton;
@@ -88,7 +88,6 @@ public class ReportActivity extends AppCompatActivity {
         guideIcon.setOnClickListener(v -> showDiscardDialog(GuidelinesActivity.class));
         searchIcon.setOnClickListener(v -> showDiscardDialog(SearchActivity.class));
         navLost.setOnClickListener(v -> showDiscardDialog(MainActivity.class));
-        navFound.setOnClickListener(v -> showDiscardDialog(ClaimedActivity.class));
         navChat.setOnClickListener(v -> showDiscardDialog(ChatActivity.class));
         navNotifications.setOnClickListener(v -> showDiscardDialog(NotificationActivity.class));
         navProfile.setOnClickListener(v -> showDiscardDialog(ProfileActivity.class));
@@ -138,7 +137,6 @@ public class ReportActivity extends AppCompatActivity {
         guideIcon = findViewById(R.id.guide_icon);
         searchIcon = findViewById(R.id.search_icon);
         navLost = findViewById(R.id.nav_lost);
-        navFound = findViewById(R.id.nav_found);
         navChat = findViewById(R.id.nav_chat);
         navNotifications = findViewById(R.id.nav_notifications);
         navProfile = findViewById(R.id.nav_profile);

@@ -90,17 +90,6 @@
                 />
 
             <ImageButton
-                android:id="@+id/nav_found"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:padding="8dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_found"
-                android:background="@color/white"
-                android:contentDescription="foundIcon"/>
-
-            <ImageButton
                 android:id="@+id/nav_chat"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
@@ -110,7 +99,7 @@
                 android:src="@drawable/ic_chat"
                 android:background="@color/white"
                 android:contentDescription="chatIcon"
-                android:visibility="gone"/>
+                />
 
             <ImageButton
                 android:id="@+id/nav_notifications"
@@ -122,7 +111,7 @@
                 android:src="@drawable/ic_notification"
                 android:background="@color/white"
                 android:contentDescription="notifIcon"
-                android:visibility="gone"/>
+                />
 
             <ImageButton
                 android:id="@+id/nav_profile"

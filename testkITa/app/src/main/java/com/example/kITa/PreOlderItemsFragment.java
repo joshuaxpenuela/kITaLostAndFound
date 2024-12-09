@@ -6,27 +6,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 
-public class OlderItemsFragment extends Fragment {
+public class PreOlderItemsFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private OlderItemsAdapter adapter;
@@ -57,7 +53,7 @@ public class OlderItemsFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         adapter.setOnItemClickListener(item -> {
-            Intent intent = new Intent(getActivity(), UnclaimedActivity.class);
+            Intent intent = new Intent(getActivity(), PreUnclaimedActivity.class);
             intent.putExtra("item_id", item.getId());
             startActivity(intent);
         });

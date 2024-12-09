@@ -1,5 +1,6 @@
 package com.example.kITa;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -23,9 +24,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchActivity extends AppCompatActivity {
+public class PreSearchActivity extends AppCompatActivity {
 
-    private ImageButton guideIcon, searchIcon, navLost, navChat, navNotifications, navProfile;
+    private ImageButton guideIcon, searchIcon, kitaLogo;
     private EditText searchEditText;
     private ImageButton searchFilterBtn;
     private RecyclerView recentSearchesRecyclerView;
@@ -36,15 +37,14 @@ public class SearchActivity extends AppCompatActivity {
     private List<SearchItem> searchResults;
     private RequestQueue requestQueue;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_search);
+        setContentView(R.layout.fragment_presearch);
 
         initializeViews();
         setupClickListeners();
-        toggleNavigationBasedOnEmail();
-
         searchEditText = findViewById(R.id.search);
         searchFilterBtn = findViewById(R.id.searchFilter);
         recentSearchesRecyclerView = findViewById(R.id.recentSearchesRecyclerView);
@@ -78,28 +78,16 @@ public class SearchActivity extends AppCompatActivity {
     private void initializeViews() {
         guideIcon = findViewById(R.id.guide_icon);
         searchIcon = findViewById(R.id.search_icon);
-        navLost = findViewById(R.id.nav_lost);
-        navChat = findViewById(R.id.nav_chat);
-        navNotifications = findViewById(R.id.nav_notifications);
-        navProfile = findViewById(R.id.nav_profile);
-    }
-
-    private void toggleNavigationBasedOnEmail() {
-        boolean isEmailEmpty = TextUtils.isEmpty(UserSession.getInstance().getEmail());
-        navChat.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
-        navNotifications.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
+        kitaLogo = findViewById(R.id.kitaLogo);
     }
 
     private void setupClickListeners() {
-        guideIcon.setOnClickListener(v -> startActivity(new Intent(SearchActivity.this, PreGuidelineActivity.class)));
+        guideIcon.setOnClickListener(v -> startActivity(new Intent(PreSearchActivity.this, PreGuidelineActivity.class)));
         searchIcon.setOnClickListener(v -> {
             finish();
             startActivity(getIntent());
         });
-        navLost.setOnClickListener(v -> startActivity(new Intent(SearchActivity.this, MainActivity.class)));
-        navChat.setOnClickListener(v -> startActivity(new Intent(SearchActivity.this, ChatActivity.class)));
-        navNotifications.setOnClickListener(v -> startActivity(new Intent(SearchActivity.this, NotificationActivity.class)));
-        navProfile.setOnClickListener(v -> startActivity(new Intent(SearchActivity.this, ProfileActivity.class)));
+        kitaLogo.setOnClickListener(v -> startActivity(new Intent(PreSearchActivity.this, PreMenuActivity.class)));
     }
 
     private void performSearch() {
@@ -140,7 +128,7 @@ public class SearchActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 },
-                error -> Toast.makeText(SearchActivity.this, "Error fetching search results", Toast.LENGTH_SHORT).show());
+                error -> Toast.makeText(PreSearchActivity.this, "Error fetching search results", Toast.LENGTH_SHORT).show());
 
         requestQueue.add(request);
     }
@@ -151,7 +139,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void onSearchItemClick(SearchItem item) {
-        Intent intent = new Intent(this, UnclaimedActivity.class);
+        Intent intent = new Intent(this, PreUnclaimedActivity.class);
         intent.putExtra("item_id", item.getId());
         startActivity(intent);
     }

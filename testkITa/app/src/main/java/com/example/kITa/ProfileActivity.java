@@ -23,7 +23,6 @@ public class ProfileActivity extends AppCompatActivity {
     private ImageButton guideIcon;
     private ImageButton searchIcon;
     private ImageButton navLost;
-    private ImageButton navFound;
     private ImageButton navChat;
     private ImageButton navNotifications;
     private ImageButton navProfile;
@@ -45,14 +44,12 @@ public class ProfileActivity extends AppCompatActivity {
         guideIcon = findViewById(R.id.guide_icon);
         searchIcon = findViewById(R.id.search_icon);
         navLost = findViewById(R.id.nav_lost);
-        navFound = findViewById(R.id.nav_found);
         navChat = findViewById(R.id.nav_chat);
         navNotifications = findViewById(R.id.nav_notifications);
         navProfile = findViewById(R.id.nav_profile);
 
         // Load user data from the UserSession
         loadUserProfile();
-        toggleNavigationBasedOnEmail();
 
         // Set onClickListeners
         logoutButton.setOnClickListener(v -> {
@@ -60,7 +57,7 @@ public class ProfileActivity extends AppCompatActivity {
             UserSession.getInstance().clearSession();
 
             // Handle logout logic
-            Intent intent = new Intent(ProfileActivity.this, UserSelectActivity.class);
+            Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();
         });
@@ -77,11 +74,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         navLost.setOnClickListener(v -> {
             Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
-            startActivity(intent);
-        });
-
-        navFound.setOnClickListener(v -> {
-            Intent intent = new Intent(ProfileActivity.this, ClaimedActivity.class);
             startActivity(intent);
         });
 
@@ -110,12 +102,6 @@ public class ProfileActivity extends AppCompatActivity {
                 Toast.makeText(this, "Please log-in as Seeker to update your profile.", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private void toggleNavigationBasedOnEmail() {
-        boolean isEmailEmpty = TextUtils.isEmpty(UserSession.getInstance().getEmail());
-        navChat.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
-        navNotifications.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
     }
 
     private void loadUserProfile() {

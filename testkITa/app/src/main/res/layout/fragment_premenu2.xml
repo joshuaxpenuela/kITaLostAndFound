@@ -12,7 +12,7 @@
     <LinearLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/toolbar_dropshadow"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,7 +24,8 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:orientation="horizontal"
-            android:background="@color/white">
+            android:background="@drawable/toolbar_dropshadow"
+            >
 
             <!-- Guide Icon -->
             <ImageButton
@@ -39,14 +40,15 @@
                 android:contentDescription="guideIcon"/>
 
             <!-- Logo Image -->
-            <ImageView
-                android:id="@+id/logo_image"
+            <ImageButton
+                android:id="@+id/kitaLogo"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="3"
                 android:padding="72dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/kitalogo"
+                android:backgroundTint="@color/white"
                 android:contentDescription="kitaLogo"/>
 
             <!-- Search Icon -->
@@ -60,62 +62,6 @@
                 android:background="@color/white"
                 android:src="@drawable/ic_search"
                 android:contentDescription="searchIcon"/>
-        </LinearLayout>
-
-        <!-- Second row with Bottom Navigation icons -->
-        <LinearLayout
-            android:id="@+id/navBarLayout"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal"
-            android:background="@drawable/toolbar_dropshadow">
-
-            <ImageButton
-                android:id="@+id/nav_lost"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:padding="8dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_lost"
-                android:background="@color/white"
-                android:contentDescription="lostIcon"
-                app:tint="@color/green" />
-
-            <ImageButton
-                android:id="@+id/nav_chat"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:padding="8dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_chat"
-                android:background="@color/white"
-                android:contentDescription="chatIcon"
-                />
-
-            <ImageButton
-                android:id="@+id/nav_notifications"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:padding="8dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_notification"
-                android:background="@color/white"
-                android:contentDescription="notifIcon"
-                />
-
-            <ImageButton
-                android:id="@+id/nav_profile"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:padding="8dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_profile"
-                android:background="@color/white"
-                android:contentDescription="profileIcon"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -151,19 +97,5 @@
         android:background="@drawable/gradient"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tabLayout" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="25dp"
-        android:layout_marginBottom="30dp"
-        android:contentDescription="addPostIcon"
-        app:backgroundTintMode="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:tint="@color/green"
-        app:srcCompat="@android:drawable/ic_input_add"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
