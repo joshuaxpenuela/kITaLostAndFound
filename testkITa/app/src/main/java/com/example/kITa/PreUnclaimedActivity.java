@@ -82,7 +82,7 @@ public class PreUnclaimedActivity extends AppCompatActivity {
 
     private void setupClickListeners() {
         guideIcon.setOnClickListener(v -> startActivity(new Intent(PreUnclaimedActivity.this, PreGuidelineActivity.class)));
-        searchIcon.setOnClickListener(v -> startActivity(new Intent(PreUnclaimedActivity.this, SearchActivity.class)));
+        searchIcon.setOnClickListener(v -> startActivity(new Intent(PreUnclaimedActivity.this, PreSearchActivity.class)));
         kitaLogo.setOnClickListener(v -> startActivity(new Intent(PreUnclaimedActivity.this, PreMenuActivity2.class)));
     }
 
