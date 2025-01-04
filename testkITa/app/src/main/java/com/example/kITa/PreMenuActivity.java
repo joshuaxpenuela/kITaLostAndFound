@@ -43,6 +43,13 @@ public class PreMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_premenu);
 
+        // Check if user is logged in before setting content view
+        if (UserSession.getInstance(this).isLoggedIn()) {
+            startActivity(new Intent(PreMenuActivity.this, MainActivity.class));
+            finish();
+            return;
+        }
+
         initializeViews();
         setupClickListeners();
         setupRecyclerViews();

@@ -41,6 +41,12 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_search);
 
+        if (TextUtils.isEmpty(UserSession.getInstance(this).getEmail())) {
+            Toast.makeText(this, "Please log-in your account.", Toast.LENGTH_SHORT).show();
+            finish(); // Close the current activity
+            return;
+        }
+
         initializeViews();
         setupClickListeners();
         toggleNavigationBasedOnEmail();
@@ -85,7 +91,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void toggleNavigationBasedOnEmail() {
-        boolean isEmailEmpty = TextUtils.isEmpty(UserSession.getInstance().getEmail());
+        boolean isEmailEmpty = TextUtils.isEmpty(UserSession.getInstance(this).getEmail());
         navChat.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
         navNotifications.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
     }

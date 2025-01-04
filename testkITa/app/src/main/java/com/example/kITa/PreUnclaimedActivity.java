@@ -60,7 +60,6 @@ public class PreUnclaimedActivity extends AppCompatActivity {
         }
     }
 
-
     private void initializeViews() {
         guideIcon = findViewById(R.id.guide_icon);
         searchIcon = findViewById(R.id.search_icon);
@@ -85,7 +84,6 @@ public class PreUnclaimedActivity extends AppCompatActivity {
         searchIcon.setOnClickListener(v -> startActivity(new Intent(PreUnclaimedActivity.this, PreSearchActivity.class)));
         kitaLogo.setOnClickListener(v -> startActivity(new Intent(PreUnclaimedActivity.this, PreMenuActivity2.class)));
     }
-
 
     private void fetchItemDetails(int itemId) {
         Log.d(TAG, "Fetching details for item_id: " + itemId);
@@ -127,7 +125,13 @@ public class PreUnclaimedActivity extends AppCompatActivity {
 
         itemCategoryText.setText(item.getString("item_category"));
         otherDetailsText.setText(item.getString("other_details"));
-        reportedByText.setText(item.getString("Fname") + " " + item.getString("Lname"));
+
+        // Display reporter's name - PHP endpoint handles the privacy check
+        String reporterName = item.getString("Fname");
+        if (!reporterName.equals("Anonymous")) {
+            reporterName += " " + item.getString("Lname");
+        }
+        reportedByText.setText(reporterName);
 
         // Dynamically populate ImageSlider and use CENTER_INSIDE or CENTER_CROP to avoid stretching
         List<SlideModel> slideModels = new ArrayList<>();
@@ -149,7 +153,6 @@ public class PreUnclaimedActivity extends AppCompatActivity {
 
         imageSlider.setImageList(slideModels, ScaleTypes.CENTER_INSIDE);
     }
-
 
     // Method to convert time from 24-hour to 12-hour format
     private String convertTimeTo12HourFormat(String time) {

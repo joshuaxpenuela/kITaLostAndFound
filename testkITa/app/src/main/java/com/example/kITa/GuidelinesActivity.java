@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 public class GuidelinesActivity extends AppCompatActivity {
@@ -20,6 +22,16 @@ public class GuidelinesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_guideline); // Linking to fragment_guideline.xml
+
+        UserSession userSession = UserSession.getInstance(this);
+
+        // Check if user is logged in
+        if (!userSession.isLoggedIn()) {
+            Toast.makeText(this, "Please log-in your account.", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish(); // Close the current activity
+            return;
+        }
 
         // Initialize ImageButtons BEFORE calling toggleNavigationBasedOnEmail()
         guideIcon = findViewById(R.id.guide_icon);

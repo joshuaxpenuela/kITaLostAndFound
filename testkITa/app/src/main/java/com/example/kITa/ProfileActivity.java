@@ -27,9 +27,23 @@ public class ProfileActivity extends AppCompatActivity {
     private ImageButton navNotifications;
     private ImageButton navProfile;
 
+    private UserSession userSession;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Initialize UserSession with context
+        userSession = UserSession.getInstance(this);
+
+        // Check if user is logged in
+        if (!userSession.isLoggedIn()) {
+            Toast.makeText(this, "Please log-in your account.", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
+        }
+
         setContentView(R.layout.fragment_profile);
 
         // Initialize views
@@ -53,11 +67,12 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Set onClickListeners
         logoutButton.setOnClickListener(v -> {
-            // Clear user session
-            UserSession.getInstance().clearSession();
+            // Clear user session with context
+            userSession.clearSession();
 
-            // Handle logout logic
+            // Clear all activities in the stack and start LoginActivity
             Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
         });
@@ -92,10 +107,8 @@ public class ProfileActivity extends AppCompatActivity {
             startActivity(getIntent());
         });
 
-        // Updated edit profile click listener
         editProfile.setOnClickListener(v -> {
-            UserSession userSession = UserSession.getInstance();
-            if (userSession.getEmail() != null && !userSession.getEmail().isEmpty()) {
+            if (userSession.isLoggedIn()) {
                 Intent intent = new Intent(ProfileActivity.this, UpdateProfileActivity.class);
                 startActivity(intent);
             } else {
@@ -104,9 +117,21 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Check login status when returning to the activity
+        if (!userSession.isLoggedIn()) {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
+        }
+        // Reload user profile in case it was updated
+        loadUserProfile();
+    }
+
     private void loadUserProfile() {
-        UserSession userSession = UserSession.getInstance();
-        if (userSession.getEmail() != null && !userSession.getEmail().isEmpty()) {
+        if (userSession.isLoggedIn()) {
             Log.d("ProfileActivity", "Email: " + userSession.getEmail());
 
             String fullName = userSession.getFirstName() + " " + userSession.getLastName();
@@ -116,7 +141,9 @@ public class ProfileActivity extends AppCompatActivity {
             deptTextView.setText(userSession.getDept());
         } else {
             Toast.makeText(this, "Please log-in as Seeker.", Toast.LENGTH_SHORT).show();
-            Log.e("ProfileActivity", "No email in UserSession.");
+            Log.e("ProfileActivity", "User not logged in");
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
         }
     }
 }

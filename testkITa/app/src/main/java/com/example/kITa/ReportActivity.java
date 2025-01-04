@@ -51,6 +51,16 @@ public class ReportActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_reporting);
 
+        UserSession userSession = UserSession.getInstance(this);
+
+        // Check if user is logged in
+        if (!userSession.isLoggedIn()) {
+            Toast.makeText(this, "Please log-in your account.", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish(); // Close the current activity
+            return;
+        }
+
         // Initialize form elements
         initializeUIComponents();
         setupDateTimePickers();
@@ -94,7 +104,7 @@ public class ReportActivity extends AppCompatActivity {
     }
 
     private void toggleNavigationBasedOnEmail() {
-        boolean isEmailEmpty = TextUtils.isEmpty(UserSession.getInstance().getEmail());
+        boolean isEmailEmpty = TextUtils.isEmpty(UserSession.getInstance(this).getEmail());
         navChat.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
         navNotifications.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
     }

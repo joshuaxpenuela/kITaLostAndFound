@@ -45,11 +45,19 @@ public class UnclaimedActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_unclaimeditem);
 
-        // Initialize views
+        UserSession userSession = UserSession.getInstance(this);
+
+        // Check if user is logged in
+        if (!userSession.isLoggedIn()) {
+            Toast.makeText(this, "Please log-in your account.", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish(); // Close the current activity
+            return;
+        }
+
         initializeViews();
         setupClickListeners();
         toggleNavigationBasedOnEmail();
-
         manageButtonVisibility();
 
         int itemId = getIntent().getIntExtra("item_id", -1);
@@ -64,21 +72,19 @@ public class UnclaimedActivity extends AppCompatActivity {
     }
 
     private void manageButtonVisibility() {
-        String userEmail = UserSession.getInstance().getEmail();
-
+        String userEmail = UserSession.getInstance(this).getEmail();
         if (userEmail == null || userEmail.isEmpty()) {
-            // Hide claim and send email buttons when no email is present
             claimItemBtn.setVisibility(View.GONE);
             sendEmailBtn.setVisibility(View.GONE);
         } else {
-            // Show buttons if email is present
             claimItemBtn.setVisibility(View.VISIBLE);
             sendEmailBtn.setVisibility(View.VISIBLE);
         }
     }
 
-
     private void initializeViews() {
+        // ... (keep existing view initializations)
+
         guideIcon = findViewById(R.id.guide_icon);
         searchIcon = findViewById(R.id.search_icon);
         navLost = findViewById(R.id.nav_lost);
@@ -98,9 +104,8 @@ public class UnclaimedActivity extends AppCompatActivity {
         claimItemBtn = findViewById(R.id.claimItemBtn);
         sendEmailBtn = findViewById(R.id.sendEmail);
 
-        // Update sendEmailBtn click listener
         sendEmailBtn.setOnClickListener(v -> {
-            String userEmail = UserSession.getInstance().getEmail();
+            String userEmail = UserSession.getInstance(this).getEmail();
             if (userEmail == null || userEmail.isEmpty()) {
                 Toast.makeText(this, "Please log in as a Seeker to send an email", Toast.LENGTH_SHORT).show();
                 return;
@@ -108,9 +113,8 @@ public class UnclaimedActivity extends AppCompatActivity {
             sendEmailToReporter();
         });
 
-        // Update claimItemBtn click listener
         claimItemBtn.setOnClickListener(v -> {
-            String userEmail = UserSession.getInstance().getEmail();
+            String userEmail = UserSession.getInstance(this).getEmail();
             if (userEmail == null || userEmail.isEmpty()) {
                 Toast.makeText(this, "Please log-in as Seeker to claim this lost item", Toast.LENGTH_SHORT).show();
                 return;
@@ -137,7 +141,7 @@ public class UnclaimedActivity extends AppCompatActivity {
     }
 
     private void toggleNavigationBasedOnEmail() {
-        boolean isEmailEmpty = TextUtils.isEmpty(UserSession.getInstance().getEmail());
+        boolean isEmailEmpty = TextUtils.isEmpty(UserSession.getInstance(this).getEmail());
         navChat.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
         navNotifications.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
     }
@@ -175,41 +179,36 @@ public class UnclaimedActivity extends AppCompatActivity {
         locationText.setText(item.getString("location_found"));
         dateText.setText(item.getString("report_date"));
 
-        // Convert time to 12-hour format before displaying it
         String time = item.getString("report_time");
         String formattedTime = convertTimeTo12HourFormat(time);
         timeText.setText(formattedTime);
 
         itemCategoryText.setText(item.getString("item_category"));
         otherDetailsText.setText(item.getString("other_details"));
-        reportedByText.setText(item.getString("Fname") + " " + item.getString("Lname"));
 
-        // Dynamically populate ImageSlider and use CENTER_INSIDE or CENTER_CROP to avoid stretching
+        // Check if Fname is "Anonymous"
+        String firstName = item.getString("Fname");
+        String lastName = item.getString("Lname");
+        if (firstName.equals("Anonymous")) {
+            reportedByText.setText("Anonymous");
+        } else {
+            reportedByText.setText(firstName + " " + lastName);
+        }
+
+        // Set up image slider
         List<SlideModel> slideModels = new ArrayList<>();
-        if (!item.isNull("img1") && !item.getString("img1").isEmpty()) {
-            slideModels.add(new SlideModel("http://10.0.2.2/lost_found_db/uploads/img_reported_items/" + item.getString("img1"), ScaleTypes.CENTER_INSIDE));
+        String[] imageFields = {"img1", "img2", "img3", "img4", "img5"};
+        for (String field : imageFields) {
+            if (!item.isNull(field) && !item.getString(field).isEmpty()) {
+                slideModels.add(new SlideModel("http://10.0.2.2/lost_found_db/uploads/img_reported_items/" +
+                        item.getString(field), ScaleTypes.CENTER_INSIDE));
+            }
         }
-        if (!item.isNull("img2") && !item.getString("img2").isEmpty()) {
-            slideModels.add(new SlideModel("http://10.0.2.2/lost_found_db/uploads/img_reported_items/" + item.getString("img2"), ScaleTypes.CENTER_INSIDE));
-        }
-        if (!item.isNull("img3") && !item.getString("img3").isEmpty()) {
-            slideModels.add(new SlideModel("http://10.0.2.2/lost_found_db/uploads/img_reported_items/" + item.getString("img3"), ScaleTypes.CENTER_INSIDE));
-        }
-        if (!item.isNull("img4") && !item.getString("img4").isEmpty()) {
-            slideModels.add(new SlideModel("http://10.0.2.2/lost_found_db/uploads/img_reported_items/" + item.getString("img4"), ScaleTypes.CENTER_INSIDE));
-        }
-        if (!item.isNull("img5") && !item.getString("img5").isEmpty()) {
-            slideModels.add(new SlideModel("http://10.0.2.2/lost_found_db/uploads/img_reported_items/" + item.getString("img5"), ScaleTypes.CENTER_INSIDE));
-        }
-
         imageSlider.setImageList(slideModels, ScaleTypes.CENTER_INSIDE);
     }
 
     private void sendEmailToReporter() {
-        // Retrieve user email from UserSession
-        String userEmail = UserSession.getInstance().getEmail();
-
-        // Validate user email before allowing email functionality
+        String userEmail = UserSession.getInstance(this).getEmail();
         if (userEmail == null || userEmail.isEmpty()) {
             Toast.makeText(this, "Please log in as a Seeker to send an email", Toast.LENGTH_SHORT).show();
             return;
@@ -252,10 +251,7 @@ public class UnclaimedActivity extends AppCompatActivity {
     }
 
     private void openGmailCompose(String email) {
-        // Retrieve user email from UserSession
-        String userEmail = UserSession.getInstance().getEmail();
-
-        // Validate user email before allowing email composition
+        String userEmail = UserSession.getInstance(this).getEmail();
         if (userEmail == null || userEmail.isEmpty()) {
             Toast.makeText(this, "Please log in as a Seeker to send an email", Toast.LENGTH_SHORT).show();
             return;
@@ -268,7 +264,6 @@ public class UnclaimedActivity extends AppCompatActivity {
         startActivity(Intent.createChooser(intent, "Send email"));
     }
 
-    // Method to convert time from 24-hour to 12-hour format
     private String convertTimeTo12HourFormat(String time) {
         try {
             SimpleDateFormat inputFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
@@ -276,7 +271,7 @@ public class UnclaimedActivity extends AppCompatActivity {
             return outputFormat.format(inputFormat.parse(time));
         } catch (ParseException e) {
             e.printStackTrace();
-            return time; // Return original time in case of error
+            return time;
         }
     }
 }

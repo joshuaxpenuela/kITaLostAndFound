@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.Button;
@@ -50,6 +51,16 @@ public class ClaimingItemActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_claimingitem);
+
+        UserSession userSession = UserSession.getInstance(this);
+
+        // Check if user is logged in
+        if (!userSession.isLoggedIn()) {
+            Toast.makeText(this, "Please log-in your account.", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish(); // Close the current activity
+            return;
+        }
 
         itemId = getIntent().getIntExtra("item_id", -1);
         if (itemId == -1) {
@@ -149,7 +160,7 @@ public class ClaimingItemActivity extends AppCompatActivity {
     }
 
     private void submitClaim() {
-        UserSession userSession = UserSession.getInstance();
+        UserSession userSession = UserSession.getInstance(this);
         String description = descriptionText.getText().toString().trim();
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, SUBMIT_CLAIM_URL,

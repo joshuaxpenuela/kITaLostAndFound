@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -22,6 +24,16 @@ public class MainActivity2 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+
+        UserSession userSession = UserSession.getInstance(this);
+
+        // Check if user is logged in
+        if (!userSession.isLoggedIn()) {
+            Toast.makeText(this, "Please log-in your account.", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish(); // Close the current activity
+            return;
+        }
 
         initializeViews();
         setupViewPager();
@@ -46,7 +58,7 @@ public class MainActivity2 extends AppCompatActivity {
     }
 
     private void toggleNavigationBasedOnEmail() {
-        boolean isEmailEmpty = TextUtils.isEmpty(UserSession.getInstance().getEmail());
+        boolean isEmailEmpty = TextUtils.isEmpty(UserSession.getInstance(this).getEmail());
         navChat.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
         navNotifications.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
     }

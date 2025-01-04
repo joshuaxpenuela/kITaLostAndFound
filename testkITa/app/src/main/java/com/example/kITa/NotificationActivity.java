@@ -40,8 +40,12 @@ public class NotificationActivity extends AppCompatActivity {
         setContentView(R.layout.fragment_notification);
 
         // Check if email is empty before initializing
-        if (TextUtils.isEmpty(UserSession.getInstance().getEmail())) {
-            Toast.makeText(this, "Please log-in as Seeker to get notification.", Toast.LENGTH_SHORT).show();
+        UserSession userSession = UserSession.getInstance(this);
+
+        // Check if user is logged in
+        if (!userSession.isLoggedIn()) {
+            Toast.makeText(this, "Please log-in your account.", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, LoginActivity.class));
             finish(); // Close the current activity
             return;
         }
@@ -54,7 +58,7 @@ public class NotificationActivity extends AppCompatActivity {
     }
 
     private void toggleNavigationBasedOnEmail() {
-        boolean isEmailEmpty = TextUtils.isEmpty(UserSession.getInstance().getEmail());
+        boolean isEmailEmpty = TextUtils.isEmpty(UserSession.getInstance(this).getEmail());
         navChat.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
         navNotifications.setVisibility(isEmailEmpty ? View.GONE : View.VISIBLE);
     }
@@ -92,7 +96,7 @@ public class NotificationActivity extends AppCompatActivity {
         navProfile.setOnClickListener(v -> navigateIfEmailValid(ProfileActivity.class));
 
         navNotifications.setOnClickListener(v -> {
-            if (TextUtils.isEmpty(UserSession.getInstance().getEmail())) {
+            if (TextUtils.isEmpty(UserSession.getInstance(this).getEmail())) {
                 Toast.makeText(this, "Please log-in to access notifications", Toast.LENGTH_SHORT).show();
             } else {
                 finish();
@@ -104,7 +108,7 @@ public class NotificationActivity extends AppCompatActivity {
     }
 
     private void navigateIfEmailValid(Class<?> activityClass) {
-        if (TextUtils.isEmpty(UserSession.getInstance().getEmail())) {
+        if (TextUtils.isEmpty(UserSession.getInstance(this).getEmail())) {
             Toast.makeText(this, "Please log in to access this feature", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -112,7 +116,7 @@ public class NotificationActivity extends AppCompatActivity {
     }
 
     private void fetchNotifications() {
-        String currentUserEmail = UserSession.getInstance().getEmail();
+        String currentUserEmail = UserSession.getInstance(this).getEmail();
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, FETCH_NOTIFICATIONS_URL,
                 response -> {

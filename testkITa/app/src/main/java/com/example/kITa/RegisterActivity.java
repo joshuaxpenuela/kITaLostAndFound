@@ -1,10 +1,12 @@
 package com.example.kITa;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -35,8 +37,10 @@ public class RegisterActivity extends AppCompatActivity {
     private Spinner department;
     private Button signUp;
     private ProgressBar loading;
-    private TextView loginLink;
+    private TextView loginLink, dataPrivacyDetails;
+    private CheckBox dataPrivacyCheckbox;
     private List<String> collegesList;
+    private Dialog dataPrivacyDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,11 @@ public class RegisterActivity extends AppCompatActivity {
         signUp = findViewById(R.id.signUp);
         loading = findViewById(R.id.loading);
         loginLink = findViewById(R.id.LoginLink);
+        dataPrivacyCheckbox = findViewById(R.id.DataPrivacy);
+        dataPrivacyDetails = findViewById(R.id.DataPrivacyDetails);
+
+        // Initialize data privacy dialog
+        initializeDataPrivacyDialog();
 
         // Initialize colleges list and fetch data
         collegesList = new ArrayList<>();
@@ -77,6 +86,34 @@ public class RegisterActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        // Set onClick listener for Data Privacy Details
+        dataPrivacyDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDataPrivacyDialog();
+            }
+        });
+    }
+
+    private void initializeDataPrivacyDialog() {
+        dataPrivacyDialog = new Dialog(this);
+        dataPrivacyDialog.setContentView(R.layout.dialogbox_dataprivacy);
+        dataPrivacyDialog.setCancelable(false);
+
+        Button closeButton = dataPrivacyDialog.findViewById(R.id.closeDataPrivacy);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dataPrivacyDialog.dismiss();
+            }
+        });
+    }
+
+    private void showDataPrivacyDialog() {
+        if (dataPrivacyDialog != null) {
+            dataPrivacyDialog.show();
+        }
     }
 
     private void fetchColleges() {
@@ -136,6 +173,7 @@ public class RegisterActivity extends AppCompatActivity {
         final String userConfirmPassword = confirmPassword.getText().toString().trim();
         final String userContactNo = contactNo.getText().toString().trim();
         final String userDept = department.getSelectedItem().toString();
+        final String dataPrivacyStatus = dataPrivacyCheckbox.isChecked() ? "Agreed" : "Disagreed";
 
         // Check if any field is empty
         if (fName.isEmpty() || lName.isEmpty() || userEmail.isEmpty() || userPassword.isEmpty()
@@ -224,6 +262,7 @@ public class RegisterActivity extends AppCompatActivity {
                 params.put("password", userPassword);
                 params.put("contactNo", userContactNo);
                 params.put("dept", userDept);
+                params.put("dataPrivacy", dataPrivacyStatus);
                 return params;
             }
         };

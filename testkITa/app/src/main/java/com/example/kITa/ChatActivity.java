@@ -3,6 +3,7 @@ package com.example.kITa;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -23,11 +24,13 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Check if email is empty before setting content view
-        if (isEmailEmpty()) {
-            // Stay in the current activity
-            Toast.makeText(this, "Please log-in as Seeker to proceed messaging.", Toast.LENGTH_SHORT).show();
-            finish();
+        UserSession userSession = UserSession.getInstance(this);
+
+        // Check if user is logged in
+        if (!userSession.isLoggedIn()) {
+            Toast.makeText(this, "Please log-in your account.", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish(); // Close the current activity
             return;
         }
 
@@ -53,7 +56,7 @@ public class ChatActivity extends AppCompatActivity {
 
     // Method to check if email is empty
     private boolean isEmailEmpty() {
-        UserSession userSession = UserSession.getInstance();
+        UserSession userSession = UserSession.getInstance(this);
         String email = userSession.getEmail();
         return email == null || email.trim().isEmpty();
     }

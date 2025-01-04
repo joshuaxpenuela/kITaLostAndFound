@@ -3,6 +3,7 @@ package com.example.kITa;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -32,6 +33,16 @@ public class AdminChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_chatadmin);
 
+        UserSession userSession = UserSession.getInstance(this);
+
+        // Check if user is logged in
+        if (!userSession.isLoggedIn()) {
+            Toast.makeText(this, "Please log-in your account.", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish(); // Close the current activity
+            return;
+        }
+
         databaseHelper = new DatabaseHelper(this);
         initializeViews();
         setupRecyclerView();
@@ -57,7 +68,7 @@ public class AdminChatActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView() {
-        int currentUserId = UserSession.getInstance().getId();
+        int currentUserId = UserSession.getInstance(this).getId();
         List<Message> messages = new ArrayList<>();
         chatAdapter = new ChatAdapter(this, messages, currentUserId);
         chatRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -65,7 +76,7 @@ public class AdminChatActivity extends AppCompatActivity {
     }
 
     private void loadPreviousMessages() {
-        int userId = UserSession.getInstance().getId();
+        int userId = UserSession.getInstance(this).getId();
         ApiClient.getUserMessages(userId, new ApiCallback<List<Message>>() {
             @Override
             public void onSuccess(List<Message> messages) {
@@ -94,7 +105,7 @@ public class AdminChatActivity extends AppCompatActivity {
 
     private void sendMessage() {
         String messageText = messageInput.getText().toString().trim();
-        int senderId = UserSession.getInstance().getId();
+        int senderId = UserSession.getInstance(this).getId();
 
         // If there's a message to send
         if (!messageText.isEmpty()) {

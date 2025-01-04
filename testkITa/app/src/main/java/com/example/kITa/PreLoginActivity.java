@@ -87,7 +87,7 @@ public class PreLoginActivity extends AppCompatActivity {
                             String contactNo = jsonResponse.optString("contactNo", "N/A");
                             String dept = jsonResponse.optString("dept", "N/A");
 
-                            UserSession.getInstance().saveUserData(id, firstName, lastName, email, contactNo, dept);
+                            UserSession.getInstance(this).saveUserData(id, firstName, lastName, email, contactNo, dept);
 
                             Intent intent = new Intent(PreLoginActivity.this, ReportActivity.class);
                             startActivity(intent);

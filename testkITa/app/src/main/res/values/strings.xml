@@ -38,6 +38,7 @@
         <item>Clothes</item>
         <item>ATM Card</item>
         <item>School Supplies</item>
+        <item>Others</item>
     </string-array>
 
     <string name="otpInstruct">Please enter the OTP sent to your email</string>
@@ -66,6 +67,54 @@
         4. The Lost and Found administrator will update the status of the item to "claimed" once it has been returned successfully to its owner.\n\n
         5. Civil Security Services will maintain a comprehensive database of all disposed lost and found items.\n\n
         6. Users are encouraged to provide feedback on the process by completing and returning the Stakeholders Feedback form or filling out the provided Google Form.
+    </string>
+
+    <string name="DataPrivacyPolicies">
+        1. Introduction\n
+        Cavite State University (CvSU) values the privacy of its students, faculty, staff, and visitors. The kITa Lost and Found Application ensures that personal data is collected, processed, and stored in compliance with the Data Privacy Act of 2012 and other applicable laws and regulations.\n\n
+
+        2. Data Collection\n
+        The application collects the following personal information from users for identification, communication, and lost item management:\n
+        - Full Name\n
+        - University ID or other identification details\n
+        - Contact information (e.g., email address, phone number)\n
+        - College or department affiliation\n
+        - Lost or found item details (including images and descriptions)\n\n
+
+        3. Purpose of Data Collection\n
+        Collected data is used solely for the following purposes:\n
+        - Facilitating the identification and recovery of lost items.\n
+        - Ensuring effective communication between users and the Civil Security Services.\n
+        - Providing a secure platform for reporting and tracking lost and found items.\n
+        - Enhancing the overall user experience by improving the application’s functionality.\n\n
+
+        4. Data Retention\n
+        Personal data will be retained only for as long as it is necessary to fulfill the purposes outlined above. Once the purpose is fulfilled or upon a user’s request, the data will be securely deleted, unless it is required to be retained by law or for legitimate business purposes.\n\n
+
+        5. Data Sharing\n
+        The application may share personal data with:\n
+        - Authorized personnel of the CvSU Civil Security Services to facilitate the processing of lost and found items.\n
+        - Relevant university departments when necessary for administrative purposes. Personal data will not be shared with third parties without the user’s explicit consent, except when required by law.\n\n
+
+        6. Data Security\n
+        We implement industry-standard measures to protect personal data from unauthorized access, alteration, disclosure, or destruction. Security protocols include:\n
+        - Encrypted storage of sensitive data.\n
+        - Regular security audits and assessments.n\
+        - Role-based access control ensuring that only authorized personnel can access user data.\n\n
+
+        7. User Rights\n
+        Under the Data Privacy Act of 2012, users have the following rights:\n
+
+        - Right to Access: Users may request a copy of the personal data held about them.\n
+        - Right to Rectification: Users can request corrections to any inaccurate or incomplete personal data.\n
+        - Right to Erasure: Users may request the deletion of personal data that is no longer necessary for the purposes for which it was collected.\n
+        - Right to Object: Users may object to the processing of their personal data on legitimate grounds.\n
+        - Right to Data Portability: Users may request to receive their data in a commonly used format.\n\n
+        8. Consent\n
+        By using the kITa Lost and Found Application, users consent to the collection, processing, and storage of their personal data in accordance with this privacy policy.\n\n
+
+        9. Amendments\n
+        CvSU reserves the right to update or modify this Privacy Policy at any time. Users will be notified of significant changes through the application or other appropriate means.
     </string>
 
 </resources>

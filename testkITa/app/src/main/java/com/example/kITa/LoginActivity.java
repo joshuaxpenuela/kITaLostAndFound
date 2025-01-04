@@ -1,13 +1,9 @@
 package com.example.kITa;
 
-import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -23,7 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
-
     private EditText emailEditText;
     private EditText passwordEditText;
     private Button loginButton;
@@ -34,16 +29,30 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Check if user is already logged in
+        if (UserSession.getInstance(this).isLoggedIn()) {
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            finish();
+            return;
+        }
+
         setContentView(R.layout.fragment_login);
 
+        initializeViews();
+        setupClickListeners();
+    }
+
+    private void initializeViews() {
         emailEditText = findViewById(R.id.email);
         passwordEditText = findViewById(R.id.password);
         loginButton = findViewById(R.id.loginbtn);
         signupButton = findViewById(R.id.signupBtn);
         forgotPasswordLink = findViewById(R.id.forgotPassLink);
-
         requestQueue = Volley.newRequestQueue(this);
+    }
 
+    private void setupClickListeners() {
         loginButton.setOnClickListener(v -> loginUser());
 
         signupButton.setOnClickListener(v -> {
@@ -51,49 +60,10 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        forgotPasswordLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, ForgetPassActivity.class);
-                startActivity(intent);
-            }
-        });
-    }
-
-    @Override
-    public void onBackPressed() {
-        // Show custom dialog when back button is pressed
-        super.onBackPressed();
-        showUserSelectDialog();
-    }
-
-    private void showUserSelectDialog() {
-        // Create a custom dialog
-        Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialogbox_userselect);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.setCancelable(false);
-
-        // Get dialog buttons
-        Button proceedButton = dialog.findViewById(R.id.ProceedUserSelect);
-        Button cancelButton = dialog.findViewById(R.id.CancelUserSelect);
-
-        // Proceed button click listener
-        proceedButton.setOnClickListener(v -> {
-            dialog.dismiss();
-            Intent intent = new Intent(LoginActivity.this, UserSelectActivity.class);
+        forgotPasswordLink.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, ForgetPassActivity.class);
             startActivity(intent);
-            finish();
         });
-
-        // Cancel button click listener
-        cancelButton.setOnClickListener(v -> {
-            dialog.dismiss();
-        });
-
-        // Show the dialog
-        dialog.show();
     }
 
     private void loginUser() {
@@ -105,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        String url = "http://10.0.2.2/lost_found_db/login_req.php"; // Update with your server URL
+        String url = "http://10.0.2.2/lost_found_db/login_req.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
@@ -116,16 +86,18 @@ public class LoginActivity extends AppCompatActivity {
                         if (success) {
                             Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
 
-                            // Save user data to UserSession
                             int id = jsonResponse.optInt("id");
                             String firstName = jsonResponse.optString("Fname", "N/A");
                             String lastName = jsonResponse.optString("Lname", "N/A");
                             String contactNo = jsonResponse.optString("contactNo", "N/A");
                             String dept = jsonResponse.optString("dept", "N/A");
 
-                            UserSession.getInstance().saveUserData(id, firstName, lastName, email, contactNo, dept);
+                            // Save user data to UserSession
+                            UserSession.getInstance(LoginActivity.this)
+                                    .saveUserData(id, firstName, lastName, email, contactNo, dept);
 
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             finish();
                         } else {
@@ -152,5 +124,10 @@ public class LoginActivity extends AppCompatActivity {
         };
 
         requestQueue.add(stringRequest);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

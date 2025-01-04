@@ -2,6 +2,7 @@ package com.example.kITa;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -51,6 +52,16 @@ public class UpdateProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_updateprofile);
 
+        UserSession userSession = UserSession.getInstance(this);
+
+        // Check if user is logged in
+        if (!userSession.isLoggedIn()) {
+            Toast.makeText(this, "Please log-in your account.", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish(); // Close the current activity
+            return;
+        }
+
         // Initialize views
         firstNameEditText = findViewById(R.id.firstName);
         lastNameEditText = findViewById(R.id.lastName);
@@ -80,7 +91,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
         fetchColleges();
 
         // Retrieve email from UserSession
-        UserSession userSession = UserSession.getInstance();
+        userSession = UserSession.getInstance(this);
         email = userSession.getEmail();
         if (email != null) {
             emailTextView.setText(email);
@@ -218,7 +229,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
                         String status = jsonResponse.getString("status");
                         if (status.equals("success")) {
                             Toast.makeText(UpdateProfileActivity.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
-                            UserSession.getInstance().saveUserData(id, firstName, lastName, email, contactNo, department);
+                            UserSession.getInstance(this).saveUserData(id, firstName, lastName, email, contactNo, department);
                             finish();
                         } else {
                             String error = jsonResponse.optString("message", "Unknown error");
