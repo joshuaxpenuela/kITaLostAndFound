@@ -3,7 +3,8 @@ package com.example.kITa;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -24,7 +25,13 @@ public class AdminChatActivity extends AppCompatActivity {
     private RecyclerView chatRecyclerView;
     private ChatAdapter chatAdapter;
     private DatabaseHelper databaseHelper;
-    private Uri selectedImageUri; // Store the selected image URI
+    private Uri selectedImageUri;
+
+    private Handler messageHandler;
+    private static final long MESSAGE_CHECK_INTERVAL = 3000; // Check every 3 seconds
+    private boolean isActivityActive = false;
+    private List<Message> currentMessages = new ArrayList<>();
+    private int lastMessageCount = 0;
 
     private static final int PICK_IMAGE_REQUEST = 1;
 
@@ -35,19 +42,18 @@ public class AdminChatActivity extends AppCompatActivity {
 
         UserSession userSession = UserSession.getInstance(this);
 
-        // Check if user is logged in
         if (!userSession.isLoggedIn()) {
             Toast.makeText(this, "Please log-in your account.", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, LoginActivity.class));
-            finish(); // Close the current activity
+            finish();
             return;
         }
 
         databaseHelper = new DatabaseHelper(this);
         initializeViews();
         setupRecyclerView();
+        setupMessageHandler();
         loadPreviousMessages();
-
         setNavbarListeners();
 
         sendMessageButton.setOnClickListener(v -> sendMessage());
@@ -69,10 +75,57 @@ public class AdminChatActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
         int currentUserId = UserSession.getInstance(this).getId();
-        List<Message> messages = new ArrayList<>();
-        chatAdapter = new ChatAdapter(this, messages, currentUserId);
+        chatAdapter = new ChatAdapter(this, currentMessages, currentUserId);
         chatRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         chatRecyclerView.setAdapter(chatAdapter);
+    }
+
+    private void setupMessageHandler() {
+        messageHandler = new Handler(Looper.getMainLooper());
+        startMessageChecking();
+    }
+
+    private void startMessageChecking() {
+        isActivityActive = true;
+        messageHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (isActivityActive) {
+                    checkForNewMessages();
+                    messageHandler.postDelayed(this, MESSAGE_CHECK_INTERVAL);
+                }
+            }
+        });
+    }
+
+    private void checkForNewMessages() {
+        int userId = UserSession.getInstance(this).getId();
+        ApiClient.getUserMessages(userId, new ApiCallback<List<Message>>() {
+            @Override
+            public void onSuccess(List<Message> messages) {
+                if (messages.size() > lastMessageCount) {
+                    // New messages received
+                    updateMessages(messages);
+                    lastMessageCount = messages.size();
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                // Silent error handling for background checks
+            }
+        });
+    }
+
+    private void updateMessages(List<Message> newMessages) {
+        runOnUiThread(() -> {
+            currentMessages.clear();
+            currentMessages.addAll(newMessages);
+            chatAdapter.updateMessages(newMessages);
+            if (!newMessages.isEmpty()) {
+                chatRecyclerView.scrollToPosition(newMessages.size() - 1);
+            }
+        });
     }
 
     private void loadPreviousMessages() {
@@ -80,11 +133,8 @@ public class AdminChatActivity extends AppCompatActivity {
         ApiClient.getUserMessages(userId, new ApiCallback<List<Message>>() {
             @Override
             public void onSuccess(List<Message> messages) {
-                chatAdapter.updateMessages(messages);
-                // Scroll to the bottom of the RecyclerView
-                if (!messages.isEmpty()) {
-                    chatRecyclerView.scrollToPosition(messages.size() - 1);
-                }
+                updateMessages(messages);
+                lastMessageCount = messages.size();
             }
 
             @Override
@@ -107,22 +157,17 @@ public class AdminChatActivity extends AppCompatActivity {
         String messageText = messageInput.getText().toString().trim();
         int senderId = UserSession.getInstance(this).getId();
 
-        // If there's a message to send
         if (!messageText.isEmpty()) {
-            // Send text message to admins
             ApiClient.sendMessageToAdmins(senderId, messageText, new ApiCallback<Boolean>() {
                 @Override
                 public void onSuccess(Boolean success) {
                     if (success) {
-                        // Create a new message and add it to the adapter
                         Message newMessage = new Message(senderId, 0, messageText, new Date(), null);
-                        chatAdapter.addMessage(newMessage);
-
-                        // Clear the input field
+                        currentMessages.add(newMessage);
+                        chatAdapter.updateMessages(currentMessages);
                         messageInput.setText("");
-
-                        // Scroll to the bottom of the RecyclerView
-                        chatRecyclerView.scrollToPosition(chatAdapter.getItemCount() - 1);
+                        chatRecyclerView.scrollToPosition(currentMessages.size() - 1);
+                        lastMessageCount = currentMessages.size();
                     } else {
                         Toast.makeText(AdminChatActivity.this, "Failed to send message", Toast.LENGTH_SHORT).show();
                     }
@@ -133,6 +178,29 @@ public class AdminChatActivity extends AppCompatActivity {
                     Toast.makeText(AdminChatActivity.this, "Error: " + error, Toast.LENGTH_SHORT).show();
                 }
             });
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isActivityActive = true;
+        startMessageChecking();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isActivityActive = false;
+        messageHandler.removeCallbacksAndMessages(null);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        isActivityActive = false;
+        if (messageHandler != null) {
+            messageHandler.removeCallbacksAndMessages(null);
         }
     }
 }
