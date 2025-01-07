@@ -120,7 +120,7 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onError(String error) {
                 Toast.makeText(ChatActivity.this, "Error loading admin messages: " + error, Toast.LENGTH_SHORT).show();
-                messageTextView.setText("Error loading messages");
+                messageTextView.setText("No Messages yet");
                 timeMessageTextView.setText("");
             }
         });
