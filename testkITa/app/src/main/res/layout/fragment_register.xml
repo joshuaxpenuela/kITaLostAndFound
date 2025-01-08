@@ -71,11 +71,11 @@
         android:padding="13dp"
         android:text="Sign up"
         android:textColor="#FFFFFFFF"
-        app:layout_constraintTop_toBottomOf="@id/DataPrivacy"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/DataPrivacy"
         app:layout_constraintVertical_bias="0.446" />
 
     <ProgressBar
@@ -233,10 +233,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="3dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="59dp"
+        android:paddingTop="14.5dp"
+        android:paddingBottom="14.5dp"
         android:text="Data Privacy Policy"
         android:textColor="@color/green"
         android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/DataPrivacy"
         app:layout_constraintTop_toBottomOf="@id/department" />
 
