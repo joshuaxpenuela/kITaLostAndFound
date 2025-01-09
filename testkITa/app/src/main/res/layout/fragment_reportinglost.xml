@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.example.kITa.ReportFoundActivity">
+    tools:context="com.example.kITa.ReportLostActivity">
 
     <!-- Top toolbar with icons -->
     <LinearLayout
@@ -116,8 +116,6 @@
         </LinearLayout>
     </LinearLayout>
 
-
-
     <!-- Main Content Container -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -125,7 +123,6 @@
         android:background="@drawable/gradient"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar">
-
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -138,7 +135,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5sp"
-                android:text="Report Found Item"
+                android:text="Report Lost Item"
                 android:textSize="27sp"
                 android:textColor="@color/green"
                 android:textStyle="bold"
@@ -152,7 +149,7 @@
                 android:layout_below="@+id/itemCategory"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="6sp"
-                android:text="Found Item's Name"
+                android:text="Lost Item Name"
                 android:textColor="@color/green"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -209,7 +206,7 @@
                 android:layout_below="@+id/otherDetails"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="6sp"
-                android:text="Location Found"
+                android:text="Location Lost"
                 android:textColor="@color/green"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -238,7 +235,7 @@
                 android:layout_below="@+id/location"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="6sp"
-                android:text="Date and Time Found"
+                android:text="Date and Time Lost"
                 android:textColor="@color/green"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -281,7 +278,7 @@
                 android:layout_below="@id/itemName"
                 android:layout_marginTop="6dp"
                 android:layout_marginStart="20dp"
-                android:text="Other Found Item's Details"
+                android:text="Other Lost Item's Details"
                 android:textColor="@color/green"
                 android:textSize="18sp"
                 android:textStyle="bold"

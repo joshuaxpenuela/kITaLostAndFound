@@ -18,7 +18,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PreLoginActivity extends AppCompatActivity {
+public class PreFoundLoginActivity extends AppCompatActivity {
 
     private EditText emailEditText;
     private EditText passwordEditText;
@@ -43,14 +43,14 @@ public class PreLoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(v -> loginUser());
 
         signupButton.setOnClickListener(v -> {
-            Intent intent = new Intent(PreLoginActivity.this, RegisterActivity.class);
+            Intent intent = new Intent(PreFoundLoginActivity.this, RegisterActivity.class);
             startActivity(intent);
         });
 
         forgotPasswordLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(PreLoginActivity.this, ForgetPassActivity.class);
+                Intent intent = new Intent(PreFoundLoginActivity.this, ForgetPassActivity.class);
                 startActivity(intent);
             }
         });
@@ -74,7 +74,7 @@ public class PreLoginActivity extends AppCompatActivity {
                         JSONObject jsonResponse = new JSONObject(response);
                         boolean success = jsonResponse.getBoolean("success");
                         if (success) {
-                            Toast.makeText(PreLoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PreFoundLoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
 
                             // Save user data to UserSession
                             int id = jsonResponse.optInt("id");
@@ -85,21 +85,21 @@ public class PreLoginActivity extends AppCompatActivity {
 
                             UserSession.getInstance(this).saveUserData(id, firstName, lastName, email, contactNo, dept);
 
-                            Intent intent = new Intent(PreLoginActivity.this, ReportFoundActivity.class);
+                            Intent intent = new Intent(PreFoundLoginActivity.this, ReportFoundActivity.class);
                             startActivity(intent);
                             finish();
                         } else {
                             String error = jsonResponse.optString("error", "Unknown error");
-                            Toast.makeText(PreLoginActivity.this, error, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PreFoundLoginActivity.this, error, Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        Toast.makeText(PreLoginActivity.this, "Error parsing response", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PreFoundLoginActivity.this, "Error parsing response", Toast.LENGTH_SHORT).show();
                     }
                 },
                 error -> {
                     Log.e("LoginActivity", "Error: " + error.getMessage());
-                    Toast.makeText(PreLoginActivity.this, "Error during login", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PreFoundLoginActivity.this, "Error during login", Toast.LENGTH_SHORT).show();
                 }
         ) {
             @Override

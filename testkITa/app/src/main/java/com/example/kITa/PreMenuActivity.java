@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class PreMenuActivity extends AppCompatActivity {
 
     private ImageButton guideIcon, searchIcon, kitaLogo;
-    private ExtendedFloatingActionButton Login;
+    private ExtendedFloatingActionButton LoginFound, LoginLost;
     private TextView todaySeeMore, weekSeeMore, olderSeeMore;
 
     private RecyclerView todayItemsRecyclerView, weekItemsRecyclerView, olderItemsRecyclerView;
@@ -60,7 +60,8 @@ public class PreMenuActivity extends AppCompatActivity {
         guideIcon = findViewById(R.id.guide_icon);
         searchIcon = findViewById(R.id.search_icon);
         kitaLogo = findViewById(R.id.kitaLogo);
-        Login = findViewById(R.id.Login);
+        LoginFound = findViewById(R.id.LoginFound);
+        LoginLost = findViewById(R.id. LoginLost);
 
         todayItemsRecyclerView = findViewById(R.id.todayItemsRecycleView);
         weekItemsRecyclerView = findViewById(R.id.weekItemsRecycleView);
@@ -78,7 +79,8 @@ public class PreMenuActivity extends AppCompatActivity {
             finish();
             startActivity(getIntent());
         });
-        Login.setOnClickListener(v -> startActivity(new Intent(PreMenuActivity.this, PreLoginActivity.class)));
+        LoginFound.setOnClickListener(v -> startActivity(new Intent(PreMenuActivity.this, PreFoundLoginActivity.class)));
+        LoginLost.setOnClickListener(v -> startActivity(new Intent(PreMenuActivity.this, PreLostLoginActivity.class)));
 
         todaySeeMore.setOnClickListener(v -> openPreMenuActivity2(0));
         weekSeeMore.setOnClickListener(v -> openPreMenuActivity2(1));
