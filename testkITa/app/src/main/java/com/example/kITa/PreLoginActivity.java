@@ -1,13 +1,9 @@
 package com.example.kITa;
 
-import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -89,7 +85,7 @@ public class PreLoginActivity extends AppCompatActivity {
 
                             UserSession.getInstance(this).saveUserData(id, firstName, lastName, email, contactNo, dept);
 
-                            Intent intent = new Intent(PreLoginActivity.this, ReportActivity.class);
+                            Intent intent = new Intent(PreLoginActivity.this, ReportFoundActivity.class);
                             startActivity(intent);
                             finish();
                         } else {

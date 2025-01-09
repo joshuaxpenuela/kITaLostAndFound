@@ -78,7 +78,7 @@
         </activity>
 
         <activity
-            android:name=".ReportActivity"
+            android:name=".ReportFoundActivity"
             android:exported="true">
         </activity>
 

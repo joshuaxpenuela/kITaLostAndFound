@@ -18,7 +18,7 @@ public class MainActivity2 extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager2 viewPager;
     private ImageButton guideIcon, searchIcon, navLost, navChat, navNotifications, navProfile;
-    private FloatingActionButton fab;
+    private FloatingActionButton reportFound, reportLost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +54,8 @@ public class MainActivity2 extends AppCompatActivity {
         navChat = findViewById(R.id.nav_chat);
         navNotifications = findViewById(R.id.nav_notifications);
         navProfile = findViewById(R.id.nav_profile);
-        fab = findViewById(R.id.fab);
+        reportFound = findViewById(R.id.reportFound);
+        reportLost = findViewById(R.id.reportLost);
     }
 
     private void toggleNavigationBasedOnEmail() {
@@ -95,6 +96,7 @@ public class MainActivity2 extends AppCompatActivity {
         navChat.setOnClickListener(v -> startActivity(new Intent(MainActivity2.this, ChatActivity.class)));
         navNotifications.setOnClickListener(v -> startActivity(new Intent(MainActivity2.this, NotificationActivity.class)));
         navProfile.setOnClickListener(v -> startActivity(new Intent(MainActivity2.this, ProfileActivity.class)));
-        fab.setOnClickListener(v -> startActivity(new Intent(MainActivity2.this, ReportActivity.class)));
+        reportFound.setOnClickListener(v -> startActivity(new Intent(MainActivity2.this, ReportFoundActivity.class)));
+        reportLost.setOnClickListener(v -> startActivity(new Intent(MainActivity2.this, ReportLostActivity.class)));
     }
 }

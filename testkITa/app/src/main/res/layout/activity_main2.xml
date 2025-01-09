@@ -152,18 +152,40 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tabLayout" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/reportLost"
+        android:layout_width="148dp"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="10dp"
+        android:contentDescription="@string/add_post"
+        android:text="Report Lost"
+        android:textSize="18sp"
+        android:textColor="@color/green"
+        android:textStyle="bold"
+        app:backgroundTintMode="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/reportFound"
+        app:tint="@color/green"
+        />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/reportFound"
+        android:layout_width="148dp"
+        android:layout_height="50dp"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="25dp"
         android:layout_marginBottom="30dp"
-        android:contentDescription="addPostIcon"
+        android:contentDescription="@string/add_post"
+        android:text="Report Found"
+        android:textSize="18sp"
+        android:textColor="@color/green"
+        android:textStyle="bold"
         app:backgroundTintMode="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:tint="@color/green"
-        app:srcCompat="@android:drawable/ic_input_add"/>
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

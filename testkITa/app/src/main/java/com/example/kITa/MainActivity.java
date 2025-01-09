@@ -27,7 +27,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     private ImageButton guideIcon, searchIcon, navLost, navChat, navNotifications, navProfile;
-    private FloatingActionButton fab;
+    private FloatingActionButton reportFound, reportLost;
     private TextView todaySeeMore, weekSeeMore, olderSeeMore;
 
     private RecyclerView todayItemsRecyclerView, weekItemsRecyclerView, olderItemsRecyclerView;
@@ -69,7 +69,8 @@ public class MainActivity extends AppCompatActivity {
         navChat = findViewById(R.id.nav_chat);
         navNotifications = findViewById(R.id.nav_notifications);
         navProfile = findViewById(R.id.nav_profile);
-        fab = findViewById(R.id.fab);
+        reportFound = findViewById(R.id.reportFound);
+        reportLost = findViewById(R.id.reportLost);
 
         todayItemsRecyclerView = findViewById(R.id.todayItemsRecycleView);
         weekItemsRecyclerView = findViewById(R.id.weekItemsRecycleView);
@@ -90,7 +91,8 @@ public class MainActivity extends AppCompatActivity {
         navChat.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ChatActivity.class)));
         navNotifications.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, NotificationActivity.class)));
         navProfile.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ProfileActivity.class)));
-        fab.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ReportActivity.class)));
+        reportFound.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ReportFoundActivity.class)));
+        reportLost.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ReportLostActivity.class)));
 
         todaySeeMore.setOnClickListener(v -> openMainActivity2(0));
         weekSeeMore.setOnClickListener(v -> openMainActivity2(1));

@@ -185,7 +185,7 @@ public class NotificationActivity extends AppCompatActivity {
             String itemName = notification.getString("item_name");
             String claimDate = notification.getString("claim_date");
             String message = "Admin has approved your claim request of the \"" + itemName +
-                    "\". Kindly claim your item in the Gate 2.";
+                    "\". Claim your item at Gate 2 and bring the proof of identification that you submitted.";
 
             if (today.equals(claimDate)) {
                 todayNotifications.add(new NotificationItem(message, claimDate, true));
