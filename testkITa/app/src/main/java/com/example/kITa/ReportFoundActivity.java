@@ -50,7 +50,6 @@ public class ReportFoundActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_reportingfound);
 
-        // Assign to the class-level userSession field
         userSession = UserSession.getInstance(this);
 
         // Check if user is logged in
