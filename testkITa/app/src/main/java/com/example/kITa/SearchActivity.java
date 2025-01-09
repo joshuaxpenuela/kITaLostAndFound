@@ -97,7 +97,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void setupClickListeners() {
-        guideIcon.setOnClickListener(v -> startActivity(new Intent(SearchActivity.this, PreGuidelineActivity.class)));
+        guideIcon.setOnClickListener(v -> startActivity(new Intent(SearchActivity.this, GuidelinesActivity.class)));
         searchIcon.setOnClickListener(v -> {
             finish();
             startActivity(getIntent());

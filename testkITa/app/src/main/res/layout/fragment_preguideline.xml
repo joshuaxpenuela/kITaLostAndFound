@@ -286,42 +286,17 @@
                 android:justificationMode="inter_word"
                 android:textSize="13dp" />
 
-            <ImageView
-                android:id="@+id/foundIcon"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_below="@id/lostIconDesc"
-                android:layout_marginTop="25dp"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="30dp"
-                android:src="@drawable/ic_found"
-                app:tint="@color/green"/>
-
-            <TextView
-                android:id="@+id/foundIconText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/lostIconDesc"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="25dp"
-                android:layout_marginEnd="30dp"
-                android:layout_toEndOf="@id/foundIcon"
-                android:text="Claimed Item Tab"
-                android:textColor="@color/green"
-                android:textSize="20dp"
-                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/foundIconDesc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/foundIconText"
+                android:layout_below="@id/lostIconDesc"
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="30dp"
-                android:layout_toEndOf="@id/foundIcon"
+                android:layout_toEndOf="@id/lostIcon"
                 android:justificationMode="inter_word"
                 android:text="Users can view a list of claimed items with full details available for each entry upon selection"
                 android:textSize="13dp" />
