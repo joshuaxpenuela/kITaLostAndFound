@@ -30,26 +30,25 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class ReportActivity extends AppCompatActivity {
+public class ReportFoundActivity extends AppCompatActivity {
 
-    private EditText firstName, lastName, email, contactNo, itemName, location, date, time, otherDetails;
-    private Spinner department, itemCategory;
+    private EditText itemName, location, date, time, otherDetails;
+    private Spinner itemCategory;
     private ImageButton guideIcon, searchIcon, navLost, navChat, navNotifications, navProfile;
     private Calendar calendar;
     private ImageButton img1, img2, img3, img4, img5;
     private Button submitButton, cancelButton;
     private ImageButton selectedImageButton;
+    private UserSession userSession;
 
     private DatePickerDialog datePickerDialog;
     private TimePickerDialog timePickerDialog;
     private Map<String, String> encodedImages = new HashMap<>();
-    private ArrayList<String> collegeList;
-    private ArrayAdapter<String> collegeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_reporting);
+        setContentView(R.layout.fragment_reportingfound);
 
         UserSession userSession = UserSession.getInstance(this);
 
@@ -65,7 +64,6 @@ public class ReportActivity extends AppCompatActivity {
         initializeUIComponents();
         setupDateTimePickers();
         setupNavigation();
-        setupCollegeSpinner(); // Add this line
         toggleNavigationBasedOnEmail();
 
         // Set onClickListeners for ImageButtons to open image picker
@@ -79,19 +77,6 @@ public class ReportActivity extends AppCompatActivity {
         submitButton.setOnClickListener(v -> submitReport());
         cancelButton.setOnClickListener(v -> showDiscardDialog(MainActivity.class));
 
-        InputFilter nameFilter = new InputFilter() {
-            @Override
-            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-                for (int i = start; i < end; i++) {
-                    if (!Character.isLetter(source.charAt(i)) && !Character.isSpaceChar(source.charAt(i))) {
-                        return ""; // Reject input that is not a letter or space
-                    }
-                }
-                return null; // Acceptable input
-            }
-        };
-        firstName.setFilters(new InputFilter[]{nameFilter});
-        lastName.setFilters(new InputFilter[]{nameFilter});
     }
 
     private void setupNavigation() {
@@ -111,7 +96,7 @@ public class ReportActivity extends AppCompatActivity {
 
     private void showDiscardDialog(Class<?> destinationClass) {
         DiscardReportDialog dialog = new DiscardReportDialog(this, () -> {
-            startActivity(new Intent(ReportActivity.this, destinationClass));
+            startActivity(new Intent(ReportFoundActivity.this, destinationClass));
             finish();
         });
         dialog.show();
@@ -125,11 +110,6 @@ public class ReportActivity extends AppCompatActivity {
     }
 
     private void initializeUIComponents() {
-        firstName = findViewById(R.id.firstName);
-        lastName = findViewById(R.id.lastName);
-        email = findViewById(R.id.email);
-        contactNo = findViewById(R.id.contactNo);
-        department = findViewById(R.id.department);
         itemName = findViewById(R.id.itemName);
         itemCategory = findViewById(R.id.itemCategory);
         location = findViewById(R.id.location);
@@ -152,39 +132,6 @@ public class ReportActivity extends AppCompatActivity {
         navProfile = findViewById(R.id.nav_profile);
     }
 
-    private void setupCollegeSpinner() {
-        collegeList = new ArrayList<>();
-        collegeList.add("Select College"); // Add default option
-
-        collegeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, collegeList);
-        collegeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        department.setAdapter(collegeAdapter);
-
-        fetchColleges();
-    }
-
-    private void fetchColleges() {
-        String url = "http://10.0.2.2/lost_found_db/college.php";
-
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
-                response -> {
-                    try {
-                        if (response.getBoolean("success")) {
-                            JSONArray collegesArray = response.getJSONArray("colleges");
-                            for (int i = 0; i < collegesArray.length(); i++) {
-                                collegeList.add(collegesArray.getString(i));
-                            }
-                            collegeAdapter.notifyDataSetChanged();
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        Toast.makeText(ReportActivity.this, "Error parsing colleges data", Toast.LENGTH_SHORT).show();
-                    }
-                },
-                error -> Toast.makeText(ReportActivity.this, "Error fetching colleges: " + error.getMessage(), Toast.LENGTH_SHORT).show());
-
-        Volley.newRequestQueue(this).add(request);
-    }
 
     private void setupDateTimePickers() {
         calendar = Calendar.getInstance();
@@ -283,18 +230,18 @@ public class ReportActivity extends AppCompatActivity {
                             JSONObject jsonResponse = new JSONObject(responseString);
 
                             if (jsonResponse.getBoolean("success")) {
-                                Toast toast = Toast.makeText(ReportActivity.this, "Report submitted successfully. Kindly surrender the lost item in CvSU-Main Gate 2.", Toast.LENGTH_LONG);
-                                toast.setDuration(Toast.LENGTH_LONG); // Extend display time to 6 seconds
+                                Toast toast = Toast.makeText(ReportFoundActivity.this, "Report submitted successfully. Kindly surrender the lost item in CvSU-Main Gate 2.", Toast.LENGTH_LONG);
+                                toast.setDuration(Toast.LENGTH_LONG);
                                 toast.show();
-                                startActivity(new Intent(ReportActivity.this, MainActivity.class));
+                                startActivity(new Intent(ReportFoundActivity.this, MainActivity.class));
                                 finish();
                             } else {
                                 String errorMessage = jsonResponse.getString("message");
-                                Toast.makeText(ReportActivity.this, "Error: " + errorMessage, Toast.LENGTH_LONG).show();
+                                Toast.makeText(ReportFoundActivity.this, "Error: " + errorMessage, Toast.LENGTH_LONG).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Toast.makeText(ReportActivity.this, "Error parsing response", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ReportFoundActivity.this, "Error parsing response", Toast.LENGTH_SHORT).show();
                         }
                     },
                     error -> {
@@ -302,23 +249,23 @@ public class ReportActivity extends AppCompatActivity {
                         if (error.networkResponse != null && error.networkResponse.data != null) {
                             try {
                                 String responseString = new String(error.networkResponse.data, StandardCharsets.UTF_8);
-                                Toast.makeText(ReportActivity.this, "Error: " + responseString, Toast.LENGTH_LONG).show();
+                                Toast.makeText(ReportFoundActivity.this, "Error: " + responseString, Toast.LENGTH_LONG).show();
                             } catch (Exception e) {
-                                Toast.makeText(ReportActivity.this, "Error: " + errorMessage, Toast.LENGTH_LONG).show();
+                                Toast.makeText(ReportFoundActivity.this, "Error: " + errorMessage, Toast.LENGTH_LONG).show();
                             }
                         } else {
-                            Toast.makeText(ReportActivity.this, "Network Error: " + errorMessage, Toast.LENGTH_LONG).show();
+                            Toast.makeText(ReportFoundActivity.this, "Network Error: " + errorMessage, Toast.LENGTH_LONG).show();
                         }
                     }
             ) {
                 @Override
                 protected Map<String, String> getStringParams() {
                     Map<String, String> params = new HashMap<>();
-                    params.put("Fname", firstName.getText().toString().trim());
-                    params.put("Lname", lastName.getText().toString().trim());
-                    params.put("email", email.getText().toString().trim());
-                    params.put("contact_no", contactNo.getText().toString().trim());
-                    params.put("dept_college", department.getSelectedItem().toString());
+                    params.put("Fname", userSession.getFirstName());
+                    params.put("Lname", userSession.getLastName());
+                    params.put("email", userSession.getEmail());
+                    params.put("contact_no", userSession.getContactNo());
+                    params.put("dept_college", userSession.getDept());
                     params.put("item_name", itemName.getText().toString().trim());
                     params.put("item_category", itemCategory.getSelectedItem().toString());
                     params.put("location_found", location.getText().toString().trim());
@@ -353,33 +300,6 @@ public class ReportActivity extends AppCompatActivity {
     private boolean validateInputFields() {
         boolean isValid = true;
 
-        if (TextUtils.isEmpty(firstName.getText().toString().trim())) {
-            firstName.setError("First name is required");
-            isValid = false;
-        }
-        // Validate lastName
-        if (TextUtils.isEmpty(lastName.getText().toString().trim())) {
-            lastName.setError("Last name is required");
-            isValid = false;
-        }
-        if (email.getText().toString().trim().isEmpty()) {
-            email.setError("Email is required");
-            isValid = false;
-        } else if (!isValidEmail(email.getText().toString().trim())) {
-            email.setError("Invalid email format");
-            isValid = false;
-        }
-        if (contactNo.getText().toString().trim().isEmpty()) {
-            contactNo.setError("Contact number is required");
-            isValid = false;
-        } else if (!isValidPhone(contactNo.getText().toString().trim())) {
-            contactNo.setError("Invalid phone number format");
-            isValid = false;
-        }
-        if (department.getSelectedItem().toString().equals("Select College")) {
-            Toast.makeText(this, "Please select a college", Toast.LENGTH_SHORT).show();
-            isValid = false;
-        }
         if (itemName.getText().toString().trim().isEmpty()) {
             itemName.setError("Item name is required");
             isValid = false;

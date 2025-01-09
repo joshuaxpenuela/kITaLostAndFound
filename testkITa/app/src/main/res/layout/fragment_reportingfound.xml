@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.example.kITa.MainActivity">
+    tools:context="com.example.kITa.ReportFoundActivity">
 
     <!-- Top toolbar with icons -->
     <LinearLayout
@@ -138,134 +138,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5sp"
-                android:text="Report Lost Item"
+                android:text="Report Found Item"
                 android:textSize="27sp"
                 android:textColor="@color/green"
                 android:textStyle="bold"
                 android:textAlignment="center"
                 />
-
-            <TextView
-                android:id="@+id/fullNameText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/reportLostItemTitle"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:text="Full Name"
-                android:textSize="18sp"
-                android:textColor="@color/green"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/firstName"
-                android:layout_width="180dp"
-                android:layout_height="48dp"
-                android:layout_below="@+id/fullNameText"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="4dp"
-                android:background="@drawable/text_input_bg"
-                android:hint="First Name"
-                android:inputType="text"
-                android:padding="10dp" />
-
-            <EditText
-                android:id="@+id/lastName"
-                android:layout_width="120dp"
-                android:layout_height="48dp"
-                android:layout_below="@+id/fullNameText"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="20dp"
-                android:layout_toEndOf="@+id/firstName"
-                android:background="@drawable/text_input_bg"
-                android:hint="Last Name"
-                android:inputType="text"
-                android:padding="10dp" />
-
-            <TextView
-                android:id="@+id/emailText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/firstName"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="6dp"
-                android:text="Email"
-                android:textSize="18sp"
-                android:textColor="@color/green"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/email"
-                android:layout_width="300dp"
-                android:layout_height="48dp"
-                android:layout_below="@+id/emailText"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="6dp"
-                android:layout_marginEnd="20dp"
-                android:background="@drawable/text_input_bg"
-                android:hint="Email"
-                android:inputType="textEmailAddress"
-                android:padding="10dp" />
-
-            <TextView
-                android:id="@+id/contactText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/email"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="6dp"
-                android:text="Contact No."
-                android:textColor="@color/green"
-                android:textSize="18sp"
-                android:textStyle="bold"/>
-
-            <EditText
-                android:id="@+id/contactNo"
-                android:layout_width="300dp"
-                android:layout_height="48dp"
-                android:layout_below="@+id/contactText"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="6dp"
-                android:layout_marginEnd="20dp"
-                android:background="@drawable/text_input_bg"
-                android:hint="Contact Number"
-                android:inputType="number"
-                android:maxLength="11"
-                android:padding="10dp" />
-
-            <TextView
-                android:id="@+id/departmentText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/contactNo"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="6dp"
-                android:text="College"
-                android:textColor="@color/green"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <Spinner
-                android:id="@+id/department"
-                android:layout_width="300dp"
-                android:layout_height="48dp"
-                android:layout_below="@+id/departmentText"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="6dp"
-                android:layout_marginEnd="20dp"
-                android:hint="Department or College"
-                android:textSize="15sp"
-                style="@style/CustomSpinnerStyle"/>
 
             <TextView
                 android:id="@+id/itemNameText"
@@ -300,7 +178,7 @@
                 android:id="@+id/itemCategoryText"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/department"
+                android:layout_below="@+id/reportLostItemTitle"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="6sp"
                 android:text="Item Category"
