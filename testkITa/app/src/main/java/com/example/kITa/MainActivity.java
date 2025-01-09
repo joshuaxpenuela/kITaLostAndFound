@@ -17,6 +17,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     private ImageButton guideIcon, searchIcon, navLost, navChat, navNotifications, navProfile;
-    private FloatingActionButton reportFound, reportLost;
+    private ExtendedFloatingActionButton reportFound, reportLost;
     private TextView todaySeeMore, weekSeeMore, olderSeeMore;
 
     private RecyclerView todayItemsRecyclerView, weekItemsRecyclerView, olderItemsRecyclerView;

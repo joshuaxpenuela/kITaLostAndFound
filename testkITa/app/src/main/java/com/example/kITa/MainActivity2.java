@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
+
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -18,7 +20,7 @@ public class MainActivity2 extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager2 viewPager;
     private ImageButton guideIcon, searchIcon, navLost, navChat, navNotifications, navProfile;
-    private FloatingActionButton reportFound, reportLost;
+    private ExtendedFloatingActionButton reportFound, reportLost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
