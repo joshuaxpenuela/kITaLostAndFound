@@ -77,7 +77,6 @@ public class ReportLostActivity extends AppCompatActivity {
         // Set onClickListeners for form buttons
         submitButton.setOnClickListener(v -> submitReport());
         cancelButton.setOnClickListener(v -> showDiscardDialog(MainActivity.class));
-
     }
 
     private void setupNavigation() {
