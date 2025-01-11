@@ -149,6 +149,17 @@
                     android:textSize="24sp"
                     android:textStyle="bold"/>
 
+                <Button
+                    android:id="@+id/clearTodayButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginTop="10dp"
+                    android:text="Clear"
+                    android:textColor="@color/white"
+                    android:backgroundTint="@color/green"/>
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/todayNotifRecycleView"
                     android:layout_width="match_parent"
@@ -180,6 +191,17 @@
                     android:textSize="24sp"
                     android:textStyle="bold"
                     />
+
+                <Button
+                    android:id="@+id/clearOlderButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginTop="10dp"
+                    android:text="Clear"
+                    android:textColor="@color/white"
+                    android:backgroundTint="@color/green"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/olderNotifRecycleView"
