@@ -153,22 +153,23 @@
                     android:id="@+id/clearTodayButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="20dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginEnd="20dp"
+                    android:backgroundTint="@color/green"
                     android:text="Clear"
-                    android:textColor="@color/white"
-                    android:backgroundTint="@color/green"/>
+                    android:textColor="@color/white" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/todayNotifRecycleView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/todayNotifTitle"
+                    android:layout_below="@+id/clearTodayButton"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentEnd="true"
                     android:layout_marginStart="1dp"
-                    android:layout_marginTop="-1dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginEnd="0dp" />
             </RelativeLayout>
 
@@ -196,22 +197,23 @@
                     android:id="@+id/clearOlderButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="20dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginEnd="20dp"
+                    android:backgroundTint="@color/green"
                     android:text="Clear"
-                    android:textColor="@color/white"
-                    android:backgroundTint="@color/green"/>
+                    android:textColor="@color/white" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/olderNotifRecycleView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/olderNotifTitle"
+                    android:layout_below="@+id/clearOlderButton"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentEnd="true"
                     android:layout_marginStart="1dp"
-                    android:layout_marginTop="0dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginEnd="0dp" />
             </RelativeLayout>
         </RelativeLayout>
