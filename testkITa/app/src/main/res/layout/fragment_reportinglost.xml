@@ -319,10 +319,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/uploadImageText"
+                android:layout_alignParentStart="true"
                 android:layout_marginStart="20dp"
-                android:text="* Maximum of 5MB per photo"
-                android:textStyle="bold"
-                />
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="20dp"
+                android:text="* Maximum of 5MB per photo. Long press the image to remove"
+                android:textStyle="bold" />
 
             <HorizontalScrollView
                 android:id="@+id/horizontalScrollView"
