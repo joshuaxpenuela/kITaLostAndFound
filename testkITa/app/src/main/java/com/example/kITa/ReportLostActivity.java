@@ -1,5 +1,6 @@
 package com.example.kITa;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -162,7 +163,29 @@ public class ReportLostActivity extends AppCompatActivity {
             selectedImageButton = imageButton;  // Keep track of the selected button
             Intent intent = new Intent(Intent.ACTION_PICK);
             intent.setType("image/*");
-            startActivityForResult(intent, 1); // Use 1 as a request code for all image selections
+            startActivityForResult(intent, 1);
+        });
+
+        // Add long press listener for image removal
+        imageButton.setOnLongClickListener(v -> {
+            if (encodedImages.containsKey(imageKey)) {
+                // Show confirmation dialog
+                new AlertDialog.Builder(this)
+                        .setTitle("Remove Image")
+                        .setMessage("Are you sure you want to remove this image?")
+                        .setPositiveButton("Yes", (dialog, which) -> {
+                            // Remove the image from encodedImages
+                            encodedImages.remove(imageKey);
+                            // Reset the ImageButton to default state
+                            imageButton.setImageResource(R.drawable.ic_addphoto);
+                            imageButton.setScaleType(ImageView.ScaleType.CENTER);
+                            Toast.makeText(this, "Image removed", Toast.LENGTH_SHORT).show();
+                        })
+                        .setNegativeButton("No", null)
+                        .show();
+                return true;
+            }
+            return false;
         });
     }
 
@@ -176,24 +199,29 @@ public class ReportLostActivity extends AppCompatActivity {
                 // Get file size in bytes
                 InputStream inputStream = getContentResolver().openInputStream(imageUri);
                 if (inputStream != null) {
-                    int fileSizeInBytes = inputStream.available(); // Get size in bytes
+                    int fileSizeInBytes = inputStream.available();
                     inputStream.close();
 
-                    if (fileSizeInBytes > 5 * 1024 * 1024) { // Check if it exceeds 5MB
+                    if (fileSizeInBytes > 5 * 1024 * 1024) {
                         Toast.makeText(this, "Image size exceeds 5MB", Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }
 
                 // Decode and encode the image
-                inputStream = getContentResolver().openInputStream(imageUri); // Re-open the input stream
+                inputStream = getContentResolver().openInputStream(imageUri);
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                 inputStream.close();
 
                 String encodedImage = encodeImage(bitmap);
-                Glide.with(this).load(bitmap).into(selectedImageButton);
 
-                // Use selectedImageButton to determine which key to use in encodedImages
+                // Set the image to fill the ImageButton
+                selectedImageButton.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                Glide.with(this)
+                        .load(bitmap)
+                        .into(selectedImageButton);
+
+                // Determine which imageButton was selected and store accordingly
                 if (selectedImageButton == img1) {
                     encodedImages.put("img1", encodedImage);
                 } else if (selectedImageButton == img2) {
