@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
+
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -13,6 +15,7 @@ public class PreMenuActivity2 extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager2 viewPager;
     private ImageButton guideIcon, searchIcon, kitaLogo;
+    private ExtendedFloatingActionButton reportFound, reportLost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,8 @@ public class PreMenuActivity2 extends AppCompatActivity {
         guideIcon = findViewById(R.id.guide_icon);
         searchIcon = findViewById(R.id.search_icon);
         kitaLogo = findViewById(R.id.kitaLogo);
+        reportFound = findViewById(R.id.reportFound);
+        reportLost = findViewById(R.id.reportLost);
     }
 
     private void setupViewPager() {
@@ -62,5 +67,7 @@ public class PreMenuActivity2 extends AppCompatActivity {
         guideIcon.setOnClickListener(v -> startActivity(new Intent(PreMenuActivity2.this, PreGuidelineActivity.class)));
         searchIcon.setOnClickListener(v -> startActivity(new Intent(PreMenuActivity2.this, PreSearchActivity.class)));
         kitaLogo.setOnClickListener(v -> startActivity(new Intent(PreMenuActivity2.this, PreMenuActivity.class)));
+        reportFound.setOnClickListener(v -> startActivity(new Intent(PreMenuActivity2.this, PreFoundLoginActivity.class)));
+        reportLost.setOnClickListener(v -> startActivity(new Intent(PreMenuActivity2.this, PreLostLoginActivity.class)));
     }
 }
