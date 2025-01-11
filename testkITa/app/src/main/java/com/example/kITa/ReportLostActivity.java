@@ -220,7 +220,7 @@ public class ReportLostActivity extends AppCompatActivity {
     }
 
     private void submitReport() {
-        if (validateInputFields() && encodedImages.size() >= 1) {
+        if (validateInputFields()) {
             String url = "http://10.0.2.2/lost_found_db/submit_lost_report.php";
 
             VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, url,
@@ -268,10 +268,8 @@ public class ReportLostActivity extends AppCompatActivity {
 
                         if (networkResponse != null && networkResponse.data != null) {
                             String responseString = new String(networkResponse.data, StandardCharsets.UTF_8);
-                            // Log the error response for debugging
                             Log.e("ServerError", "Error response: " + responseString);
 
-                            // Clean the response
                             responseString = responseString.replaceAll("<[^>]*>", "");
 
                             if (responseString.contains("Fatal error")) {
@@ -334,9 +332,7 @@ public class ReportLostActivity extends AppCompatActivity {
             RequestQueue queue = Volley.newRequestQueue(this);
             queue.add(multipartRequest);
         } else {
-            Toast.makeText(this,
-                    "Please fill all required fields and upload at least 1 image",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please fill all required fields", Toast.LENGTH_SHORT).show();
         }
     }
 
