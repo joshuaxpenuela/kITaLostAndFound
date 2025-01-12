@@ -1,25 +1,37 @@
 package com.example.kITa;
 
 public class NotificationItem {
+    private String title;
     private String message;
     private String date;
-    private boolean isToday;
 
-    public NotificationItem(String message, String date, boolean isToday) {
+    public NotificationItem(String title, String message, String date) {
+        this.title = title;
         this.message = message;
         this.date = date;
-        this.isToday = isToday;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getMessage() {
         return message;
     }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public String getDate() {
         return date;
     }
 
-    public boolean isToday() {
-        return isToday;
+    public void setDate(String date) {
+        this.date = date;
     }
 }

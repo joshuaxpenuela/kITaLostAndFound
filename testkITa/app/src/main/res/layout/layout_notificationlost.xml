@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    app:contentPadding="5dp"
+    app:cardUseCompatPadding="true"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            >
+            <ImageView
+                android:id="@+id/itemImg"
+                android:layout_width="80dp"
+                android:layout_height="60dp"
+                android:src="@drawable/ic_notification"
+                android:padding="5dp"
+                app:tint="@color/green" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginStart="10dp"
+            >
+            <TextView
+                android:id="@+id/notifTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Claiming Item Approved"
+                android:textColor="@color/green"
+                android:textSize="23dp"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:id="@+id/notifPreview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Notification message"
+                android:textSize="15dp"
+                android:textColor="@color/green"
+                />
+
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

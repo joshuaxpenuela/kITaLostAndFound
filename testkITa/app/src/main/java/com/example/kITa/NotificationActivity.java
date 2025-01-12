@@ -35,21 +35,20 @@ public class NotificationActivity extends AppCompatActivity {
     private RecyclerView todayNotifRecyclerView, olderNotifRecyclerView;
     private NotificationAdapter todayAdapter, olderAdapter;
     private List<NotificationItem> todayNotifications, olderNotifications;
-    private static final String FETCH_NOTIFICATIONS_URL = "http://10.0.2.2/lost_found_db/fetch_notifications.php";
+    private static final String FETCH_CLAIM_NOTIFICATIONS_URL = "http://10.0.2.2/lost_found_db/fetch_notifications.php";
+    private static final String FETCH_LOST_NOTIFICATIONS_URL = "http://10.0.2.2/lost_found_db/fetch_lost_notifications.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_notification);
 
-        // Check if email is empty before initializing
         UserSession userSession = UserSession.getInstance(this);
 
-        // Check if user is logged in
         if (!userSession.isLoggedIn()) {
             Toast.makeText(this, "Please log-in your account.", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, LoginActivity.class));
-            finish(); // Close the current activity
+            finish();
             return;
         }
 
@@ -58,7 +57,7 @@ public class NotificationActivity extends AppCompatActivity {
         setupRecyclerViews();
         setupClickListeners();
         setupClearButtons();
-        fetchNotifications();
+        fetchAllNotifications();
     }
 
     private void toggleNavigationBasedOnEmail() {
@@ -80,45 +79,6 @@ public class NotificationActivity extends AppCompatActivity {
 
         clearTodayButton = findViewById(R.id.clearTodayButton);
         clearOlderButton = findViewById(R.id.clearOlderButton);
-    }
-
-    private void setupClearButtons() {
-        clearTodayButton.setOnClickListener(v -> showClearConfirmationDialog("today's"));
-        clearOlderButton.setOnClickListener(v -> showClearConfirmationDialog("older"));
-    }
-
-    private void showClearConfirmationDialog(String notificationType) {
-        new AlertDialog.Builder(this)
-                .setTitle("Clear Notifications")
-                .setMessage("Are you sure you want to clear " + notificationType + " notifications?")
-                .setPositiveButton("Clear", (dialog, which) -> {
-                    if (notificationType.equals("today's")) {
-                        clearTodayNotifications();
-                    } else {
-                        clearOlderNotifications();
-                    }
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
-    }
-
-    private void clearTodayNotifications() {
-        todayNotifications.clear();
-        todayAdapter.notifyDataSetChanged();
-        updateClearButtonsVisibility();
-        Toast.makeText(this, "Today's notifications cleared", Toast.LENGTH_SHORT).show();
-    }
-
-    private void clearOlderNotifications() {
-        olderNotifications.clear();
-        olderAdapter.notifyDataSetChanged();
-        updateClearButtonsVisibility();
-        Toast.makeText(this, "Older notifications cleared", Toast.LENGTH_SHORT).show();
-    }
-
-    private void updateClearButtonsVisibility() {
-        clearTodayButton.setVisibility(todayNotifications.isEmpty() ? View.GONE : View.VISIBLE);
-        clearOlderButton.setVisibility(olderNotifications.isEmpty() ? View.GONE : View.VISIBLE);
     }
 
     private void setupRecyclerViews() {
@@ -161,12 +121,56 @@ public class NotificationActivity extends AppCompatActivity {
         startActivity(new Intent(this, activityClass));
     }
 
-    private void fetchNotifications() {
+    private void setupClearButtons() {
+        clearTodayButton.setOnClickListener(v -> showClearConfirmationDialog("today's"));
+        clearOlderButton.setOnClickListener(v -> showClearConfirmationDialog("older"));
+    }
+
+    private void showClearConfirmationDialog(String notificationType) {
+        new AlertDialog.Builder(this)
+                .setTitle("Clear Notifications")
+                .setMessage("Are you sure you want to clear " + notificationType + " notifications?")
+                .setPositiveButton("Clear", (dialog, which) -> {
+                    if (notificationType.equals("today's")) {
+                        clearTodayNotifications();
+                    } else {
+                        clearOlderNotifications();
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void clearTodayNotifications() {
+        todayNotifications.clear();
+        todayAdapter.notifyDataSetChanged();
+        updateClearButtonsVisibility();
+        Toast.makeText(this, "Today's notifications cleared", Toast.LENGTH_SHORT).show();
+    }
+
+    private void clearOlderNotifications() {
+        olderNotifications.clear();
+        olderAdapter.notifyDataSetChanged();
+        updateClearButtonsVisibility();
+        Toast.makeText(this, "Older notifications cleared", Toast.LENGTH_SHORT).show();
+    }
+
+    private void updateClearButtonsVisibility() {
+        clearTodayButton.setVisibility(todayNotifications.isEmpty() ? View.GONE : View.VISIBLE);
+        clearOlderButton.setVisibility(olderNotifications.isEmpty() ? View.GONE : View.VISIBLE);
+    }
+
+    private void fetchAllNotifications() {
+        fetchClaimNotifications();
+        fetchLostNotifications();
+    }
+
+    private void fetchClaimNotifications() {
         String currentUserEmail = UserSession.getInstance(this).getEmail();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, FETCH_NOTIFICATIONS_URL,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, FETCH_CLAIM_NOTIFICATIONS_URL,
                 response -> {
-                    Log.d("NotificationResponse", "Response: " + response);
+                    Log.d("ClaimNotificationResponse", "Response: " + response);
                     try {
                         if (response.contains("error")) {
                             JSONObject errorObj = new JSONObject(response);
@@ -178,55 +182,77 @@ public class NotificationActivity extends AppCompatActivity {
                         }
 
                         JSONArray jsonArray = new JSONArray(response);
-                        processNotifications(jsonArray);
+                        processClaimNotifications(jsonArray);
 
-                        if (jsonArray.length() == 0) {
-                            Toast.makeText(NotificationActivity.this,
-                                    "No notifications found",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-
-                        // Update clear buttons visibility after processing notifications
-                        updateClearButtonsVisibility();
                     } catch (JSONException e) {
                         e.printStackTrace();
                         Log.e("NotificationError", "Parse error: " + e.getMessage());
-                        Toast.makeText(NotificationActivity.this,
-                                "Error loading notifications. Please try again.",
-                                Toast.LENGTH_LONG).show();
                     }
                 },
                 error -> {
-                    String errorMessage = "Network error. Please check your connection.";
-                    if (error.networkResponse != null) {
-                        errorMessage += " (Status: " + error.networkResponse.statusCode + ")";
-                    }
                     Log.e("NotificationError", "Volley error: " + error.toString());
-                    Toast.makeText(NotificationActivity.this, errorMessage, Toast.LENGTH_LONG).show();
                 }) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put("email", currentUserEmail);
-                Log.d("NotificationDebug", "Sending email: " + currentUserEmail);
                 return params;
             }
         };
 
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
-                10000,  // 10 seconds timeout
+        addToRequestQueue(stringRequest);
+    }
+
+    private void fetchLostNotifications() {
+        String currentUserEmail = UserSession.getInstance(this).getEmail();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, FETCH_LOST_NOTIFICATIONS_URL,
+                response -> {
+                    Log.d("LostNotificationResponse", "Response: " + response);
+                    try {
+                        if (response.contains("error")) {
+                            JSONObject errorObj = new JSONObject(response);
+                            String error = errorObj.getString("error");
+                            Toast.makeText(NotificationActivity.this,
+                                    "Server error: " + error,
+                                    Toast.LENGTH_LONG).show();
+                            return;
+                        }
+
+                        JSONArray jsonArray = new JSONArray(response);
+                        processLostNotifications(jsonArray);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Log.e("NotificationError", "Parse error: " + e.getMessage());
+                    }
+                },
+                error -> {
+                    Log.e("NotificationError", "Volley error: " + error.toString());
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("email", currentUserEmail);
+                return params;
+            }
+        };
+
+        addToRequestQueue(stringRequest);
+    }
+
+    private void addToRequestQueue(StringRequest request) {
+        request.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
         ));
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
+        requestQueue.add(request);
     }
 
-    private void processNotifications(JSONArray jsonArray) throws JSONException {
-        todayNotifications.clear();
-        olderNotifications.clear();
-
+    private void processClaimNotifications(JSONArray jsonArray) throws JSONException {
         String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
         for (int i = 0; i < jsonArray.length(); i++) {
@@ -237,12 +263,35 @@ public class NotificationActivity extends AppCompatActivity {
                     "\". Claim your item at Gate 2 and bring the proof of identification that you submitted.";
 
             if (today.equals(claimDate)) {
-                todayNotifications.add(new NotificationItem(message, claimDate, true));
+                todayNotifications.add(new NotificationItem("Claim Approved", message, claimDate));
             } else {
-                olderNotifications.add(new NotificationItem(message, claimDate, false));
+                olderNotifications.add(new NotificationItem("Claim Approved", message, claimDate));
             }
         }
 
+        updateAdapters();
+    }
+
+    private void processLostNotifications(JSONArray jsonArray) throws JSONException {
+        String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject notification = jsonArray.getJSONObject(i);
+            String itemName = notification.getString("item_name");
+            String notifDate = notification.getString("notification_date");
+            String message = itemName + " was found by the Admin. Check the item in the Main Menu to confirm if it is yours. Request claim the item for claiming.";
+
+            if (today.equals(notifDate)) {
+                todayNotifications.add(new NotificationItem("Found Item", message, notifDate));
+            } else {
+                olderNotifications.add(new NotificationItem("Found Item", message, notifDate));
+            }
+        }
+
+        updateAdapters();
+    }
+
+    private void updateAdapters() {
         todayAdapter.notifyDataSetChanged();
         olderAdapter.notifyDataSetChanged();
         updateClearButtonsVisibility();
