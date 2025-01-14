@@ -129,8 +129,7 @@
         <RelativeLayout
             android:id="@+id/guide_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="match_parent">
 
             <RelativeLayout
                 android:id="@+id/todayNotifLayout"
@@ -149,23 +148,11 @@
                     android:textSize="24sp"
                     android:textStyle="bold"/>
 
-                <Button
-                    android:id="@+id/clearTodayButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="20dp"
-                    android:backgroundTint="@color/green"
-                    android:text="Clear"
-                    android:textColor="@color/white" />
-
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/todayNotifRecycleView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/clearTodayButton"
+                    android:layout_below="@+id/todayNotifTitle"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentEnd="true"
                     android:layout_marginStart="1dp"
@@ -177,8 +164,7 @@
                 android:id="@+id/olderNotifLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/todayNotifLayout"
-                >
+                android:layout_below="@id/todayNotifLayout">
                 <TextView
                     android:id="@+id/olderNotifTitle"
                     android:layout_width="wrap_content"
@@ -190,26 +176,13 @@
                     android:textAlignment="viewStart"
                     android:textColor="@color/green"
                     android:textSize="24sp"
-                    android:textStyle="bold"
-                    />
-
-                <Button
-                    android:id="@+id/clearOlderButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="20dp"
-                    android:backgroundTint="@color/green"
-                    android:text="Clear"
-                    android:textColor="@color/white" />
+                    android:textStyle="bold"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/olderNotifRecycleView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/clearOlderButton"
+                    android:layout_below="@+id/olderNotifTitle"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentEnd="true"
                     android:layout_marginStart="1dp"
@@ -218,6 +191,5 @@
             </RelativeLayout>
         </RelativeLayout>
     </androidx.core.widget.NestedScrollView>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

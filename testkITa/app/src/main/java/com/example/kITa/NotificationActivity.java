@@ -5,10 +5,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,7 +29,6 @@ import java.util.Map;
 
 public class NotificationActivity extends AppCompatActivity {
     private ImageButton guideIcon, searchIcon, navLost, navNotifications, navProfile, navChat;
-    private Button clearTodayButton, clearOlderButton;
     private RecyclerView todayNotifRecyclerView, olderNotifRecyclerView;
     private NotificationAdapter todayAdapter, olderAdapter;
     private List<NotificationItem> todayNotifications, olderNotifications;
@@ -56,7 +53,6 @@ public class NotificationActivity extends AppCompatActivity {
         toggleNavigationBasedOnEmail();
         setupRecyclerViews();
         setupClickListeners();
-        setupClearButtons();
         fetchAllNotifications();
     }
 
@@ -76,9 +72,6 @@ public class NotificationActivity extends AppCompatActivity {
 
         todayNotifRecyclerView = findViewById(R.id.todayNotifRecycleView);
         olderNotifRecyclerView = findViewById(R.id.olderNotifRecycleView);
-
-        clearTodayButton = findViewById(R.id.clearTodayButton);
-        clearOlderButton = findViewById(R.id.clearOlderButton);
     }
 
     private void setupRecyclerViews() {
@@ -119,45 +112,6 @@ public class NotificationActivity extends AppCompatActivity {
             return;
         }
         startActivity(new Intent(this, activityClass));
-    }
-
-    private void setupClearButtons() {
-        clearTodayButton.setOnClickListener(v -> showClearConfirmationDialog("today's"));
-        clearOlderButton.setOnClickListener(v -> showClearConfirmationDialog("older"));
-    }
-
-    private void showClearConfirmationDialog(String notificationType) {
-        new AlertDialog.Builder(this)
-                .setTitle("Clear Notifications")
-                .setMessage("Are you sure you want to clear " + notificationType + " notifications?")
-                .setPositiveButton("Clear", (dialog, which) -> {
-                    if (notificationType.equals("today's")) {
-                        clearTodayNotifications();
-                    } else {
-                        clearOlderNotifications();
-                    }
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
-    }
-
-    private void clearTodayNotifications() {
-        todayNotifications.clear();
-        todayAdapter.notifyDataSetChanged();
-        updateClearButtonsVisibility();
-        Toast.makeText(this, "Today's notifications cleared", Toast.LENGTH_SHORT).show();
-    }
-
-    private void clearOlderNotifications() {
-        olderNotifications.clear();
-        olderAdapter.notifyDataSetChanged();
-        updateClearButtonsVisibility();
-        Toast.makeText(this, "Older notifications cleared", Toast.LENGTH_SHORT).show();
-    }
-
-    private void updateClearButtonsVisibility() {
-        clearTodayButton.setVisibility(todayNotifications.isEmpty() ? View.GONE : View.VISIBLE);
-        clearOlderButton.setVisibility(olderNotifications.isEmpty() ? View.GONE : View.VISIBLE);
     }
 
     private void fetchAllNotifications() {
@@ -294,6 +248,5 @@ public class NotificationActivity extends AppCompatActivity {
     private void updateAdapters() {
         todayAdapter.notifyDataSetChanged();
         olderAdapter.notifyDataSetChanged();
-        updateClearButtonsVisibility();
     }
 }
