@@ -199,11 +199,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/proofOfOwnershipText"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginEnd="20dp"
-                android:text="*Picture of yourself with the lost item"
-                android:textColor="@color/green"
+                android:text="*Picture of yourself with the lost item, documents, etc"
+                android:textStyle="bold"
                 android:textSize="15sp" />
 
             <ImageButton
@@ -231,18 +233,32 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/DescriptionNote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/DescriptionTitle"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp"
+                android:text="*Describe your lost item's unique description precisely"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
             <EditText
                 android:id="@+id/DescriptionText"
                 android:layout_width="400dp"
                 android:layout_height="100dp"
-                android:layout_below="@id/DescriptionTitle"
+                android:layout_below="@id/DescriptionNote"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/text_input_bg"
-                android:hint="Marks, Unique description of the item, Other evidence of ownership"
+                android:hint="Marks, Unique description of the item, Addtional evidence of ownership"
                 android:inputType="textMultiLine"
                 android:padding="10dp"
                 android:textAlignment="textStart"

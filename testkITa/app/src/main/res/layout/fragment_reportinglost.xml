@@ -295,7 +295,7 @@
                 android:layout_marginTop="6dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/text_input_bg"
-                android:hint="Other details about the lost item, recovery"
+                android:hint="Describe your lost item's unique description precisely (E.g. Marks, Wallpaper, etc)"
                 android:textAlignment="viewStart"
                 android:textSize="15sp"
                 android:inputType="textMultiLine"
